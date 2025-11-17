@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Form Sinh Viên</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header text-white"
+                     th:classappend="${nvkStudent.nvkId != null ? 'bg-warning' : 'bg-success'}">
+                    <h3 class="mb-0 text-center"
+                        th:text="${nvkStudent.nvkId != null ? 'CẬP NHẬT SINH VIÊN' : 'THÊM MỚI SINH VIÊN'}">
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    <form th:action="@{/nvkStudent/save}" th:object="${nvkStudent}" method="post">
+                        <input type="hidden" th:field="*{nvkId}">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Họ và Tên:</label>
+                            <input type="text" th:field="*{nvkName}" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Email:</label>
+                            <input type="email" th:field="*{nvkEmail}" class="form-control" required>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Tuổi:</label>
+                                <input type="number" th:field="*{nvkAge}" class="form-control">
+                            </div>
+                            <div class="col-md-6 d-flex align-items-center pt-4">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" th:field="*{nvkStatus}" checked>
+                                    <label class="form-check-label">Đang theo học</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn"
+                                    th:classappend="${nvkStudent.nvkId != null ? 'btn-warning' : 'btn-success'}"
+                                    th:text="${nvkStudent.nvkId != null ? 'Lưu thay đổi' : 'Thêm mới'}">
+                            </button>
+                            <a href="/nvkStudent" class="btn btn-secondary">Quay lại</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
