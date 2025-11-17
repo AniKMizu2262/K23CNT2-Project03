@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Quản lý Sản Phẩm</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-4">
+<div class="card shadow-sm">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h3 class="mb-0">Quản lý Sản phẩm</h3>
+        <a href="/nvkProduct" class="btn btn-light btn-sm" th:if="${nvkProduct.nvkId != null}">Tạo mới SP</a>
+    </div>
+
+    <div class="card-body">
+        <form th:action="@{/nvkProduct/save}" th:object="${nvkProduct}" method="post" class="row g-3 mb-4 border-bottom pb-4">
+
+            <input type="hidden" th:field="*{nvkId}">
+
+            <div class="col-md-4">
+                <label class="form-label fw-bold">Tên sản phẩm:</label>
+                <input type="text" th:field="*{nvkProductName}" class="form-control" required>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label fw-bold">Giá bán:</label>
+                <input type="number" th:field="*{nvkPrice}" class="form-control">
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label fw-bold">Danh mục:</label>
+                <select th:field="*{nvkCategory}" class="form-select">
+                    <option value="">-- Chọn danh mục --</option>
+                    <option th:each="cat : ${nvkListCategory}"
+                            th:value="${cat.nvkId}"
+                            th:text="${cat.nvkCategoryName}"></option>
+                </select>
+            </div>
+
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn w-100"
+                        th:classappend="${nvkProduct.nvkId != null ? 'btn-warning' : 'btn-success'}"
+                        th:text="${nvkProduct.nvkId != null ? 'Cập nhật' : 'Thêm mới'}">
+                </button>
+            </div>
+        </form>
+
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark text-center">
+            <tr>
+                <th>ID</th>
+                <th>Tên Sản Phẩm</th>
+                <th>Giá</th>
+                <th>Danh Mục</th>
+                <th style="width: 150px;">Chức năng</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="p : ${nvkListProduct}">
+                <td class="text-center fw-bold" th:text="${p.nvkId}"></td>
+                <td th:text="${p.nvkProductName}"></td>
+                <td class="text-end"></td>
+                <td th:text="${#numbers.formatDecimal(p.nvkPrice, 0, 'POINT', 0, 'COMMA')}"></td>
+                <td class="text-center">
+                            <span class="badge bg-info text-dark"
+                                  th:text="${p.nvkCategory != null ? p.nvkCategory.nvkCategoryName : 'N/A'}">
+                            </span>
+                </td>
+                <td class="text-center">
+                    <a th:href="@{/nvkProduct/edit/{id}(id=${p.nvkId})}" class="btn btn-warning btn-sm">Sửa</a>
+                    <a th:href="@{/nvkProduct/delete/{id}(id=${p.nvkId})}"
+                       class="btn btn-danger btn-sm"
+                       onclick="return confirm('Xóa sản phẩm này?');">Xóa</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="mt-3">
+            <a href="/nvkCategory" class="btn btn-secondary">&laquo; Quay lại Danh mục</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
