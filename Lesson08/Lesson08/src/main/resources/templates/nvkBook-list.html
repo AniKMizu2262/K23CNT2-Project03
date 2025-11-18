@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách Sách</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body class="container mt-4 bg-light">
+
+<div class="card shadow">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h3 class="mb-0">Quản lý Sách </h3>
+        <div>
+            <a href="/nvkBook/create" class="btn btn-warning fw-bold">
+                <i class="bi bi-plus-circle"></i> Thêm mới Sách
+            </a>
+            <a href="/nvkAuthor" class="btn btn-light text-primary ms-2">
+                <i class="bi bi-people"></i> Quản lý Tác giả
+            </a>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark text-center">
+            <tr>
+                <th>ID</th>
+                <th>Ảnh</th> <th>Tên Sách</th>
+                <th>Giá bán</th>
+                <th>Tác Giả (M-N)</th>
+                <th style="width: 150px;">Chức năng</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="book : ${nvkListBook}">
+                <td class="text-center fw-bold" th:text="${book.nvkId}"></td>
+
+                <td class="text-center">
+                    <img th:if="${book.nvkImgUrl != null}"
+                         th:src="${book.nvkImgUrl}"
+                         style="width: 60px; height: auto; border-radius: 5px; border: 1px solid #ccc;">
+                    <span th:unless="${book.nvkImgUrl != null}" class="text-muted small">No Image</span>
+                </td>
+
+                <td class="fw-bold text-primary" th:text="${book.nvkTitle}"></td>
+
+                <td class="text-end text-danger fw-bold"
+                    th:text="${#numbers.formatDecimal(book.nvkPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">
+                </td>
+
+                <td>
+                            <span th:each="auth : ${book.nvkAuthors}"
+                                  class="badge bg-info text-dark me-1"
+                                  th:text="${auth.nvkName}">
+                            </span>
+                </td>
+
+                <td class="text-center">
+                    <a th:href="@{/nvkBook/edit/{id}(id=${book.nvkId})}" class="btn btn-warning btn-sm" title="Sửa">
+                        <i class="bi bi-pencil-square"></i>
+                    </a>
+
+                    <a href="#" class="btn btn-danger btn-sm" title="Xóa (Demo)">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                </td>
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(nvkListBook)}">
+                <td colspan="6" class="text-center text-muted py-4">
+                    Chưa có dữ liệu sách nào.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

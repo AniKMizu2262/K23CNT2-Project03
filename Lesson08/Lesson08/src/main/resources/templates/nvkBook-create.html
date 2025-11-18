@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Form Sách</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body class="container mt-4">
+<div class="card col-md-10 mx-auto shadow"> <div class="card-header bg-warning">
+    <h4 class="mb-0">Thông tin Sách</h4>
+</div>
+    <div class="card-body">
+        <form th:action="@{/nvkBook/save}" th:object="${nvkBook}" method="post" enctype="multipart/form-data">
+
+            <input type="hidden" th:field="*{nvkId}">
+            <input type="hidden" th:field="*{nvkImgUrl}">
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Mã sách:</label>
+                    <input type="text" th:field="*{nvkCode}" class="form-control" placeholder="VD: B001" required>
+                </div>
+                <div class="col-md-8">
+                    <label class="form-label fw-bold">Tên sách:</label>
+                    <input type="text" th:field="*{nvkTitle}" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Giá bán:</label>
+                    <input type="number" th:field="*{nvkPrice}" class="form-control">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Số lượng:</label>
+                    <input type="number" th:field="*{nvkQuantity}" class="form-control">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Ảnh bìa:</label>
+                    <input type="file" name="nvkImageFile" class="form-control" accept="image/*">
+                    <div class="mt-2" th:if="${nvkBook.nvkImgUrl != null}">
+                        <img th:src="${nvkBook.nvkImgUrl}" width="80" class="img-thumbnail">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Mô tả:</label>
+                    <textarea th:field="*{nvkDescription}" class="form-control" rows="3"></textarea>
+                </div>
+            </div>
+
+            <div class="mb-3 p-3 border rounded bg-light">
+                <label class="form-label fw-bold text-primary">Chọn Tác Giả:</label>
+                <div class="row">
+                    <div class="col-4" th:each="auth : ${nvkListAuthor}">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox"
+                                   name="nvkAuthorIds"
+                                   th:value="${auth.nvkId}"
+                                   th:checked="${nvkBook.nvkAuthors != null and nvkBook.nvkAuthors.contains(auth)}">
+                            <label class="form-check-label" th:text="${auth.nvkName}"></label>
+                        </div>
+                    </div>
+                    <div th:if="${#lists.isEmpty(nvkListAuthor)}" class="col-12 text-danger mt-2">
+                        <i class="bi bi-exclamation-triangle"></i> Chưa có tác giả nào. <a href="/nvkAuthor/create">Thêm ngay!</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3 form-check">
+                <input type="checkbox" th:field="*{nvkActive}" class="form-check-input" id="activeBook">
+                <label class="form-check-label fw-bold" for="activeBook">Đang kinh doanh (Active)</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Lưu Sách</button>
+            <a href="/nvkBook" class="btn btn-secondary w-100 mt-2">Quay lại</a>
+        </form>
+    </div>
+</div>
+</body>
+</html>
