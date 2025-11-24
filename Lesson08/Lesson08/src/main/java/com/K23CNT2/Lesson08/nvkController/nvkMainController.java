@@ -121,4 +121,17 @@ public class nvkMainController {
         model.addAttribute("nvkListAuthor", authorService.nvkGetAll());
         return "nvkBook-create";
     }
+    // === HÀM XÓA SÁCH ===
+    @GetMapping("/nvkBook/delete/{id}")
+    public String deleteBook(@PathVariable Long id) {
+        bookService.nvkDelete(id);
+        return "redirect:/nvkBook";
+    }
+
+    // === HÀM XÓA TÁC GIẢ ===
+    @GetMapping("/nvkAuthor/delete/{id}")
+    public String deleteAuthor(@PathVariable Long id) {
+        authorService.nvkDelete(id);
+        return "redirect:/nvkAuthor";
+    }
 }
