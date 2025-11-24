@@ -28,8 +28,9 @@
                 <th>ID</th>
                 <th>Ảnh</th>
                 <th>Tên Sách</th>
-                <th>Giá bán</th>
-                <th>Số lượng</th> <th>Tác Giả (M-N)</th>
+                <th>Mô tả</th> <th>Giá bán</th>
+                <th>Số lượng</th>
+                <th>Tác Giả (M-N)</th>
                 <th>Trạng thái</th>
                 <th style="width: 150px;">Chức năng</th>
             </tr>
@@ -47,6 +48,11 @@
 
                 <td class="fw-bold text-primary" th:text="${book.nvkTitle}"></td>
 
+                <td style="max-width: 200px;" class="text-truncate"
+                    th:title="${book.nvkDescription}"
+                    th:text="${book.nvkDescription}">
+                </td>
+
                 <td class="text-end text-danger fw-bold"
                     th:text="${#numbers.formatDecimal(book.nvkPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">
                 </td>
@@ -57,19 +63,19 @@
                 </td>
 
                 <td>
-                        <span th:each="auth : ${book.nvkAuthors}"
-                              class="badge bg-info text-dark me-1"
-                              th:text="${auth.nvkName}">
-                        </span>
+                    <span th:each="auth : ${book.nvkAuthors}"
+                          class="badge bg-info text-dark me-1"
+                          th:text="${auth.nvkName}">
+                    </span>
                 </td>
 
                 <td class="text-center">
-                        <span th:if="${book.nvkActive}" class="badge bg-success">
-                            <i class="bi bi-check-circle"></i> Đang kinh doanh
-                        </span>
+                    <span th:if="${book.nvkActive}" class="badge bg-success">
+                        <i class="bi bi-check-circle"></i> KD
+                    </span>
                     <span th:unless="${book.nvkActive}" class="badge bg-secondary">
-                            <i class="bi bi-x-circle"></i> Ngừng kinh doanh
-                        </span>
+                        <i class="bi bi-x-circle"></i> Ngừng
+                    </span>
                 </td>
 
                 <td class="text-center">
@@ -83,7 +89,7 @@
             </tr>
 
             <tr th:if="${#lists.isEmpty(nvkListBook)}">
-                <td colspan="8" class="text-center text-muted py-4">
+                <td colspan="9" class="text-center text-muted py-4">
                     Chưa có dữ liệu sách nào.
                 </td>
             </tr>
