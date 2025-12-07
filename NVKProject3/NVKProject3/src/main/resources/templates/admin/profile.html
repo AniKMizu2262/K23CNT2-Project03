@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Thông tin cá nhân</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
-<body class="bg-light">
+<body class="bg-body">
 
 <div class="container mt-5">
     <div class="row justify-content-center">
@@ -44,7 +46,9 @@
                     <form th:action="@{/nvkAdmin/profile/update}" th:object="${nvkAdmin}" method="post" enctype="multipart/form-data">
 
                         <input type="hidden" th:field="*{nvkId}">
-                        <input type="hidden" th:field="*{nvkActive}"> <input type="hidden" th:field="*{nvkAvatar}"> <div class="mb-3">
+                        <input type="hidden" th:field="*{nvkActive}">
+                        <input type="hidden" th:field="*{nvkAvatar}">
+                        <div class="mb-3">
                         <label class="form-label fw-bold">Tài khoản (Không thể sửa):</label>
                         <input type="text" th:field="*{nvkUsername}" class="form-control bg-light" readonly>
                     </div>
@@ -57,7 +61,7 @@
                         <div class="mb-3">
                             <label class="form-label fw-bold">Mật khẩu:</label>
                             <input type="text" th:field="*{nvkPassword}" class="form-control" required>
-                            <div class="form-text text-danger">* Lưu ý: Đổi mật khẩu thì nhớ kỹ nhé bro!</div>
+                            <div class="form-text text-danger"></div>
                         </div>
 
                         <div class="mb-4">

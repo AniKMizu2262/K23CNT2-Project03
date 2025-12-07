@@ -16,37 +16,35 @@ public class nvkLoginController {
     @Autowired
     private nvkAdminService adminService;
 
-    // 1. Form Đăng nhập
+    // --- FORM LOGIN ---
     @GetMapping("/nvkLogin")
     public String showLoginForm() {
-        return "admin/login"; // Tạo file login.html trong thư mục admin
+        return "admin/login";
     }
 
-    // 2. Xử lý Đăng nhập
+    // --- XỬ LÝ LOGIN ---
     @PostMapping("/nvkLogin")
     public String login(@RequestParam("nvkUsername") String username,
                         @RequestParam("nvkPassword") String password,
                         HttpSession session,
                         Model model) {
 
-        // Kiểm tra tài khoản trong DB
+        // Kiểm tra thông tin
         nvkAdmin admin = adminService.login(username, password);
 
         if (admin != null) {
-            // Lưu phiên đăng nhập
-            session.setAttribute("nvkAdminLogin", admin);
-            return "redirect:/nvkAdmin"; // Vào trang chủ Admin
+            session.setAttribute("nvkAdminLogin", admin); // Lưu session
+            return "redirect:/nvkAdmin";
         } else {
-            // Báo lỗi
             model.addAttribute("error", "Tài khoản hoặc mật khẩu không đúng!");
             return "admin/login";
         }
     }
 
-    // 3. Đăng xuất
+    // --- LOGOUT ---
     @GetMapping("/nvkLogout")
     public String logout(HttpSession session) {
-        session.invalidate(); // Xóa session
+        session.invalidate(); // Hủy session
         return "redirect:/nvkLogin";
     }
 }

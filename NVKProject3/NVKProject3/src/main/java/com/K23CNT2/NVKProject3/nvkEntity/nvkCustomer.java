@@ -2,6 +2,7 @@ package com.K23CNT2.NVKProject3.nvkEntity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.util.List;
 
 @Entity
@@ -11,22 +12,24 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class nvkCustomer {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long nvkId;
 
+    // --- Tài khoản ---
     @Column(unique = true)
-    private String nvkEmail;    // Email = Tên đăng nhập
-
+    private String nvkEmail;    // Dùng làm tên đăng nhập
     private String nvkPassword;
+    private Boolean nvkActive;  // Trạng thái khóa/mở
+
+    // --- Thông tin cá nhân ---
     private String nvkFullName;
     private String nvkPhone;
-    private String nvkAddress;  // Địa chỉ nhận hàng mặc định
+    private String nvkAddress;
     private String nvkAvatar;
 
-    private Boolean nvkActive;  // Khóa/Mở tài khoản
-
-    // Danh sách đơn hàng của khách
+    // --- Quan hệ ---
     @OneToMany(mappedBy = "nvkCustomer")
     @ToString.Exclude
     private List<nvkOrder> nvkOrders;

@@ -10,35 +10,42 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class nvkProduct {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long nvkId;
 
-    private String nvkCode;       // Mã SP (IP15, DELL...)
-    private String nvkName;       // Tên SP
-    private String nvkBrand;      // Hãng (Apple, Samsung...) - MỚI THÊM
+    // --- Thông tin cơ bản ---
+    private String nvkCode;       // Mã sản phẩm
+    private String nvkName;       // Tên sản phẩm
+    private String nvkBrand;      // Hãng sản xuất
 
-    private Double nvkPrice;      // Giá bán
-    private Double nvkOldPrice;   // Giá cũ
-    private String nvkImgUrl;     // Ảnh
-    private Integer nvkQuantity;  // Tồn kho
+    // --- Giá & Kho ---
+    private Double nvkPrice;      // Giá bán hiện tại
+    private Double nvkOldPrice;   // Giá gốc (để gạch ngang)
+    private Integer nvkQuantity;  // Số lượng tồn kho
+
+    // --- Chi tiết & Hình ảnh ---
+    private String nvkImgUrl;     // Đường dẫn ảnh
 
     @Column(columnDefinition = "TEXT")
-    private String nvkDescription; // Cấu hình chi tiết (HTML/Text)
+    private String nvkDescription; // Mô tả chi tiết
 
-    // 0: Ngừng bán, 1: Đang bán, 2: Sắp về
+    // --- Trạng thái (0: Ngừng, 1: Bán, 2: Sắp về) ---
     private Integer nvkStatus;
 
-    // Liên kết sang Danh mục
+    // --- Quan hệ ---
     @ManyToOne
     @JoinColumn(name = "nvk_cate_id")
     @ToString.Exclude
     private nvkCategory nvkCategory;
 
-    // === Hàm ảo tính % giảm giá (Không lưu DB) ===
+    // --- Logic ảo (Computed) ---
     @Transient
     public Integer getNvkDiscountPercentage() {
-        if (nvkOldPrice == null || nvkOldPrice <= 0 || nvkPrice == null) return 0;
+        if (nvkOldPrice == null || nvkOldPrice <= 0 || nvkPrice == null) {
+            return 0;
+        }
         return (int) Math.round(((nvkOldPrice - nvkPrice) / nvkOldPrice) * 100);
     }
 }

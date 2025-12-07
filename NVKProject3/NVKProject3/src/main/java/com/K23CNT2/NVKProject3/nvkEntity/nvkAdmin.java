@@ -1,7 +1,10 @@
 package com.K23CNT2.NVKProject3.nvkEntity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "nvk_admins")
@@ -10,16 +13,20 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class nvkAdmin {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long nvkId;
 
+    // --- Thông tin đăng nhập ---
     @Column(unique = true)
-    private String nvkUsername; // Tên đăng nhập
+    private String nvkUsername;
+    private String nvkPassword;
 
-    private String nvkPassword; // Mật khẩu
-    private String nvkFullName; // Tên hiển thị
-    private String nvkAvatar;   // Ảnh đại diện
+    // --- Thông tin cá nhân ---
+    private String nvkFullName;
+    private String nvkAvatar;
 
-    private Boolean nvkActive;  // Trạng thái hoạt động
+    // --- Trạng thái ---
+    private Boolean nvkActive;
 }

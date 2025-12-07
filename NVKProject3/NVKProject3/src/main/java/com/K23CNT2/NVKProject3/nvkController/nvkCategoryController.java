@@ -11,37 +11,33 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/nvkAdmin/category")
 public class nvkCategoryController {
 
-    @Autowired private nvkCategoryService categoryService;
+    @Autowired
+    private nvkCategoryService categoryService;
 
-    // Danh sách
     @GetMapping("")
     public String listCategory(Model model) {
         model.addAttribute("nvkCategories", categoryService.getAllCategories());
         return "admin/category/list";
     }
 
-    // Form thêm mới
     @GetMapping("/create")
     public String createCategory(Model model) {
         model.addAttribute("nvkCategory", new nvkCategory());
         return "admin/category/form";
     }
 
-    // Sửa
     @GetMapping("/edit/{id}")
     public String editCategory(@PathVariable("id") Long id, Model model) {
         model.addAttribute("nvkCategory", categoryService.getCategoryById(id));
         return "admin/category/form";
     }
 
-    // Lưu
     @PostMapping("/save")
     public String saveCategory(@ModelAttribute("nvkCategory") nvkCategory nvkCategory) {
         categoryService.saveCategory(nvkCategory);
         return "redirect:/nvkAdmin/category";
     }
 
-    // Xóa
     @GetMapping("/delete/{id}")
     public String deleteCategory(@PathVariable("id") Long id) {
         categoryService.deleteCategory(id);

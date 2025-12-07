@@ -1,119 +1,123 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"> <title>Quản lý Đơn hàng</title>
+    <meta charset="UTF-8">
+    <title>Quản lý Đơn hàng</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body class="bg-body">
 
 <aside class="sidebar">
-    <a href="/nvkAdmin" class="sidebar-brand"><i class="bi bi-shield-check me-2"></i> NVK-ADMIN</a>
-    <div class="sidebar-content">
-        <div class="user-panel">
-            <img th:if="${session.nvkAdminLogin.nvkAvatar != null}" th:src="${session.nvkAdminLogin.nvkAvatar}" class="user-avatar">
-            <img th:unless="${session.nvkAdminLogin.nvkAvatar != null}" src="/images/sbcf-default-avatar.webp" class="user-avatar">
-            <div class="ms-2">
-                <div class="fw-bold text-white small" th:text="${session.nvkAdminLogin.nvkFullName}">Admin</div>
-                <div class="text-success" style="font-size: 0.7rem;"><i class="bi bi-circle-fill" style="font-size: 6px; vertical-align: middle;"></i> Online</div>
-            </div>
-        </div>
-        <nav class="mt-2 px-2">
-            <a href="/nvkAdmin" class="nav-link">Dashboard</a>
-            <div class="nav-header">Quản lý Kho</div>
-            <a href="/nvkAdmin/category" class="nav-link">Danh Mục</a>
-            <a href="/nvkAdmin/product" class="nav-link">Sản Phẩm</a>
-            <div class="nav-header">KINH DOANH</div>
-            <a href="/nvkAdmin/customer" class="nav-link">Khách Hàng</a>
-            <a href="/nvkAdmin/order" class="nav-link active"><i class="bi bi-cart-fill me-2"></i> Đơn Hàng</a>
-            <div class="nav-header">HỆ THỐNG</div>
-            <a href="/nvkAdmin/accounts" class="nav-link">Tài khoản Admin</a>
-        </nav>
+    <a href="/nvkAdmin" class="brand-link">
+        <i class="bi bi-shield-check me-2 text-primary"></i>
+        <span class="fw-bold">NVK ADMIN</span>
+    </a>
+
+    <div class="user-panel">
+        <img th:src="${session.nvkAdminLogin.nvkAvatar != null ? session.nvkAdminLogin.nvkAvatar : '/images/sbcf-default-avatar.webp'}"
+             class="rounded-circle"
+             style="object-fit: cover;">
+        <div style="color: #fff;" th:text="${session.nvkAdminLogin.nvkFullName}">Admin</div>
     </div>
-    <div class="sidebar-footer"><a href="/nvkLogout" class="nav-link logout-link"><i class="bi bi-box-arrow-right"></i> Đăng xuất</a></div>
+
+    <ul class="nav-sidebar">
+        <li class="nav-item">
+            <a href="/nvkAdmin" class="nav-link">
+                <i class="bi bi-speedometer2 me-2"></i> Dashboard
+            </a>
+        </li>
+
+        <li class="nav-header">KHO HÀNG</li>
+        <li class="nav-item">
+            <a href="/nvkAdmin/category" class="nav-link"><i class="bi bi-tags-fill me-2"></i> Danh mục</a>
+        </li>
+        <li class="nav-item">
+            <a href="/nvkAdmin/product" class="nav-link"><i class="bi bi-box-seam-fill me-2"></i> Sản phẩm</a>
+        </li>
+
+        <li class="nav-header">KINH DOANH</li>
+        <li class="nav-item">
+            <a href="/nvkAdmin/customer" class="nav-link"><i class="bi bi-people-fill me-2"></i> Khách hàng</a>
+        </li>
+
+        <li class="nav-item">
+            <a href="/nvkAdmin/order" class="nav-link active">
+                <i class="bi bi-cart-check-fill me-2"></i> Đơn hàng
+            </a>
+        </li>
+
+        <li class="nav-header">HỆ THỐNG</li>
+        <li class="nav-item">
+            <a href="/nvkAdmin/accounts" class="nav-link">
+                <i class="bi bi-person-lines-fill me-2"></i> Tài khoản Admin
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="/nvkLogout" class="nav-link text-danger fw-bold"><i class="bi bi-box-arrow-right me-2"></i> Đăng xuất</a>
+        </li>
+    </ul>
 </aside>
 
 <div class="content-wrapper">
-    <div class="top-navbar">
-        <div class="d-flex align-items-center gap-3">
-            <button class="btn text-dark p-0 fs-4" onclick="document.body.classList.toggle('sidebar-closed')"><i class="bi bi-list"></i></button>
-            <h4 class="mb-0 fw-bold text-dark">Danh sách Đơn hàng</h4>
-        </div>
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="document.body.classList.toggle('sidebar-closed')">
+                    <i class="bi bi-list"></i> Menu
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="content-header">
+        <h1 class="m-0 text-dark fs-3">Quản lý Đơn hàng</h1>
     </div>
 
-    <section class="content px-3 mt-4">
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0 fw-bold text-primary"><i class="bi bi-receipt-cutoff me-2"></i> Đơn đặt hàng gần đây</h5>
-
-                <div class="btn-group btn-group-sm">
-                    <button type="button" class="btn btn-outline-secondary active">Tất cả</button>
-                    <button type="button" class="btn btn-outline-secondary">Mới</button>
-                    <button type="button" class="btn btn-outline-secondary">Đang giao</button>
-                </div>
-            </div>
-
-            <div class="card-body p-0">
-                <table class="table table-hover mb-0 align-middle">
-                    <thead class="bg-light">
+    <div class="content">
+        <div class="card">
+            <div class="card-body p-0 table-responsive">
+                <table class="table table-hover text-nowrap align-middle">
+                    <thead class="table-light">
                     <tr>
-                        <th>Mã Đơn</th>
-                        <th>Khách Hàng</th>
-                        <th>Ngày Đặt</th>
-                        <th class="text-end">Tổng Tiền</th>
-                        <th class="text-center">Trạng Thái</th>
-                        <th class="text-center">Chi Tiết</th>
+                        <th>Mã</th>
+                        <th>Khách</th>
+                        <th>Ngày đặt</th>
+                        <th class="text-end">Tổng tiền</th>
+                        <th class="text-center">Trạng thái</th>
+                        <th class="text-center">Xem</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="item : ${nvkOrders}">
+                    <tr th:each="o : ${nvkOrders}">
+                        <td class="text-primary fw-bold">#[[${o.nvkCode}]]</td>
                         <td>
-                            <a th:href="@{/nvkAdmin/order/view/{id}(id=${item.nvkId})}" class="fw-bold text-decoration-none text-primary">
-                                <i class="bi bi-hash"></i><span th:text="${item.nvkCode}"></span>
-                            </a>
+                            <div class="fw-bold">[[${o.nvkReceiverName}]]</div>
+                            <small class="text-muted">[[${o.nvkReceiverPhone}]]</small>
                         </td>
-
-                        <td>
-                            <div class="fw-bold" th:text="${item.nvkReceiverName}"></div>
-                            <small class="text-muted" th:text="${item.nvkReceiverPhone}"></small>
-                        </td>
-
-                        <td class="text-muted small">
-                            <i class="bi bi-clock me-1"></i>
-                            <span th:text="${#temporals.format(item.nvkCreatedDate, 'dd/MM/yyyy HH:mm')}"></span>
-                        </td>
-
-                        <td class="text-end fw-bold text-danger" th:text="${#numbers.formatDecimal(item.nvkTotalAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
-
+                        <td class="text-muted">[[${#temporals.format(o.nvkCreatedDate, 'dd/MM HH:mm')}]]</td>
+                        <td class="text-end text-danger fw-bold">[[${#numbers.formatDecimal(o.nvkTotalAmount, 0, 'COMMA', 0, 'POINT')}]] đ</td>
                         <td class="text-center">
-                            <span th:if="${item.nvkStatus == 0}" class="badge bg-secondary">Mới đặt</span>
-                            <span th:if="${item.nvkStatus == 1}" class="badge bg-info text-dark">Đã xác nhận</span>
-                            <span th:if="${item.nvkStatus == 2}" class="badge bg-warning text-dark">Đang giao</span>
-                            <span th:if="${item.nvkStatus == 3}" class="badge bg-success">Hoàn thành</span>
-                            <span th:if="${item.nvkStatus == 4}" class="badge bg-danger">Đã hủy</span>
+                            <span th:if="${o.nvkStatus==0}" class="badge bg-secondary">Mới</span>
+                            <span th:if="${o.nvkStatus==1}" class="badge bg-info text-dark">Xác nhận</span>
+                            <span th:if="${o.nvkStatus==2}" class="badge bg-warning text-dark">Giao</span>
+                            <span th:if="${o.nvkStatus==3}" class="badge bg-success">Hoàn thành</span>
+                            <span th:if="${o.nvkStatus==4}" class="badge bg-danger">Hủy</span>
                         </td>
-
                         <td class="text-center">
-                            <a th:href="@{/nvkAdmin/order/view/{id}(id=${item.nvkId})}" class="btn btn-sm btn-outline-primary border-0">
-                                <i class="bi bi-eye-fill fs-5"></i>
+                            <a th:href="@{/nvkAdmin/order/view/{id}(id=${o.nvkId})}" class="btn btn-sm btn-primary">
+                                <i class="bi bi-eye"></i> Chi tiết
                             </a>
-                        </td>
-                    </tr>
-
-                    <tr th:if="${#lists.isEmpty(nvkOrders)}">
-                        <td colspan="6" class="text-center py-5 text-muted">
-                            <i class="bi bi-inbox fs-1 d-block mb-2 opacity-50"></i>
-                            Chưa có đơn hàng nào.
                         </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-    </section>
+    </div>
 </div>
+
 <script>function toggleSidebar() { document.body.classList.toggle('sidebar-closed'); }</script>
 </body>
 </html>

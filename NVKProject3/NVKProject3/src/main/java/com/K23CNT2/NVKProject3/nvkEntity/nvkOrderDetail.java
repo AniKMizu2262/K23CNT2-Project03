@@ -10,20 +10,21 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class nvkOrderDetail {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long nvkId;
 
+    // --- Thông tin chi tiết ---
     private Integer nvkQuantity; // Số lượng mua
-    private Double nvkPrice;     // Giá tại thời điểm chốt đơn
+    private Double nvkPrice;     // Giá tại thời điểm mua
 
-    // Sản phẩm nào?
+    // --- Quan hệ ---
     @ManyToOne
     @JoinColumn(name = "nvk_product_id")
     @ToString.Exclude
     private nvkProduct nvkProduct;
 
-    // Thuộc đơn nào?
     @ManyToOne
     @JoinColumn(name = "nvk_order_id")
     @ToString.Exclude

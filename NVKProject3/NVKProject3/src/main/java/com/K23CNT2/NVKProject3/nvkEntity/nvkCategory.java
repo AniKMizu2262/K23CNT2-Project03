@@ -2,6 +2,7 @@ package com.K23CNT2.NVKProject3.nvkEntity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.util.List;
 
 @Entity
@@ -10,16 +11,17 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-
 public class nvkCategory {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long nvkId;
 
-    private String nvkName; // Tên loại: Điện thoại, Laptop...
-    // Đã bỏ các trường thừa (Status, Icon) cho nhẹ
+    @Column(name = "nvk_name")
+    private String nvkName;
 
+    // --- Quan hệ (Relations) ---
     @OneToMany(mappedBy = "nvkCategory")
-    @ToString.Exclude // Chặn vòng lặp
+    @ToString.Exclude
     private List<nvkProduct> nvkProducts;
 }

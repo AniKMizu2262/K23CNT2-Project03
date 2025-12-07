@@ -2,6 +2,7 @@ package com.K23CNT2.NVKProject3.nvkEntity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,32 +13,32 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class nvkOrder {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long nvkId;
 
-    private String nvkCode;             // Mã đơn (DH001)
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime nvkCreatedDate; // Ngày tạo
-
+    // --- Thông tin chung ---
+    private String nvkCode;             // Mã đơn hàng
     private Double nvkTotalAmount;      // Tổng tiền
 
-    // Thông tin người nhận (đề phòng mua hộ)
-    private String nvkReceiverName;
-    private String nvkReceiverAddress;
-    private String nvkReceiverPhone;
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime nvkCreatedDate; // Ngày đặt
 
-    // 0:Mới, 1:Xác nhận, 2:Đang giao, 3:Hoàn thành, 4:Hủy
+    // --- Thông tin người nhận ---
+    private String nvkReceiverName;
+    private String nvkReceiverPhone;
+    private String nvkReceiverAddress;
+
+    // --- Trạng thái (0:Mới, 1:Xác nhận, 2:Giao, 3:Xong, 4:Hủy) ---
     private Integer nvkStatus;
 
-    // Khách nào đặt?
+    // --- Quan hệ ---
     @ManyToOne
     @JoinColumn(name = "nvk_customer_id")
     @ToString.Exclude
     private nvkCustomer nvkCustomer;
 
-    // Danh sách chi tiết
     @OneToMany(mappedBy = "nvkOrder", cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<nvkOrderDetail> nvkOrderDetails;

@@ -12,18 +12,18 @@ public class nvkWebConfig implements WebMvcConfigurer {
     @Autowired
     private AdminLoginInterceptor adminLoginInterceptor;
 
-    // 1. Cấu hình để xem được ảnh upload
+    // --- 1. Cấu hình Static Resources (Để xem ảnh Upload) ---
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/images/**")
                 .addResourceLocations("file:src/main/resources/static/images/");
     }
 
-    // 2. bảo vệ (Interceptor)
+    // --- 2. Cấu hình Interceptor (Bảo mật Admin) ---
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(adminLoginInterceptor)
-                .addPathPatterns("/nvkAdmin/**") // Chặn tất cả các trang Admin
-                .excludePathPatterns("/nvkLogin/**", "/nvkAdmin/assets/**"); // Trừ trang Login ra
+                .addPathPatterns("/nvkAdmin/**")              // Chặn toàn bộ trang Admin
+                .excludePathPatterns("/nvkLogin/**", "/nvkAdmin/assets/**"); // Trừ trang Login và CSS/JS
     }
 }
