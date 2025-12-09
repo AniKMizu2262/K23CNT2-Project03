@@ -9,78 +9,137 @@
 </head>
 <body class="bg-body">
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
+<aside th:replace="~{fragments/sidebar :: sidebar('')}"></aside>
 
-        <div class="col-md-4">
-            <div class="card shadow text-center p-4 mb-3">
-                <div class="mb-3 mx-auto">
-                    <img th:if="${nvkAdmin.nvkAvatar != null}"
-                         th:src="${nvkAdmin.nvkAvatar}"
-                         class="rounded-circle border border-3 border-primary shadow-sm"
-                         style="width: 150px; height: 150px; object-fit: cover;">
+<div class="content-wrapper">
 
-                    <img th:unless="${nvkAdmin.nvkAvatar != null}"
-                         src="https://via.placeholder.com/150"
-                         class="rounded-circle border border-3 border-secondary"
-                         style="width: 150px; height: 150px;">
-                </div>
-                <h4 class="fw-bold" th:text="${nvkAdmin.nvkFullName}">Admin Name</h4>
-                <p class="text-muted mb-1" th:text="'@' + ${nvkAdmin.nvkUsername}"></p>
-                <span class="badge bg-success">Quản trị viên</span>
+    <div class="content-header mb-4 p-4 rounded shadow-sm d-flex align-items-center gap-3">
+        <button class="btn btn-outline-secondary border-0" onclick="document.body.classList.toggle('sidebar-closed')"
+                title="Menu">
+            <i class="bi bi-list fs-4"></i>
+        </button>
+        <div>
+            <h1 class="fw-bold fs-3 m-0">Hồ sơ cá nhân</h1>
+            <small class="text-muted">Quản lý thông tin tài khoản và bảo mật</small>
+        </div>
+    </div>
 
-                <div class="mt-4">
-                    <a href="/nvkAdmin" class="btn btn-outline-secondary w-100">
-                        <i class="bi bi-arrow-left"></i> Quay lại Dashboard
-                    </a>
+    <div class="content">
+        <div class="row">
+
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-lg border-0 h-100">
+                    <div class="card-body text-center p-5">
+                        <div class="mb-4 position-relative d-inline-block">
+                            <img th:src="${nvkAdmin.nvkAvatar != null && nvkAdmin.nvkAvatar != '' ? nvkAdmin.nvkAvatar : 'https://ui-avatars.com/api/?name=' + nvkAdmin.nvkFullName + '&background=random&size=200'}"
+                                 class="rounded-circle border border-4 border-light shadow"
+                                 style="width: 140px; height: 140px; object-fit: cover;"
+                                 onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Admin&background=random';">
+
+                            <span class="position-absolute bottom-0 end-0 p-2 bg-success border border-light rounded-circle"
+                                  title="Đang hoạt động"></span>
+                        </div>
+
+                        <h3 class="fw-bold text-primary mb-1">[[${nvkAdmin.nvkFullName}]]</h3>
+                        <p class="text-muted mb-3">@[[${nvkAdmin.nvkUsername}]]</p>
+
+                        <div class="d-flex justify-content-center">
+                            <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary border border-primary-subtle px-3 py-2">
+                                <i class="bi bi-shield-check me-1"></i> Quản trị viên
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-md-8">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="bi bi-person-gear"></i> Cập nhật thông tin</h5>
-                </div>
-                <div class="card-body">
-                    <form th:action="@{/nvkAdmin/profile/update}" th:object="${nvkAdmin}" method="post" enctype="multipart/form-data">
-
-                        <input type="hidden" th:field="*{nvkId}">
-                        <input type="hidden" th:field="*{nvkActive}">
-                        <input type="hidden" th:field="*{nvkAvatar}">
-                        <div class="mb-3">
-                        <label class="form-label fw-bold">Tài khoản (Không thể sửa):</label>
-                        <input type="text" th:field="*{nvkUsername}" class="form-control bg-light" readonly>
+            <div class="col-md-8 mb-4">
+                <div class="card shadow-lg border-0 h-100">
+                    <div class="card-header py-3 bg-transparent border-bottom">
+                        <h5 class="card-title m-0 fw-bold text-primary text-uppercase small">
+                            <i class="bi bi-person-gear me-2"></i> Cập nhật thông tin
+                        </h5>
                     </div>
 
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Họ và Tên:</label>
-                            <input type="text" th:field="*{nvkFullName}" class="form-control" required>
+                    <form th:action="@{/nvkAdmin/profile/update}" th:object="${nvkAdmin}" method="post"
+                          enctype="multipart/form-data">
+                        <div class="card-body p-4">
+
+                            <input type="hidden" th:field="*{nvkId}">
+                            <input type="hidden" th:field="*{nvkActive}">
+                            <input type="hidden" th:field="*{nvkAvatar}">
+
+                            <div class="mb-3">
+                                <label class="form-label small text-uppercase text-muted fw-bold">Tài khoản (Không thể
+                                    sửa)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-muted border-end-0"><i
+                                            class="bi bi-person-badge-fill"></i></span>
+                                    <input type="text" th:field="*{nvkUsername}"
+                                           class="form-control bg-light text-muted border-start-0 fw-bold" readonly>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label small text-uppercase text-muted fw-bold">Họ và Tên</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i
+                                            class="bi bi-person-vcard text-primary"></i></span>
+                                    <input type="text" th:field="*{nvkFullName}" class="form-control" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label small text-uppercase text-muted fw-bold">Mật khẩu</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-key text-primary"></i></span>
+                                    <input type="text" th:field="*{nvkPassword}" class="form-control" required>
+                                </div>
+                                <div class="form-text text-white-50 small fst-italic mt-1">
+                                    <i class="bi bi-info-circle"></i> Nhập mật khẩu mới để đổi, hoặc giữ nguyên mật khẩu
+                                    cũ.
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label small text-uppercase text-muted fw-bold">Ảnh đại diện</label>
+
+                                <div class="form-control d-flex align-items-center p-0 ps-2" style="height: 38px;">
+                                    <img th:src="${nvkAdmin.nvkAvatar != null && nvkAdmin.nvkAvatar != '' ? nvkAdmin.nvkAvatar : 'https://ui-avatars.com/api/?name=' + nvkAdmin.nvkFullName + '&background=random'}"
+                                         width="28" height="28"
+                                         class="rounded-circle border shadow-sm flex-shrink-0"
+                                         style="object-fit: cover;"
+                                         onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Admin&background=random';">
+
+                                    <div class="flex-grow-1">
+                                        <input type="file" name="nvkImageFile"
+                                               class="form-control border-0 bg-transparent shadow-none"
+                                               style="height: 36px; padding-top: 6px; font-size: 0.9rem;">
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Mật khẩu:</label>
-                            <input type="text" th:field="*{nvkPassword}" class="form-control" required>
-                            <div class="form-text text-danger"></div>
-                        </div>
+                        <div class="card-footer bg-transparent border-top p-4 d-flex justify-content-between align-items-center">
+                            <a href="/nvkAdmin" class="btn btn-outline-secondary fw-bold px-3">
+                                Trang chủ
+                            </a>
 
-                        <div class="mb-4">
-                            <label class="form-label fw-bold">Đổi ảnh đại diện:</label>
-                            <input type="file" name="nvkImageFile" class="form-control" accept="image/*">
-                        </div>
-
-                        <div class="text-end">
-                            <button type="submit" class="btn btn-success px-4 fw-bold">
-                                <i class="bi bi-save"></i> Lưu Thay Đổi
+                            <button type="submit" class="btn btn-primary btn-lg px-5 fw-bold shadow-sm">
+                                LƯU THAY ĐỔI
                             </button>
                         </div>
+
                     </form>
                 </div>
             </div>
-        </div>
 
+        </div>
     </div>
 </div>
 
+<script>function toggleSidebar() {
+    document.body.classList.toggle('sidebar-closed');
+}</script>
 </body>
 </html>

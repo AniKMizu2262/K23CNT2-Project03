@@ -12,11 +12,11 @@ public class nvkWebConfig implements WebMvcConfigurer {
     @Autowired
     private AdminLoginInterceptor adminLoginInterceptor;
 
-    // --- 1. Cấu hình Static Resources (Để xem ảnh Upload) ---
+    // --- 1. Cấu hình Static Resources (Đã nâng cấp) ---
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/images/**")
-                .addResourceLocations("file:src/main/resources/static/images/");
+                .addResourceLocations("file:src/main/resources/static/images/", "classpath:/static/images/");
     }
 
     // --- 2. Cấu hình Interceptor (Bảo mật Admin) ---
