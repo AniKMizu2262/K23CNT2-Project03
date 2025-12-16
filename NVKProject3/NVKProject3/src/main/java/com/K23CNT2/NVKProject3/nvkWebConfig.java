@@ -26,4 +26,5 @@ public class nvkWebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/nvkAdmin/**")              // Chặn toàn bộ trang Admin
                 .excludePathPatterns("/nvkLogin/**", "/nvkAdmin/assets/**"); // Trừ trang Login và CSS/JS
     }
+
 }

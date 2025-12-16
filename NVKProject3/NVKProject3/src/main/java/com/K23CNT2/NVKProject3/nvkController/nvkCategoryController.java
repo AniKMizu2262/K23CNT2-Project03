@@ -8,12 +8,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/nvkAdmin/category")
+@RequestMapping("/nvkAdmin/category") // Prefix dành riêng cho Admin
 public class nvkCategoryController {
 
     @Autowired
     private nvkCategoryService categoryService;
 
+    // Admin xem danh sách quản lý
     @GetMapping("")
     public String listCategory(Model model) {
         model.addAttribute("nvkCategories", categoryService.getAllCategories());

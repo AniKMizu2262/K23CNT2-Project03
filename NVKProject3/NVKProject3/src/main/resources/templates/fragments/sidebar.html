@@ -52,6 +52,12 @@
         </li>
 
         <li class="nav-item">
+            <a href="/nvkAdmin/review" class="nav-link" th:classappend="${activePage == 'review' ? 'active' : ''}">
+                <i class="bi bi-chat-right-quote-fill me-2"></i> Đánh giá/Bình luận
+            </a>
+        </li>
+
+        <li class="nav-item">
             <a href="/nvkAdmin/order" class="nav-link" th:classappend="${activePage == 'order' ? 'active' : ''}">
                 <i class="bi bi-cart-check-fill me-2"></i> Đơn hàng
             </a>

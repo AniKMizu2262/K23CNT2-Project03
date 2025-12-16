@@ -11,18 +11,65 @@ import java.util.Optional;
 public class nvkCustomerService {
 
     @Autowired
-    private nvkCustomerRepository repo;
+    private nvkCustomerRepository nvkCustomerRepository;
 
-    // --- Xử lý Đăng nhập (Frontend) ---
+    // ======================
+    // 1. LOGIN
+    // ======================
     public nvkCustomer login(String email, String password) {
-        // Tìm khách hàng theo Email
-        Optional<nvkCustomer> op = repo.findByNvkEmail(email);
+        // Tìm user theo email
+        nvkCustomer customer = nvkCustomerRepository.findByNvkEmail(email);
 
-        // Kiểm tra mật khẩu
-        if (op.isPresent() && op.get().getNvkPassword().equals(password)) {
-            return op.get();
+        // Check mật khẩu
+        if (customer != null && customer.getNvkPassword().equals(password)) {
+            return customer;
         }
+        return null; // Sai thông tin
+    }
 
+    // ======================
+    // 2. LẤY USER THEO ID (Thêm cái này để Controller gọi cho tiện)
+    // ======================
+    public nvkCustomer getCustomerById(Long id) {
+        Optional<nvkCustomer> customer = nvkCustomerRepository.findById(id);
+        return customer.orElse(null);
+    }
+
+    // ======================
+    // 3. UPDATE CUSTOMER INFO
+    // ======================
+    public nvkCustomer updateCustomer(nvkCustomer customer) {
+        // Lấy user trong DB để tránh ghi đè những trường không được chỉnh sửa (như password, email)
+        nvkCustomer existingUser = nvkCustomerRepository.findById(customer.getNvkId()).orElse(null);
+
+        if (existingUser != null) {
+            // Cập nhật các trường cho phép thay đổi
+            existingUser.setNvkFullName(customer.getNvkFullName());
+            existingUser.setNvkPhone(customer.getNvkPhone());
+            existingUser.setNvkAddress(customer.getNvkAddress());
+
+            // Cập nhật Avatar (nếu người dùng có nhập link mới)
+            existingUser.setNvkAvatar(customer.getNvkAvatar());
+
+            return nvkCustomerRepository.save(existingUser);
+        }
         return null;
+    }
+
+    // ======================
+    // 4. ĐỔI MẬT KHẨU
+    // ======================
+    public boolean changePassword(Long customerId, String oldPass, String newPass) {
+        nvkCustomer existingUser = nvkCustomerRepository.findById(customerId).orElse(null);
+
+        if (existingUser != null) {
+            // Kiểm tra mật khẩu cũ
+            if (existingUser.getNvkPassword().equals(oldPass)) {
+                existingUser.setNvkPassword(newPass); // Gán mật khẩu mới
+                nvkCustomerRepository.save(existingUser); // Lưu lại
+                return true; // Thành công
+            }
+        }
+        return false; // Sai mật khẩu cũ hoặc lỗi
     }
 }

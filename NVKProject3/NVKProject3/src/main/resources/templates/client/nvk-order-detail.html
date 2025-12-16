@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/client/head :: head}"></head>
+
+<body style="background-color: #1a1d29; color: #fff;">
+
+<nav th:replace="~{fragments/client/header :: header}"></nav>
+
+<main class="py-5">
+    <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <a href="/nvk-order/history" class="btn btn-outline-light rounded-pill px-4">
+                <i class="bi bi-arrow-left me-2"></i> Quay lại danh sách
+            </a>
+            
+        </div>
+
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden" style="background-color: #262b3c; color: white;">
+
+            <div class="card-header bg-transparent border-bottom border-secondary p-4">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    <div>
+                        <h6 class="text-secondary text-uppercase mb-1">Mã đơn hàng</h6>
+                        <h3 class="fw-bold text-info mb-0">#[[${nvkOrder.nvkCode}]]</h3>
+                        <small class="text-white-50">
+                            <i class="bi bi-calendar3 me-1"></i> Ngày đặt:
+                            [[${#temporals.format(nvkOrder.nvkCreatedDate, 'dd/MM/yyyy HH:mm')}]]
+                        </small>
+                    </div>
+                    <div class="text-end">
+                        <h6 class="text-secondary text-uppercase mb-2">Trạng thái</h6>
+                        <span th:if="${nvkOrder.nvkStatus == 0}" class="badge bg-secondary fs-6 px-3 py-2 rounded-pill"><i
+                                class="bi bi-hourglass-split me-1"></i> Chờ xác nhận</span>
+                        <span th:if="${nvkOrder.nvkStatus == 1}" class="badge bg-primary fs-6 px-3 py-2 rounded-pill"><i
+                                class="bi bi-box-seam me-1"></i> Đã xác nhận</span>
+                        <span th:if="${nvkOrder.nvkStatus == 2}"
+                              class="badge bg-info text-dark fs-6 px-3 py-2 rounded-pill"><i
+                                class="bi bi-truck me-1"></i> Đang giao hàng</span>
+                        <span th:if="${nvkOrder.nvkStatus == 3}" class="badge bg-success fs-6 px-3 py-2 rounded-pill"><i
+                                class="bi bi-check-circle-fill me-1"></i> Giao thành công</span>
+                        <span th:if="${nvkOrder.nvkStatus == 4}" class="badge bg-danger fs-6 px-3 py-2 rounded-pill"><i
+                                class="bi bi-x-circle-fill me-1"></i> Đã hủy</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body p-4">
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <div class="p-4 rounded-4 h-100" style="background-color: #1a1d29;">
+                            <h5 class="fw-bold text-primary mb-3"><i class="bi bi-geo-alt-fill me-2"></i> Địa chỉ nhận
+                                hàng</h5>
+                            <p class="mb-2"><strong class="text-white">Người nhận:</strong>
+                                [[${nvkOrder.nvkReceiverName}]]</p>
+                            <p class="mb-2"><strong class="text-white">Số điện thoại:</strong>
+                                [[${nvkOrder.nvkReceiverPhone}]]</p>
+                            <p class="mb-0 text-white-50">[[${nvkOrder.nvkReceiverAddress}]]</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-4 rounded-4 h-100" style="background-color: #1a1d29;">
+                            <h5 class="fw-bold text-primary mb-3"><i class="bi bi-credit-card-2-front-fill me-2"></i>
+                                Thanh toán</h5>
+                            <p class="mb-2"><strong class="text-white">Phương thức:</strong> Thanh toán khi nhận hàng
+                                (COD)</p>
+                            <p class="mb-0">
+                                <strong class="text-white">Trạng thái:</strong>
+                                <span th:if="${nvkOrder.nvkStatus == 3}"
+                                      class="text-success fw-bold">Đã thanh toán</span>
+                                <span th:unless="${nvkOrder.nvkStatus == 3}" class="text-warning fw-bold">Chưa thanh toán</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <h5 class="fw-bold mb-3 mt-5">Chi tiết sản phẩm</h5>
+                <div class="table-responsive rounded-3 border border-secondary mb-4">
+                    <table class="table table-dark table-striped mb-0 align-middle">
+                        <thead class="text-secondary text-uppercase small">
+                        <tr>
+                            <th class="py-3 ps-4" style="width: 40%;">Sản phẩm</th>
+                            <th class="py-3 text-center">Đơn giá</th>
+                            <th class="py-3 text-center">Số lượng</th>
+                            <th class="py-3 text-end pe-4">Thành tiền</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="detail : ${nvkOrderDetails}">
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <img th:src="${detail.nvkProduct.nvkImgUrl != null && detail.nvkProduct.nvkImgUrl.startsWith('http') ? detail.nvkProduct.nvkImgUrl : '/images/' + detail.nvkProduct.nvkImgUrl}"
+                                         class="rounded border border-secondary me-3" width="60" height="60"
+                                         style="object-fit: cover;"
+                                         onerror="this.src='https://placehold.co/60x60?text=No+Image'">
+
+                                    <div>
+                                        <span class="fw-bold d-block text-white">[[${detail.nvkProduct.nvkName}]]</span>
+                                        <small class="text-white-50">Mã SP: [[${detail.nvkProduct.nvkId}]]</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-center text-white-50">[[${#numbers.formatDecimal(detail.nvkPrice, 0,
+                                'COMMA', 0, 'POINT')}]] ₫
+                            </td>
+                            <td class="text-center fw-bold">x[[${detail.nvkQuantity}]]</td>
+                            <td class="text-end pe-4 fw-bold text-white">[[${#numbers.formatDecimal(detail.nvkPrice *
+                                detail.nvkQuantity, 0, 'COMMA', 0, 'POINT')}]] ₫
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-6 d-flex align-items-end">
+                        <div th:if="${nvkOrder.nvkStatus == 0}">
+                            <button class="btn btn-outline-danger rounded-pill px-4 fw-bold"
+                                    th:onclick="'confirmCancel(' + ${nvkOrder.nvkId} + ')'">
+                                <i class="bi bi-x-circle me-2"></i> Hủy đơn hàng này
+                            </button>
+                            <p class="text-white-50 small mt-2 mb-0">* Chỉ có thể hủy khi đơn hàng chưa được xác
+                                nhận.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="p-3 rounded-3 ms-md-auto" style="max-width: 400px; background-color: #1a1d29;">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-white-50">Tổng tiền hàng:</span>
+                                <span class="fw-bold">[[${#numbers.formatDecimal(nvkOrder.nvkTotalAmount, 0, 'COMMA', 0, 'POINT')}]] ₫</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3 border-bottom border-secondary pb-3">
+                                <span class="text-white-50">Phí vận chuyển:</span>
+                                <span class="text-success fw-bold">Miễn phí</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-white fs-5 fw-bold">Tổng thanh toán:</span>
+                                <span class="text-warning fs-3 fw-bold">[[${#numbers.formatDecimal(nvkOrder.nvkTotalAmount, 0, 'COMMA', 0, 'POINT')}]] ₫</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/client/footer :: footer}"></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function confirmCancel(orderId) {
+        Swal.fire({
+            title: 'Hủy đơn hàng?',
+            text: "Bạn có chắc chắn muốn hủy đơn hàng này không?",
+            icon: 'warning',
+            background: '#1e293b',
+            color: '#fff',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Đồng ý hủy',
+            cancelButtonText: 'Giữ lại'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/nvk-order/cancel/' + orderId;
+            }
+        })
+    }
+</script>
+
+</body>
+</html>
