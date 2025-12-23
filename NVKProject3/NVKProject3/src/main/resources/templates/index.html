@@ -9,90 +9,130 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
 
     <style>
-        /* CSS CHUNG CHO CARD */
+        /* [GIỮ NGUYÊN CSS CỦA BRO - KHÔNG THAY ĐỔI MÀU NỀN] */
+
+        /* 1. BANNER */
+        .main-banner-item {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .main-banner-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* DOTS BANNER */
+        .owl-theme .owl-dots .owl-dot span {
+            width: 12px;
+            height: 12px;
+            margin: 5px 7px;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .owl-theme .owl-dots .owl-dot.active span {
+            background: #0d6efd;
+            transform: scale(1.2);
+        }
+
+        /* 2. CARD SẢN PHẨM */
         .card {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: transparent;
             transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1); /* Viền nhẹ cho nền tối */
-            background-color: transparent; /* Để hiện màu nền của body */
         }
 
         .card:hover {
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5) !important;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+            border-color: #0d6efd;
             transform: translateY(-5px);
-            border-color: #0d6efd; /* Hover viền xanh */
         }
 
-        /* Badge giảm giá (Góc phải) */
+        /* KHUNG ẢNH CĂN GIỮA (Đã căn chỉnh) */
+        .card-img-container {
+            width: 100%;
+            height: 230px;
+            display: flex; /* Dùng Flexbox để căn giữa */
+            align-items: center; /* Căn giữa dọc */
+            justify-content: center; /* Căn giữa ngang */
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px 8px 0 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-img-container a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .card-img-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; /* Ảnh giữ tỷ lệ, không bị méo */
+            transition: transform 0.4s ease;
+        }
+
+        .card:hover .card-img-container img {
+            transform: scale(1.08);
+        }
+
+        /* BADGES */
         .badge-discount {
             position: absolute;
-            top: 15px;
-            right: 15px;
+            top: 10px;
+            right: 10px;
             background-color: #dc3545;
             color: white;
-            padding: 5px 12px;
-            border-radius: 8px;
-            font-weight: 800;
-            font-size: 0.85rem;
-            z-index: 10;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Giá cũ gạch ngang */
-        .price-old {
-            color: #adb5bd !important;
-            opacity: 0.8;
-            font-size: 0.9rem;
-            text-decoration: line-through;
-            margin-left: 8px;
-        }
-
-        /* Badge Category */
-        .badge-category {
-            background-color: #0d6efd;
-            color: white;
-            font-size: 0.7rem;
-            font-weight: 600;
-            padding: 4px 10px;
+            padding: 4px 8px;
             border-radius: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: inline-block;
-            margin-bottom: 10px;
-        }
-
-        .card.sold-out {
-            opacity: 0.6;
-            pointer-events: none;
-        }
-
-        .badge-status-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 8px 12px;
-            font-weight: bold;
-            border: 2px solid #fff;
-            z-index: 20;
-            color: white;
-            background: #000;
+            font-weight: 700;
+            font-size: 0.8rem;
+            z-index: 10;
         }
 
         .badge-coming-soon {
             position: absolute;
-            top: 15px;
-            left: 15px;
+            top: 10px;
+            left: 10px;
             background-color: #ffc107;
             color: #000;
-            padding: 5px 10px;
-            border-radius: 8px;
+            padding: 4px 8px;
+            border-radius: 4px;
             font-weight: 700;
+            font-size: 0.75rem;
             z-index: 10;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
-        .hover-zoom:hover {
-            transform: scale(1.05);
-            transition: transform 0.3s;
+        .badge-category {
+            background-color: #0d6efd;
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .price-old {
+            color: #adb5bd !important;
+            opacity: 0.7;
+            font-size: 0.9rem;
+            text-decoration: line-through;
+            margin-left: 8px;
         }
     </style>
 </head>
@@ -103,21 +143,36 @@
 
 <main class="flex-grow-1 bg-body-tertiary">
 
-    <section class="py-5 text-center container border-bottom border-secondary">
-        <div class="row py-lg-4">
-            <div class="col-lg-6 col-md-8 mx-auto">
-                <h1 class="fw-bold text-white display-5">NVK STORE</h1>
-                <p class="lead text-secondary mb-4">Công nghệ đỉnh cao - Giá cả phải chăng.</p>
-                <a href="#products" class="btn btn-primary btn-lg fw-bold px-5 rounded-pill shadow-sm">Mua ngay</a>
+    <section class="container mt-4 mb-5">
+        <div class="owl-carousel owl-theme" id="nvkBannerSlider">
+            <div class="item">
+                <div class="main-banner-item"><img
+                        src="https://placehold.co/1200x400/111/fff?text=SIEU+SALE+IPHONE+15+PRO+MAX&font=roboto"
+                        alt="Banner 1"></div>
+            </div>
+            <div class="item">
+                <div class="main-banner-item"><img
+                        src="https://placehold.co/1200x400/0d6efd/fff?text=LAPTOP+GAMING+GIAM+SOC+20%25&font=roboto"
+                        alt="Banner 2"></div>
+            </div>
+            <div class="item">
+                <div class="main-banner-item"><img
+                        src="https://placehold.co/1200x400/ffc107/000?text=PHU+KIEN+CHINH+HANG+-+MUA+1+TANG+1&font=roboto"
+                        alt="Banner 3"></div>
             </div>
         </div>
     </section>
 
-    <section class="container my-5" th:if="${listRandom != null && !listRandom.isEmpty()}">
-        <h3 class="mb-4 text-white">🔥 Có thể bạn quan tâm</h3>
+    <section class="container my-5">
+        <h3 class="mb-4 text-white border-start border-4 border-warning ps-3">🔥 Có thể bạn quan tâm</h3>
 
-        <div class="owl-carousel owl-theme" id="nvkRandomSlider">
-            <div class="item" th:each="sp : ${listRandom}">
+        <div th:if="${listRandom == null || listRandom.isEmpty()}" class="text-white opacity-50 fst-italic">
+            Đang cập nhật sản phẩm gợi ý...
+        </div>
+
+        <div class="owl-carousel owl-theme" id="nvkRandomSlider" th:if="${listRandom != null && !listRandom.isEmpty()}">
+            <div class="item"
+                 th:each="sp : ${listRandom.?[nvkStatus == 1 and nvkQuantity != null and nvkQuantity > 0]}">
                 <div class="card h-100 shadow-sm border-0 overflow-hidden position-relative">
 
                     <div class="badge-discount"
@@ -125,12 +180,13 @@
                         -[[${#numbers.formatInteger((sp.nvkOldPrice - sp.nvkPrice) / sp.nvkOldPrice * 100, 0)}]]%
                     </div>
 
-                    <div class="position-relative bg-white text-center p-3">
-                        <a th:href="@{'/nvk-product/detail/' + ${sp.nvkId}}" class="d-block">
-                            <img th:src="${sp.nvkImgUrl != null ? sp.nvkImgUrl : '/images/no-image.png'}"
-                                 class="card-img-top hover-zoom"
-                                 style="height: 180px; object-fit: contain;"
-                                 onerror="this.src='https://via.placeholder.com/200?text=No+Image'">
+                    <div class="card-img-container">
+                        <a th:href="@{'/nvk-product/detail/' + ${sp.nvkId}}">
+                            <img th:src="${(sp.nvkImgUrl != null && sp.nvkImgUrl != '')
+                                    ? '/nvk-product-img/' + sp.nvkImgUrl
+                                    : 'https://placehold.co/200x200?text=No+Image'}"
+                                 alt="Product Image"
+                                 onerror="this.src='https://placehold.co/200x200?text=Error'">
                         </a>
                     </div>
 
@@ -140,98 +196,130 @@
                                th:text="${sp.nvkName}">Tên SP</a>
                         </h5>
 
-                        <div>
-                            <span class="badge-category" th:text="${sp.nvkCategory?.nvkName ?: 'KHÁC'}">Category</span>
+                        <div><span class="badge-category" th:text="${sp.nvkCategory?.nvkName ?: 'KHÁC'}">Category</span>
                         </div>
 
                         <div class="mb-3 mt-auto">
                             <span class="text-primary fw-bold fs-5">
-                                <span th:if="${sp.nvkPrice != null}">[[${#numbers.formatDecimal(sp.nvkPrice, 0, 'COMMA', 0, 'POINT')}]] ₫</span>
+                                <span th:if="${sp.nvkPrice != null}">[[${#numbers.formatDecimal(sp.nvkPrice, 0, 'POINT', 0, 'COMMA')}]] ₫</span>
                                 <span th:unless="${sp.nvkPrice != null}">Liên hệ</span>
                             </span>
-
                             <span class="price-old"
                                   th:if="${sp.nvkOldPrice != null && sp.nvkPrice != null && sp.nvkOldPrice > sp.nvkPrice}">
-                                [[${#numbers.formatDecimal(sp.nvkOldPrice, 0, 'COMMA', 0, 'POINT')}]] ₫
+                                [[${#numbers.formatDecimal(sp.nvkOldPrice, 0, 'POINT', 0, 'COMMA')}]] ₫
                             </span>
                         </div>
-
                         <a th:href="@{'/nvk-product/detail/' + ${sp.nvkId}}"
-                           class="btn btn-outline-primary btn-sm rounded-pill w-100 fw-bold">Xem ngay</a>
+                           class="btn btn-outline-primary btn-sm rounded-pill w-100 fw-bold">Xem chi tiết</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <div class="container py-5" id="products">
+    <section class="container my-5" th:if="${nvkProducts != null}">
+        <h3 class="mb-4 text-white border-start border-4 border-info ps-3">🚀 Sản phẩm sắp về</h3>
+
+        <div th:if="${nvkProducts.?[nvkStatus == 2].isEmpty()}" class="text-white opacity-50 fst-italic">
+            Hiện chưa có sản phẩm sắp về.
+        </div>
+
+        <div class="owl-carousel owl-theme" id="nvkComingSoonSlider"
+             th:unless="${nvkProducts.?[nvkStatus == 2].isEmpty()}">
+
+            <div class="item" th:each="p : ${nvkProducts.?[nvkStatus == 2]}">
+                <div class="card h-100 shadow-sm border-0 overflow-hidden position-relative">
+                    <div class="badge-coming-soon"><i class="bi bi-clock-history me-1"></i> SẮP VỀ</div>
+
+                    <div class="card-img-container">
+                        <a th:href="@{'/nvk-product/detail/' + ${p.nvkId}}">
+                            <img th:src="${(p.nvkImgUrl != null && p.nvkImgUrl != '')
+                                    ? '/nvk-product-img/' + p.nvkImgUrl
+                                    : 'https://placehold.co/200x200?text=No+Image'}"
+                                 alt="Product Image" onerror="this.src='https://placehold.co/200x200?text=Error'">
+                        </a>
+                    </div>
+
+                    <div class="card-body d-flex flex-column bg-dark bg-opacity-25 pt-4">
+                        <h5 class="card-title text-truncate fw-bold mb-2">
+                            <a th:href="@{'/nvk-product/detail/' + ${p.nvkId}}" class="text-decoration-none text-white"
+                               th:text="${p.nvkName}">Tên SP</a>
+                        </h5>
+                        <div><span class="badge-category" th:text="${p.nvkCategory?.nvkName ?: 'KHÁC'}">Category</span>
+                        </div>
+
+                        <div class="mb-3 mt-auto">
+                            <span class="text-info fw-bold fs-5">
+                                <span th:if="${p.nvkPrice != null && p.nvkPrice > 0}">[[${#numbers.formatDecimal(p.nvkPrice, 0, 'POINT', 0, 'COMMA')}]] ₫</span>
+                                <span th:unless="${p.nvkPrice != null && p.nvkPrice > 0}">Giá dự kiến</span>
+                            </span>
+                        </div>
+                        <button class="btn btn-secondary btn-sm rounded-pill w-100 fw-bold opacity-75" disabled
+                                style="cursor: not-allowed;">
+                            <i class="bi bi-hourglass-split me-1"></i> Chờ ngày mở bán
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container py-5" id="products" th:if="${nvkProducts != null}">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h3 class="fw-bold text-white m-0 border-start border-4 border-primary ps-3">Sản phẩm nổi bật</h3>
             <a href="/nvk-categories" class="btn btn-outline-primary btn-sm fw-bold">Xem tất cả <i
-                    class="bi bi-arrow-right"></i></a>
+                    class="bi bi-arrow-right ms-1"></i></a>
         </div>
 
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-            <div class="col" th:each="p : ${nvkProducts}">
-                <div class="card h-100 shadow-sm border-0 overflow-hidden position-relative"
-                     th:classappend="${(p.nvkQuantity != null && p.nvkQuantity == 0 && p.nvkStatus == 1) || p.nvkStatus == 0} ? 'sold-out' : ''">
+            <div class="col"
+                 th:each="p, loopStat : ${nvkProducts.?[nvkStatus == 1 and nvkQuantity != null and nvkQuantity > 0]}"
+                 th:if="${loopStat.index < 8}">
 
+                <div class="card h-100 shadow-sm border-0 overflow-hidden position-relative">
                     <div class="badge-discount"
                          th:if="${p.nvkOldPrice != null && p.nvkPrice != null && p.nvkOldPrice > p.nvkPrice}">
                         -[[${#numbers.formatInteger((p.nvkOldPrice - p.nvkPrice) / p.nvkOldPrice * 100, 0)}]]%
                     </div>
 
-                    <div class="badge-status-center bg-danger" th:if="${p.nvkStatus == 0}">NGỪNG BÁN</div>
-                    <div class="badge-status-center bg-dark"
-                         th:if="${p.nvkQuantity != null && p.nvkQuantity == 0 && p.nvkStatus == 1}">HẾT HÀNG
-                    </div>
-                    <div class="badge-coming-soon" th:if="${p.nvkStatus == 2}">SẮP VỀ</div>
-
-                    <div class="position-relative bg-white text-center p-3">
-                        <a th:href="@{/nvk-product/detail/{id}(id=${p.nvkId})}" class="d-block">
-                            <img th:src="${p.nvkImgUrl != null ? p.nvkImgUrl : '/images/no-image.png'}"
-                                 class="card-img-top hover-zoom" alt="Product Image"
-                                 onerror="this.src='https://via.placeholder.com/200?text=No+Image'"
-                                 style="height: 180px; object-fit: contain;">
+                    <div class="card-img-container">
+                        <a th:href="@{'/nvk-product/detail/' + ${p.nvkId}}">
+                            <img th:src="${(p.nvkImgUrl != null && p.nvkImgUrl != '')
+                                    ? '/nvk-product-img/' + p.nvkImgUrl
+                                    : 'https://placehold.co/200x200?text=No+Image'}"
+                                 alt="Product Image" onerror="this.src='https://placehold.co/200x200?text=Error'">
                         </a>
                     </div>
 
                     <div class="card-body d-flex flex-column bg-dark bg-opacity-25 pt-4">
-                        <h5 class="card-title text-truncate fw-bold mb-2 text-white" th:text="${p.nvkName}">Tên sản
-                            phẩm</h5>
-
-                        <div>
-                            <span class="badge-category" th:text="${p.nvkCategory?.nvkName ?: 'KHÁC'}">Category</span>
+                        <h5 class="card-title text-truncate fw-bold mb-2">
+                            <a th:href="@{'/nvk-product/detail/' + ${p.nvkId}}" class="text-decoration-none text-white"
+                               th:text="${p.nvkName}">Tên sản phẩm</a>
+                        </h5>
+                        <div><span class="badge-category" th:text="${p.nvkCategory?.nvkName ?: 'KHÁC'}">Category</span>
                         </div>
 
                         <div class="mt-auto mb-3">
                             <span class="text-primary fw-bold fs-5">
-                                <span th:if="${p.nvkPrice != null}">[[${#numbers.formatDecimal(p.nvkPrice, 0, 'COMMA', 0, 'POINT')}]] ₫</span>
+                                <span th:if="${p.nvkPrice != null}">[[${#numbers.formatDecimal(p.nvkPrice, 0, 'POINT', 0, 'COMMA')}]] ₫</span>
                                 <span th:unless="${p.nvkPrice != null}">Liên hệ</span>
                             </span>
-
                             <span class="price-old"
                                   th:if="${p.nvkOldPrice != null && p.nvkPrice != null && p.nvkOldPrice > p.nvkPrice}">
-                                [[${#numbers.formatDecimal(p.nvkOldPrice, 0, 'COMMA', 0, 'POINT')}]] ₫
+                                [[${#numbers.formatDecimal(p.nvkOldPrice, 0, 'POINT', 0, 'COMMA')}]] ₫
                             </span>
                         </div>
 
-                        <button th:if="${p.nvkStatus == 1 and p.nvkQuantity != null and p.nvkQuantity > 0}"
-                                class="btn btn-primary btn-sm rounded-pill w-100 fw-bold shadow-sm"
+                        <button class="btn btn-primary btn-sm rounded-pill w-100 fw-bold shadow-sm"
                                 th:onclick="'nvkAddToCart(' + ${p.nvkId} + ')'">
-                            <i class="bi bi-cart-plus-fill me-1"></i>
-                        </button>
-
-                        <button th:if="${p.nvkStatus != 1 or p.nvkQuantity == null or p.nvkQuantity == 0}"
-                                class="btn btn-secondary btn-sm rounded-pill w-100 fw-bold shadow-sm" disabled>
-                            <i class="bi bi-x-circle"></i>
+                            <i class="bi bi-cart-plus-fill me-1"></i> Thêm vào giỏ
                         </button>
                     </div>
                 </div>
             </div>
 
-            <div class="col-12 text-center text-muted py-5" th:if="${nvkProducts == null || nvkProducts.empty}">
-                <p>Chưa có sản phẩm.</p>
+            <div class="col-12 text-center text-muted py-5" th:if="${nvkProducts.empty}">
+                <p>Chưa có sản phẩm nào.</p>
             </div>
         </div>
     </div>
@@ -241,8 +329,8 @@
     <div id="liveToast" class="toast align-items-center text-bg-success border-0 shadow-lg" role="alert">
         <div class="d-flex">
             <div class="toast-body fw-bold" id="toastMessage">
-                Đã thêm vào giỏ! <a href="/nvk-cart" class="text-white text-decoration-underline ms-2 small">Xem giỏ
-                hàng</a>
+                <i class="bi bi-check-circle-fill me-2"></i> Đã thêm vào giỏ!
+                <a href="/nvk-cart" class="text-white text-decoration-underline ms-2 small">Xem giỏ hàng</a>
             </div>
             <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
         </div>
@@ -256,16 +344,33 @@
 
 <script>
     $(document).ready(function () {
-        var owl = $("#nvkRandomSlider");
-        if (owl.length > 0) {
-            owl.owlCarousel({
-                loop: false,
-                margin: 20, nav: false, autoplay: true,
-                responsive: {0: {items: 1}, 600: {items: 2}, 1000: {items: 4}}
+        // SLIDER CONFIG (GIỮ NGUYÊN)
+        $("#nvkBannerSlider").owlCarousel({
+            items: 1, loop: true, margin: 10, nav: false, dots: true,
+            autoplay: true, autoplayTimeout: 5000, autoplaySpeed: 1500, smartSpeed: 1500
+        });
+
+        function initSmartSlider(selector) {
+            var $slider = $(selector);
+            if (!$slider.length) return;
+            var itemCount = $slider.children('.item').length;
+            var shouldLoop = itemCount > 4;
+            $slider.owlCarousel({
+                margin: 20, nav: false, dots: false, autoplay: true, autoplayTimeout: 4000,
+                autoplayHoverPause: true, loop: shouldLoop, smartSpeed: 1000, autoplaySpeed: 1000,
+                responsive: {
+                    0: {items: 1, loop: itemCount > 1},
+                    600: {items: 2, loop: itemCount > 2},
+                    1000: {items: 4, loop: shouldLoop}
+                }
             });
         }
+
+        initSmartSlider("#nvkRandomSlider");
+        initSmartSlider("#nvkComingSoonSlider");
     });
 
+    // [QUAN TRỌNG] HÀM CẬP NHẬT SỐ GIỎ HÀNG TRÊN MENU
     function nvkAddToCart(productId) {
         fetch('/api/nvk-cart/add?productId=' + productId + '&quantity=1', {method: 'POST'})
             .then(response => response.json())
@@ -275,6 +380,14 @@
                 } else if (data.status === 'success') {
                     const toast = new bootstrap.Toast(document.getElementById('liveToast'));
                     toast.show();
+
+                    // [ĐÃ SỬA] Tìm badge giỏ hàng trên Menu và cập nhật số
+                    if (document.getElementById('cartBadge')) {
+                        document.getElementById('cartBadge').innerText = data.cartCount;
+                        document.getElementById('cartBadge').style.display = 'inline-block';
+                    }
+                } else if (data.status === 'error') {
+                    alert(data.message);
                 }
             })
             .catch(error => console.error('Error:', error));

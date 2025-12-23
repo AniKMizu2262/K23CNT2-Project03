@@ -24,6 +24,20 @@
         </div>
     </div>
 
+    <div class="px-4">
+        <div th:if="${successMsg}" class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            <strong th:text="${successMsg}">Thông báo thành công</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div th:if="${errorMsg}" class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <strong th:text="${errorMsg}">Thông báo lỗi</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+
     <div class="content">
         <div class="row">
 
@@ -31,10 +45,12 @@
                 <div class="card shadow-lg border-0 h-100">
                     <div class="card-body text-center p-5">
                         <div class="mb-4 position-relative d-inline-block">
-                            <img th:src="${nvkAdmin.nvkAvatar != null && nvkAdmin.nvkAvatar != '' ? nvkAdmin.nvkAvatar : 'https://ui-avatars.com/api/?name=' + nvkAdmin.nvkFullName + '&background=random&size=200'}"
+                            <img th:src="${(nvkAdmin.nvkAvatar != null && nvkAdmin.nvkAvatar != '')
+                                    ? nvkAdmin.nvkAvatar + '?v=' + #dates.createNow().getTime()
+                                    : 'https://ui-avatars.com/api/?name=' + nvkAdmin.nvkFullName + '&background=random&size=200'}"
                                  class="rounded-circle border border-4 border-light shadow"
                                  style="width: 140px; height: 140px; object-fit: cover;"
-                                 onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Admin&background=random';">
+                                 alt="Avatar">
 
                             <span class="position-absolute bottom-0 end-0 p-2 bg-success border border-light rounded-circle"
                                   title="Đang hoạt động"></span>
@@ -72,8 +88,9 @@
                                 <label class="form-label small text-uppercase text-muted fw-bold">Tài khoản (Không thể
                                     sửa)</label>
                                 <div class="input-group">
-                                    <span class="input-group-text bg-light text-muted border-end-0"><i
-                                            class="bi bi-person-badge-fill"></i></span>
+                                    <span class="input-group-text bg-light text-muted border-end-0">
+                                        <i class="bi bi-person-badge-fill"></i>
+                                    </span>
                                     <input type="text" th:field="*{nvkUsername}"
                                            class="form-control bg-light text-muted border-start-0 fw-bold" readonly>
                                 </div>
@@ -82,8 +99,9 @@
                             <div class="mb-3">
                                 <label class="form-label small text-uppercase text-muted fw-bold">Họ và Tên</label>
                                 <div class="input-group">
-                                    <span class="input-group-text"><i
-                                            class="bi bi-person-vcard text-primary"></i></span>
+                                    <span class="input-group-text">
+                                        <i class="bi bi-person-vcard text-primary"></i>
+                                    </span>
                                     <input type="text" th:field="*{nvkFullName}" class="form-control" required>
                                 </div>
                             </div>
@@ -91,7 +109,9 @@
                             <div class="mb-4">
                                 <label class="form-label small text-uppercase text-muted fw-bold">Mật khẩu</label>
                                 <div class="input-group">
-                                    <span class="input-group-text"><i class="bi bi-key text-primary"></i></span>
+                                    <span class="input-group-text">
+                                        <i class="bi bi-key text-primary"></i>
+                                    </span>
                                     <input type="text" th:field="*{nvkPassword}" class="form-control" required>
                                 </div>
                                 <div class="form-text text-white-50 small fst-italic mt-1">
@@ -104,11 +124,13 @@
                                 <label class="form-label small text-uppercase text-muted fw-bold">Ảnh đại diện</label>
 
                                 <div class="form-control d-flex align-items-center p-0 ps-2" style="height: 38px;">
-                                    <img th:src="${nvkAdmin.nvkAvatar != null && nvkAdmin.nvkAvatar != '' ? nvkAdmin.nvkAvatar : 'https://ui-avatars.com/api/?name=' + nvkAdmin.nvkFullName + '&background=random'}"
+                                    <img th:src="${(nvkAdmin.nvkAvatar != null && nvkAdmin.nvkAvatar != '')
+                                            ? nvkAdmin.nvkAvatar + '?v=' + #dates.createNow().getTime()
+                                            : 'https://ui-avatars.com/api/?name=' + nvkAdmin.nvkFullName + '&background=random'}"
                                          width="28" height="28"
                                          class="rounded-circle border shadow-sm flex-shrink-0"
                                          style="object-fit: cover;"
-                                         onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Admin&background=random';">
+                                         alt="Avatar Small">
 
                                     <div class="flex-grow-1">
                                         <input type="file" name="nvkImageFile"
@@ -121,10 +143,7 @@
                         </div>
 
                         <div class="card-footer bg-transparent border-top p-4 d-flex justify-content-between align-items-center">
-                            <a href="/nvkAdmin" class="btn btn-outline-secondary fw-bold px-3">
-                                Trang chủ
-                            </a>
-
+                            <a href="/nvkAdmin" class="btn btn-outline-secondary fw-bold px-3">Trang chủ</a>
                             <button type="submit" class="btn btn-primary btn-lg px-5 fw-bold shadow-sm">
                                 LƯU THAY ĐỔI
                             </button>
@@ -138,8 +157,10 @@
     </div>
 </div>
 
-<script>function toggleSidebar() {
-    document.body.classList.toggle('sidebar-closed');
-}</script>
+<script>
+    function toggleSidebar() {
+        document.body.classList.toggle('sidebar-closed');
+    }
+</script>
 </body>
 </html>

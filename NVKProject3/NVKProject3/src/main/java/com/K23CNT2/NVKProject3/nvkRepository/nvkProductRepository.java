@@ -23,4 +23,16 @@ public interface nvkProductRepository extends JpaRepository<nvkProduct, Long> {
 
     // 4. Tìm tất cả SP có số lượng > 0 (Có sắp xếp)
     List<nvkProduct> findByNvkQuantityGreaterThan(Integer quantity, Sort sort);
+
+    // 5. Hàm tìm kiếm này:
+    List<nvkProduct> findByNvkNameContainingIgnoreCase(String name);
+
+    // 2. Tìm theo Loại (Mới)
+    List<nvkProduct> findByNvkCategory_NvkId(Long categoryId);
+
+    // 3. Tìm kết hợp cả Tên và Loại (Mới)
+    List<nvkProduct> findByNvkCategory_NvkIdAndNvkNameContainingIgnoreCase(Long categoryId, String name);
+
+    @Query("SELECT p FROM nvkProduct p LEFT JOIN FETCH p.nvkCategory")
+    List<nvkProduct> findAllWithCategory();
 }

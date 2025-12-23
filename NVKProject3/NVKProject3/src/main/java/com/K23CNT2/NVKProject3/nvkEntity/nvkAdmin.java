@@ -26,6 +26,7 @@ public class nvkAdmin {
     // --- Thông tin cá nhân ---
     private String nvkFullName;
     private String nvkAvatar;
+    
 
     // --- Trạng thái ---
     private Boolean nvkActive;

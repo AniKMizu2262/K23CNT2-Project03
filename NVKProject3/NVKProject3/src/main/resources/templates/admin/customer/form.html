@@ -78,11 +78,11 @@
                         <div class="col-md-6">
                             <label class="form-label fw-bold small text-muted text-uppercase">Avatar</label>
                             <div class="d-flex align-items-center gap-3">
-                                <img th:src="${nvkCustomer.nvkAvatar != null && nvkCustomer.nvkAvatar != '' ? nvkCustomer.nvkAvatar : 'https://ui-avatars.com/api/?name=' + (nvkCustomer.nvkFullName != null ? nvkCustomer.nvkFullName : 'New Customer') + '&background=random'}"
+                                <img th:src="${nvkCustomer.nvkAvatar != null && nvkCustomer.nvkAvatar != '' ? nvkCustomer.nvkAvatar : 'https://ui-avatars.com/api/?name=' + (nvkCustomer.nvkFullName != null ? nvkCustomer.nvkFullName : 'New') + '&background=random'}"
                                      width="60" height="60"
                                      class="rounded-circle border shadow-sm"
                                      style="object-fit: cover;"
-                                     onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Customer&background=random';">
+                                     onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=User&background=random';">
 
                                 <input type="file" name="nvkImageFile" class="form-control">
                             </div>
@@ -90,7 +90,6 @@
 
                         <div class="col-md-6">
                             <label class="form-label fw-bold small text-muted text-uppercase">Trạng thái</label>
-
                             <div class="form-control d-flex align-items-center gap-3">
                                 <div class="form-check form-switch m-0 d-flex align-items-center">
                                     <input class="form-check-input" type="checkbox" id="activeSwitch"

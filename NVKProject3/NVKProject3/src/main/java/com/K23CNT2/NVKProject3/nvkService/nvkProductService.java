@@ -11,21 +11,14 @@ import java.util.List;
 @Service
 public class nvkProductService {
 
-    // === 1. KHAI BÁO REPO LÊN ĐẦU (ĐỂ CODE GỌN GÀNG) ===
     @Autowired
     private nvkProductRepository repo;
 
-    // === 2. HÀM UPDATE MÀ CONTROLLER ĐANG CẦN ===
-    public void updateProduct(nvkProduct product) {
-        repo.save(product); //
-    }
-
-    // ==============================================================
-    // 3. CÁC HÀM CRUD CƠ BẢN
-    // ==============================================================
+    // === CÁC HÀM CƠ BẢN ===
 
     public List<nvkProduct> getAllProducts() {
-        return repo.findAll();
+        // [FIX LAG Ở ĐÂY]: Thay vì dùng repo.findAll() (bị chậm), ta dùng hàm tối ưu:
+        return repo.findAllWithCategory();
     }
 
     public nvkProduct getProductById(Long id) {
@@ -36,16 +29,17 @@ public class nvkProductService {
         repo.save(product);
     }
 
+    public void updateProduct(nvkProduct product) {
+        repo.save(product);
+    }
+
     public void deleteProduct(Long id) {
         repo.deleteById(id);
     }
 
-    // ==============================================================
-    // 4. CHỨC NĂNG ĐẶC BIỆT (Slider, Filter...)
-    // ==============================================================
+    // === CHỨC NĂNG NÂNG CAO (LỌC & TÌM KIẾM) ===
 
     public List<nvkProduct> findRandomProducts() {
-
         return repo.findRandomProducts();
     }
 
@@ -71,7 +65,6 @@ public class nvkProductService {
         }
 
         // --- BƯỚC 2: GỌI REPO ---
-        // Lưu ý: Bro phải đảm bảo Repository đã có các hàm findBy... bên dưới
         if (categoryId != null) {
             if (inStock) {
                 return repo.findByNvkCategory_NvkIdAndNvkQuantityGreaterThan(categoryId, 0, sort);
@@ -84,6 +77,31 @@ public class nvkProductService {
             } else {
                 return repo.findAll(sort);
             }
+        }
+    }
+
+    // === 2 HÀM CỦA BRO ===
+
+    public List<nvkProduct> searchProducts(String keyword) {
+        if (keyword != null && !keyword.isEmpty()) {
+            return repo.findByNvkNameContainingIgnoreCase(keyword);
+        }
+        return repo.findAllWithCategory(); // Search rỗng thì trả về list tối ưu
+    }
+
+    public nvkProduct save(nvkProduct product) {
+        return repo.save(product);
+    }
+
+    public List<nvkProduct> searchAndFilter(String keyword, Long categoryId) {
+        if (keyword != null && !keyword.isEmpty() && categoryId != null) {
+            return repo.findByNvkCategory_NvkIdAndNvkNameContainingIgnoreCase(categoryId, keyword);
+        } else if (categoryId != null) {
+            return repo.findByNvkCategory_NvkId(categoryId);
+        } else if (keyword != null && !keyword.isEmpty()) {
+            return repo.findByNvkNameContainingIgnoreCase(keyword);
+        } else {
+            return repo.findAllWithCategory(); // Lấy hết thì dùng hàm tối ưu
         }
     }
 }

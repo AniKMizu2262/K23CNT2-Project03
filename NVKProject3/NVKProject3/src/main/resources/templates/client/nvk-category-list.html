@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:replace="~{fragments/client/head :: head}"></th:block>
+
+    <style>
+        /* 1. STYLE CARD SẢN PHẨM & KHUNG ẢNH */
+        .card-img-container {
+            width: 100%;
+            height: 230px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px 8px 0 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-img-container a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .card-img-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.4s ease;
+            display: block;
+            margin: auto;
+        }
+
+        .card:hover .card-img-container img {
+            transform: scale(1.08);
+        }
+
+        .card {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
+            border-color: #0d6efd;
+            transform: translateY(-5px);
+        }
+
+        /* Badge & Text */
+        .badge-discount {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: #dc3545;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 0.8rem;
+            z-index: 10;
+        }
+
+        .price-old {
+            color: #adb5bd !important;
+            opacity: 0.7;
+            font-size: 0.9rem;
+            text-decoration: line-through;
+            margin-left: 8px;
+        }
+
+        .badge-category {
+            background-color: #0d6efd;
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        /* Badge trạng thái ở giữa ảnh */
+        .badge-status-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 8px 15px;
+            font-weight: bold;
+            border: 2px solid #fff;
+            z-index: 20;
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            white-space: nowrap;
+            backdrop-filter: blur(2px);
+        }
+
+        /* SIDEBAR */
+        .category-sidebar {
+            position: sticky;
+            top: 100px;
+        }
+
+        .cat-link {
+            display: block;
+            padding: 12px 20px;
+            color: #adb5bd;
+            text-decoration: none;
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.02);
+            margin-bottom: 5px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .cat-link:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            padding-left: 25px;
+        }
+
+        .cat-link.active {
+            background: linear-gradient(90deg, rgba(13, 110, 253, 0.2) 0%, rgba(13, 110, 253, 0) 100%);
+            border-left-color: #0d6efd;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .sidebar-title {
+            font-size: 1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            color: #fff;
+            padding-left: 10px;
+            border-left: 4px solid #0d6efd;
+        }
+
+        /* CUSTOM SWITCH */
+        .form-check-input:checked {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+
+        /* PHÂN TRANG (PAGINATION) */
+        .pagination {
+            margin-top: 40px;
+        }
+
+        .page-link {
+            background-color: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #adb5bd;
+            margin: 0 3px;
+            border-radius: 5px !important;
+            transition: all 0.3s;
+        }
+
+        .page-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-color: #fff;
+        }
+
+        .page-item.active .page-link {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .page-item.disabled .page-link {
+            background-color: transparent;
+            border-color: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+
+<nav th:replace="~{fragments/client/header :: header}"></nav>
+
+<main class="flex-grow-1 bg-body-tertiary pt-5 pb-5">
+
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-3 mb-5">
+                <div class="category-sidebar">
+                    <div class="sidebar-title">Danh mục</div>
+                    <div class="d-flex flex-column mb-4">
+                        <a href="/nvk-categories"
+                           class="cat-link"
+                           th:classappend="${param.cid == null} ? 'active' : ''">
+                            <i class="bi bi-grid-fill me-2"></i> Tất cả sản phẩm
+                        </a>
+
+                        <a th:each="c : ${nvkCategories}"
+                           th:href="@{/nvk-categories(cid=${c.nvkId})}"
+                           class="cat-link"
+                           th:classappend="${param.cid != null && param.cid[0] == c.nvkId.toString()} ? 'active' : ''">
+                            <i class="bi bi-caret-right me-2"></i> [[${c.nvkName}]]
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-9">
+
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary gap-3">
+                    <div>
+                        <h4 class="text-white fw-bold m-0">
+                            <span th:if="${param.cid == null}">Tất cả sản phẩm</span>
+                            <span th:if="${param.cid != null}">Sản phẩm theo danh mục</span>
+                        </h4>
+
+                        <span class="text-light small opacity-75">
+                            Tìm thấy <strong class="text-warning fs-6">[[${totalItems}]]</strong> sản phẩm
+                            (Trang <strong class="text-warning">[[${currentPage + 1}]]</strong>)
+                        </span>
+                    </div>
+
+                    <form action="/nvk-categories" method="get" class="d-flex align-items-center gap-3">
+                        <input type="hidden" name="cid" th:value="${param.cid}" th:if="${param.cid != null}">
+
+                        <div class="form-check form-switch d-flex align-items-center gap-2 m-0 border-end border-secondary pe-3">
+                            <input class="form-check-input" type="checkbox" role="switch" id="instockSwitch"
+                                   name="instock" value="true"
+                                   th:checked="${param.instock != null}"
+                                   onchange="this.form.submit()" style="cursor: pointer;">
+                            <label class="form-check-label text-white small text-nowrap" for="instockSwitch"
+                                   style="cursor: pointer;">Chỉ xem còn hàng</label>
+                        </div>
+
+                        <select name="sort" class="form-select form-select-sm bg-dark text-white border-secondary"
+                                onchange="this.form.submit()" style="min-width: 160px;">
+                            <option value="">-- Sắp xếp --</option>
+                            <option value="name_asc" th:selected="${param.sort != null && param.sort[0] == 'name_asc'}">
+                                Tên: A - Z
+                            </option>
+                            <option value="name_desc"
+                                    th:selected="${param.sort != null && param.sort[0] == 'name_desc'}">Tên: Z - A
+                            </option>
+                            <option value="price_asc"
+                                    th:selected="${param.sort != null && param.sort[0] == 'price_asc'}">Giá: Tăng dần
+                            </option>
+                            <option value="price_desc"
+                                    th:selected="${param.sort != null && param.sort[0] == 'price_desc'}">Giá: Giảm dần
+                            </option>
+                        </select>
+                    </form>
+                </div>
+
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    <div class="col" th:each="p : ${nvkProducts}">
+                        <div class="card h-100 shadow-sm border-0 overflow-hidden position-relative">
+
+                            <div class="badge-discount"
+                                 th:if="${p.nvkOldPrice != null && p.nvkPrice != null && p.nvkOldPrice > p.nvkPrice}">
+                                -[[${#numbers.formatInteger((p.nvkOldPrice - p.nvkPrice) / p.nvkOldPrice * 100, 0)}]]%
+                            </div>
+
+                            <div class="badge-status-center bg-danger" th:if="${p.nvkStatus == 0}">NGỪNG BÁN</div>
+                            <div class="badge-status-center bg-dark" th:if="${p.nvkQuantity == 0 && p.nvkStatus == 1}">
+                                HẾT HÀNG
+                            </div>
+                            <div class="badge-status-center bg-warning text-dark" th:if="${p.nvkStatus == 2}">SẮP VỀ
+                            </div>
+
+                            <div class="card-img-container">
+                                <a th:href="@{/nvk-product/detail/{id}(id=${p.nvkId})}" class="d-block w-100 h-100">
+                                    <img th:src="${(p.nvkImgUrl != null && p.nvkImgUrl != '')
+                                            ? '/nvk-product-img/' + p.nvkImgUrl
+                                            : 'https://placehold.co/200x200?text=No+Image'}"
+                                         alt="Product Image"
+                                         onerror="this.src='https://placehold.co/200x200?text=Error'">
+                                </a>
+                            </div>
+
+                            <div class="card-body d-flex flex-column bg-dark bg-opacity-25 pt-4">
+                                <h6 class="card-title text-truncate mb-1">
+                                    <a th:href="@{/nvk-product/detail/{id}(id=${p.nvkId})}"
+                                       class="text-decoration-none text-white fw-bold" th:text="${p.nvkName}">Tên SP</a>
+                                </h6>
+                                <div><span class="badge-category"
+                                           th:text="${p.nvkCategory?.nvkName ?: 'KHÁC'}">Category</span></div>
+
+                                <div class="mt-auto mb-3">
+                                    <span class="text-primary fw-bold fs-5">
+                                        <span th:if="${p.nvkPrice != null}">[[${#numbers.formatDecimal(p.nvkPrice, 0, 'COMMA', 0, 'POINT')}]] ₫</span>
+                                        <span th:unless="${p.nvkPrice != null}">Liên hệ</span>
+                                    </span>
+                                    <span class="price-old"
+                                          th:if="${p.nvkOldPrice != null && p.nvkPrice != null && p.nvkOldPrice > p.nvkPrice}">
+                                        [[${#numbers.formatDecimal(p.nvkOldPrice, 0, 'COMMA', 0, 'POINT')}]] ₫
+                                    </span>
+                                </div>
+
+                                <button th:if="${p.nvkStatus == 1 and p.nvkQuantity > 0}"
+                                        class="btn btn-outline-primary btn-sm rounded-pill w-100 fw-bold"
+                                        th:onclick="'nvkAddToCart(' + ${p.nvkId} + ')'">
+                                    <i class="bi bi-cart-plus me-1"></i> Thêm vào giỏ
+                                </button>
+
+                                <button th:if="${p.nvkStatus == 2}"
+                                        class="btn btn-warning btn-sm rounded-pill w-100 fw-bold text-dark opacity-75"
+                                        disabled style="cursor: not-allowed;">
+                                    <i class="bi bi-hourglass-split me-1"></i> Chờ ngày mở bán
+                                </button>
+
+                                <button th:if="${p.nvkStatus == 1 and p.nvkQuantity == 0}"
+                                        class="btn btn-secondary btn-sm rounded-pill w-100 fw-bold opacity-75"
+                                        disabled style="cursor: not-allowed;">
+                                    <i class="bi bi-box-seam me-1"></i> Tạm hết hàng
+                                </button>
+
+                                <button th:if="${p.nvkStatus == 0}"
+                                        class="btn btn-danger btn-sm rounded-pill w-100 fw-bold opacity-75"
+                                        disabled style="cursor: not-allowed;">
+                                    <i class="bi bi-x-circle me-1"></i> Ngừng kinh doanh
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 text-center text-muted py-5" th:if="${nvkProducts == null || nvkProducts.empty}">
+                        <i class="bi bi-inbox fs-1 d-block mb-3 opacity-50"></i>
+                        <p class="fs-5">Chưa có sản phẩm nào.</p>
+                        <a href="/nvk-categories" class="btn btn-outline-light btn-sm mt-2">Quay lại tất cả</a>
+                    </div>
+                </div>
+
+                <nav th:if="${totalPages > 1}">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{/nvk-categories(page=${currentPage - 1}, cid=${param.cid}, sort=${param.sort}, instock=${param.instock})}">
+                                <i class="bi bi-chevron-left"></i>
+                            </a>
+                        </li>
+
+                        <li class="page-item"
+                            th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                            th:classappend="${i == currentPage} ? 'active'">
+                            <a class="page-link"
+                               th:href="@{/nvk-categories(page=${i}, cid=${param.cid}, sort=${param.sort}, instock=${param.instock})}"
+                               th:text="${i + 1}">1</a>
+                        </li>
+
+                        <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{/nvk-categories(page=${currentPage + 1}, cid=${param.cid}, sort=${param.sort}, instock=${param.instock})}">
+                                <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+            </div>
+        </div>
+    </div>
+</main>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="liveToast" class="toast align-items-center text-bg-success border-0 shadow-lg" role="alert">
+        <div class="d-flex">
+            <div class="toast-body fw-bold" id="toastMessage">
+                Đã thêm vào giỏ! <a href="/nvk-cart" class="text-white text-decoration-underline ms-2 small">Xem giỏ
+                hàng</a>
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/client/footer :: footer}"></footer>
+
+<script>
+    function nvkAddToCart(productId) {
+        fetch('/api/nvk-cart/add?productId=' + productId + '&quantity=1', {method: 'POST'})
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'login_required') {
+                    window.location.href = '/nvk-login';
+                } else if (data.status === 'success') {
+
+                    // [BỔ SUNG] Cập nhật số giỏ hàng trên Menu (Nếu có phần tử đó)
+                    if (document.getElementById('cartBadge')) {
+                        document.getElementById('cartBadge').innerText = data.cartCount;
+                        document.getElementById('cartBadge').style.display = 'inline-block';
+                    }
+
+                    new bootstrap.Toast(document.getElementById('liveToast')).show();
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
+
+</body>
+</html>

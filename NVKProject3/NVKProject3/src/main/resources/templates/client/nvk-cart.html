@@ -10,6 +10,11 @@
     <div class="container">
         <h2 class="fw-bold mb-4 text-warning"><i class="bi bi-cart4 me-2"></i> Giỏ hàng của bạn</h2>
 
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show shadow-sm mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> <strong th:text="${error}"></strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
         <div class="row">
             <div class="col-lg-8">
                 <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-4"
@@ -30,9 +35,14 @@
                                 <tr th:each="item : ${cartItems}">
                                     <td class="text-start ps-4">
                                         <div class="d-flex align-items-center">
-                                            <img th:src="${item.productImg != null && item.productImg.startsWith('http') ? item.productImg : '/images/' + item.productImg}"
+
+                                            <img th:src="${(item.productImg != null && item.productImg != '')
+                                                    ? (item.productImg.startsWith('http') ? item.productImg : '/nvk-product-img/' + item.productImg)
+                                                    : 'https://placehold.co/60x60?text=No+Image'}"
                                                  class="rounded border border-secondary me-3" width="60" height="60"
-                                                 style="object-fit: cover;">
+                                                 style="object-fit: cover;"
+                                                 onerror="this.src='https://placehold.co/60x60?text=Error'">
+
                                             <span class="fw-bold text-light">[[${item.productName}]]</span>
                                         </div>
                                     </td>

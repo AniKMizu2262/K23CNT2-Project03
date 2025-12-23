@@ -1,59 +1,69 @@
 package com.K23CNT2.NVKProject3.nvkController;
 
-import com.K23CNT2.NVKProject3.nvkEntity.nvkCustomer;
-import com.K23CNT2.NVKProject3.nvkEntity.nvkProduct;
 import com.K23CNT2.NVKProject3.nvkEntity.nvkReview;
-import com.K23CNT2.NVKProject3.nvkRepository.nvkProductRepository;
-import com.K23CNT2.NVKProject3.nvkRepository.nvkReviewRepository;
-import jakarta.servlet.http.HttpSession;
+import com.K23CNT2.NVKProject3.nvkService.nvkReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 @Controller
-@RequestMapping("/nvk-review")
+@RequestMapping("/nvkAdmin/review") // URL chuẩn cho trang Admin
 public class nvkReviewController {
 
     @Autowired
-    private nvkReviewRepository nvkReviewRepo;
+    private nvkReviewService reviewService; // Dùng Service mà mình vừa tạo lúc nãy
 
-    @Autowired
-    private nvkProductRepository nvkProductRepo;
+    // ==========================================================
+    // 1. HIỂN THỊ DANH SÁCH + LỌC (Kết hợp Sao & Từ khóa)
+    // ==========================================================
+    @GetMapping("")
+    public String listReview(Model model,
+                             @RequestParam(value = "rating", required = false) Integer rating,
+                             @RequestParam(value = "keyword", required = false) String keyword) {
 
-    @PostMapping("/add")
-    public String addReview(
-            @RequestParam("productId") Long productId,
-            @RequestParam("rating") Integer rating,
-            @RequestParam("comment") String comment,
-            HttpSession session) {
+        // Gọi hàm searchAndFilter bên Service
+        List<nvkReview> list = reviewService.searchAndFilter(rating, keyword);
+        model.addAttribute("nvkReviews", list);
 
-        // 1. Kiểm tra đăng nhập (Lấy user từ session)
-        // Lưu ý: Key session phải trùng với lúc bro làm chức năng Login (ví dụ: "nvkUserLogin")
-        nvkCustomer currentUser = (nvkCustomer) session.getAttribute("nvkUserLogin");
+        // Giữ lại giá trị filter để hiển thị trên giao diện
+        model.addAttribute("currRating", rating);
+        model.addAttribute("currKeyword", keyword);
 
-        if (currentUser == null) {
-            return "redirect:/nvk-login"; // Chưa đăng nhập thì đá về trang login
-        }
+        return "admin/review/list";
+    }
 
-        // 2. Tìm sản phẩm cần đánh giá
-        nvkProduct product = nvkProductRepo.findById(productId).orElse(null);
+    // ==========================================================
+    // 2. API LIVE SEARCH (Trả về Fragment bảng)
+    // ==========================================================
+    @GetMapping("/search-results")
+    public String searchResults(Model model,
+                                @RequestParam(value = "rating", required = false) Integer rating,
+                                @RequestParam(value = "keyword", required = false) String keyword) {
 
-        if (product != null) {
-            // 3. Tạo Review mới
-            nvkReview review = nvkReview.builder()
-                    .nvkRating(rating)
-                    .nvkComment(comment)
-                    .nvkProduct(product)
-                    .nvkCustomer(currentUser)
-                    .build();
+        List<nvkReview> list = reviewService.searchAndFilter(rating, keyword);
+        model.addAttribute("nvkReviews", list);
 
-            // 4. Lưu vào DB
-            nvkReviewRepo.save(review);
-        }
+        return "admin/review/list :: review_rows";
+    }
 
-        // 5. Quay lại trang chi tiết sản phẩm
-        return "redirect:/nvk-product/detail/" + productId;
+    // ==========================================================
+    // 3. XÓA ĐÁNH GIÁ (Admin chỉ có quyền xóa)
+    // ==========================================================
+    @GetMapping("/delete/{id}")
+    public String deleteReview(@PathVariable("id") Long id,
+                               RedirectAttributes redirectAttributes) {
+
+        reviewService.deleteReview(id);
+
+        redirectAttributes.addFlashAttribute("nvkMsg", "Đã xóa đánh giá thành công!");
+
+        return "redirect:/nvkAdmin/review";
     }
 }

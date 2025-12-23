@@ -21,15 +21,17 @@
                      style="top: 20px; background-color: #262b3c; color: white;">
                     <div class="card-body p-5">
                         <div class="position-relative d-inline-block mb-4">
-                            <img th:src="${nvkCustomer.nvkAvatar != null && nvkCustomer.nvkAvatar.startsWith('http') ? nvkCustomer.nvkAvatar : '/images/' + (nvkCustomer.nvkAvatar != null ? nvkCustomer.nvkAvatar : 'default-user.jpg')}"
+                            <img th:src="${(nvkCustomer.nvkAvatar != null && nvkCustomer.nvkAvatar.trim() != '')
+                                    ? nvkCustomer.nvkAvatar + '?v=' + #dates.createNow().getTime()
+                                    : 'https://ui-avatars.com/api/?name=' + nvkCustomer.nvkFullName + '&background=random&size=150'}"
                                  class="rounded-circle border border-4 border-primary shadow"
                                  style="width: 150px; height: 150px; object-fit: cover;"
                                  alt="Avatar"
-                                 id="avatarPreview"
+                                 id="avatarPreviewSide"
                                  onerror="this.src='https://ui-avatars.com/api/?name=User&background=random'">
                         </div>
                         <h4 class="fw-bold mb-1" th:text="${nvkCustomer.nvkFullName}">Tên Khách Hàng</h4>
-                        <p class="text-info mb-3 small" th:text="${nvkCustomer.nvkEmail}">email</p>
+                        <p class="text-info mb-3 small" th:text="${nvkCustomer.nvkEmail}">email@example.com</p>
 
                         <hr class="border-secondary my-4">
                         <div class="d-grid gap-2">
@@ -43,8 +45,16 @@
             </div>
 
             <div class="col-lg-8">
-                <div th:if="${param.success}" class="alert alert-success rounded-3"><i
-                        class="bi bi-check-circle-fill me-2"></i> Cập nhật thành công!
+
+                <div th:if="${success}"
+                     class="alert alert-success alert-dismissible fade show rounded-3 border-0 shadow-sm">
+                    <i class="bi bi-check-circle-fill me-2"></i> [[${success}]]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <div th:if="${error}"
+                     class="alert alert-danger alert-dismissible fade show rounded-3 border-0 shadow-sm">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> [[${error}]]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
 
                 <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-4"
@@ -62,7 +72,6 @@
                             <input type="hidden" th:field="*{nvkEmail}">
                             <input type="hidden" th:field="*{nvkPassword}">
                             <input type="hidden" th:field="*{nvkActive}">
-
                             <input type="hidden" th:field="*{nvkAvatar}">
 
                             <div class="row g-3">
@@ -80,11 +89,12 @@
                                 <div class="col-12">
                                     <label class="form-label fw-bold text-white-50">Ảnh đại diện</label>
                                     <div class="input-group">
-                                        <input type="file" name="nvkAvatarFile"
+                                        <input type="file" name="nvkImageFile"
                                                class="form-control bg-dark text-white border-secondary"
                                                accept="image/*" onchange="previewImage(event)">
-                                        <span class="input-group-text bg-secondary border-secondary text-light"><i
-                                                class="bi bi-image"></i></span>
+                                        <span class="input-group-text bg-secondary border-secondary text-light">
+                                            <i class="bi bi-image"></i>
+                                        </span>
                                     </div>
                                     <div class="form-text text-white-50">Chọn ảnh từ máy tính của bạn (JPG, PNG).</div>
                                 </div>
@@ -144,15 +154,17 @@
 
 <footer th:replace="~{fragments/client/footer :: footer}"></footer>
 
-
 <script>
     function previewImage(event) {
         const reader = new FileReader();
         reader.onload = function () {
-            const output = document.getElementById('avatarPreview');
-            output.src = reader.result;
+            // Cập nhật ảnh ở sidebar bên trái
+            const outputSide = document.getElementById('avatarPreviewSide');
+            if (outputSide) outputSide.src = reader.result;
         };
-        reader.readAsDataURL(event.target.files[0]);
+        if (event.target.files[0]) {
+            reader.readAsDataURL(event.target.files[0]);
+        }
     }
 </script>
 

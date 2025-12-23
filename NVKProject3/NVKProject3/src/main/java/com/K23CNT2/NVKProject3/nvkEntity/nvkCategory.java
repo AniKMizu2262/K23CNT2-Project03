@@ -21,7 +21,8 @@ public class nvkCategory {
     private String nvkName;
 
     // --- Quan hệ (Relations) ---
-    @OneToMany(mappedBy = "nvkCategory")
+    @OneToMany(mappedBy = "nvkCategory", fetch = FetchType.LAZY) // 1. Thêm LAZY cho chắc
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude // 2. [QUAN TRỌNG] Ngăn Lombok quét qua list này gây chậm
     private List<nvkProduct> nvkProducts;
 }

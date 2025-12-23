@@ -10,11 +10,12 @@
 
     <div class="user-panel">
         <div class="image">
-            <img th:src="${session.nvkAdminLogin.nvkAvatar != null && session.nvkAdminLogin.nvkAvatar != '' ? session.nvkAdminLogin.nvkAvatar : 'https://ui-avatars.com/api/?name=' + session.nvkAdminLogin.nvkFullName + '&background=random'}"
+            <img th:src="${(session.nvkAdminLogin.nvkAvatar != null && session.nvkAdminLogin.nvkAvatar != '')
+                    ? session.nvkAdminLogin.nvkAvatar + '?v=' + #dates.createNow().getTime()
+                    : 'https://ui-avatars.com/api/?name=' + session.nvkAdminLogin.nvkFullName + '&background=random'}"
                  class="rounded-circle border border-secondary"
                  style="width: 40px; height: 40px; object-fit: cover;"
-                 alt="User Image"
-                 onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Admin&background=random';">
+                 alt="User Image">
         </div>
         <div class="info ps-2">
             <a href="/nvkAdmin/profile" class="d-block text-decoration-none text-light fw-bold"

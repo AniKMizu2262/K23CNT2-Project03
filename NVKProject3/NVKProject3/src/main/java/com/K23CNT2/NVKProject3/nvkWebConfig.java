@@ -6,25 +6,30 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.nio.file.Paths;
+
 @Configuration
 public class nvkWebConfig implements WebMvcConfigurer {
 
     @Autowired
     private AdminLoginInterceptor adminLoginInterceptor;
 
-    // --- 1. Cấu hình Static Resources (Đã nâng cấp) ---
+    // --- 1. Cấu hình Static Resources ---
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // Lấy đường dẫn tuyệt đối của thư mục uploads
+        String path = Paths.get("./uploads").toUri().toString();
+
+        // Cấu hình map URL
         registry.addResourceHandler("/images/**")
-                .addResourceLocations("file:src/main/resources/static/images/", "classpath:/static/images/");
+                .addResourceLocations(path);
     }
 
-    // --- 2. Cấu hình Interceptor (Bảo mật Admin) ---
+    // --- 2. Cấu hình Interceptor ---
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(adminLoginInterceptor)
-                .addPathPatterns("/nvkAdmin/**")              // Chặn toàn bộ trang Admin
-                .excludePathPatterns("/nvkLogin/**", "/nvkAdmin/assets/**"); // Trừ trang Login và CSS/JS
+                .addPathPatterns("/nvkAdmin/**")
+                .excludePathPatterns("/nvkLogin/**", "/nvkAdmin/assets/**");
     }
-
 }

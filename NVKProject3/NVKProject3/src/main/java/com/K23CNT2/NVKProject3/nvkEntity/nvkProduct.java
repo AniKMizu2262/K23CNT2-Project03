@@ -40,6 +40,7 @@ public class nvkProduct {
     // --- Quan hệ ---
     @ManyToOne
     @JoinColumn(name = "nvk_cate_id")
+    @EqualsAndHashCode.Exclude // <--- THÊM DÒNG NÀY (Chống lag)
     @ToString.Exclude
     private nvkCategory nvkCategory;
 

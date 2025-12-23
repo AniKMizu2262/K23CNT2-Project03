@@ -29,6 +29,20 @@
         </a>
     </div>
 
+    <div class="px-4">
+        <div th:if="${successMsg}" class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            <strong th:text="${successMsg}">Thông báo thành công</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div th:if="${errorMsg}" class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <strong th:text="${errorMsg}">Thông báo lỗi</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+
     <div class="content">
         <div class="card shadow-lg border-0">
             <div class="card-header py-3 bg-transparent border-bottom">
@@ -38,7 +52,7 @@
             </div>
             <div class="card-body p-0 table-responsive">
                 <table class="table table-hover mb-0 align-middle">
-                    <thead>
+                    <thead class="table-primary">
                     <tr>
                         <th class="text-center" width="5%">ID</th>
                         <th class="text-center" width="10%">Avatar</th>
@@ -49,34 +63,48 @@
                     </tr>
                     </thead>
                     <tbody>
+
                     <tr th:each="ad : ${nvkAdmins}">
                         <td class="text-center text-muted fw-bold">[[${ad.nvkId}]]</td>
 
                         <td class="text-center">
-                            <img th:src="${ad.nvkAvatar != null && ad.nvkAvatar != '' ? ad.nvkAvatar : 'https://ui-avatars.com/api/?name=' + ad.nvkFullName + '&background=random'}"
+                            <img th:src="${(ad.nvkAvatar != null && ad.nvkAvatar != '')
+                                    ? ad.nvkAvatar + '?v=' + #dates.createNow().getTime()
+                                    : 'https://ui-avatars.com/api/?name=' + ad.nvkFullName + '&background=random'}"
                                  style="width: 35px; height: 35px; object-fit: cover;"
                                  class="rounded-circle border"
-                                 onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Admin&background=random';">
+                                 alt="Avatar">
                         </td>
 
                         <td class="fw-bold text-primary">[[${ad.nvkUsername}]]</td>
                         <td>[[${ad.nvkFullName}]]</td>
 
                         <td class="text-center">
-                            <span th:if="${ad.nvkActive}" class="badge bg-success">Active</span>
-                            <span th:unless="${ad.nvkActive}" class="badge bg-secondary">Locked</span>
+                            <span th:if="${ad.nvkActive}" class="badge bg-success bg-opacity-75">Active</span>
+                            <span th:unless="${ad.nvkActive}" class="badge bg-secondary bg-opacity-75">Locked</span>
                         </td>
 
                         <td class="text-center">
-                            <a th:href="@{/nvkAdmin/accounts/edit/{id}(id=${ad.nvkId})}" class="btn btn-sm btn-primary">
+                            <a th:href="@{/nvkAdmin/accounts/edit/{id}(id=${ad.nvkId})}"
+                               class="btn btn-sm btn-outline-primary" title="Sửa">
                                 <i class="bi bi-pencil-square"></i>
                             </a>
-                            <a th:href="@{/nvkAdmin/accounts/delete/{id}(id=${ad.nvkId})}" class="btn btn-sm btn-danger"
-                               onclick="return confirm('Xóa admin này?');">
+                            <a th:href="@{/nvkAdmin/accounts/delete/{id}(id=${ad.nvkId})}"
+                               class="btn btn-sm btn-outline-danger ms-1"
+                               onclick="return confirm('Bạn có chắc muốn xóa admin này không? Hành động này không thể hoàn tác!');"
+                               title="Xóa">
                                 <i class="bi bi-trash"></i>
                             </a>
                         </td>
                     </tr>
+
+                    <tr th:if="${#lists.isEmpty(nvkAdmins)}">
+                        <td colspan="6" class="text-center py-5 text-muted">
+                            <i class="bi bi-inbox fs-1 d-block mb-2 text-secondary"></i>
+                            Chưa có dữ liệu quản trị viên nào.
+                        </td>
+                    </tr>
+
                     </tbody>
                 </table>
             </div>
@@ -84,8 +112,10 @@
     </div>
 
 </div>
-<script>function toggleSidebar() {
-    document.body.classList.toggle('sidebar-closed');
-}</script>
+<script>
+    function toggleSidebar() {
+        document.body.classList.toggle('sidebar-closed');
+    }
+</script>
 </body>
 </html>

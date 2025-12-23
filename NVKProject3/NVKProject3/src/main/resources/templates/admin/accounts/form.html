@@ -64,13 +64,13 @@
                         <div class="col-md-6">
                             <label class="form-label fw-bold small text-muted text-uppercase">Avatar</label>
                             <div class="d-flex align-items-center gap-3">
-                                <img th:src="${nvkAdmin.nvkAvatar != null && nvkAdmin.nvkAvatar != '' ? nvkAdmin.nvkAvatar : 'https://ui-avatars.com/api/?name=' + (nvkAdmin.nvkFullName != null ? nvkAdmin.nvkFullName : 'New Admin') + '&background=random'}"
+                                <img th:src="${(nvkAdmin.nvkAvatar != null && nvkAdmin.nvkAvatar != '')
+                                        ? nvkAdmin.nvkAvatar + '?v=' + #dates.createNow().getTime()
+                                        : 'https://ui-avatars.com/api/?name=' + (nvkAdmin.nvkFullName != null ? nvkAdmin.nvkFullName : 'New Admin') + '&background=random'}"
                                      width="60" height="60"
                                      class="rounded-circle border shadow-sm"
                                      style="object-fit: cover;"
-                                     onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Admin&background=random';">
-
-                                <input type="file" name="nvkImageFile" class="form-control">
+                                     alt="Avatar Preview"> <input type="file" name="nvkImageFile" class="form-control">
                             </div>
                         </div>
 
@@ -78,13 +78,11 @@
                             <label class="form-label small text-uppercase text-muted fw-bold">Trạng thái</label>
 
                             <div class="form-control d-flex align-items-center gap-3">
-
                                 <div class="form-check form-switch m-0 d-flex align-items-center">
                                     <input class="form-check-input" type="checkbox" id="activeSwitch"
                                            th:field="*{nvkActive}"
                                            style="width: 3em; height: 1.5em; cursor: pointer; margin-left: -2.5em;">
                                 </div>
-
                                 <label class="form-check-label fw-bold text-success mb-0 flex-grow-1"
                                        for="activeSwitch" style="cursor: pointer;">
                                     Kích hoạt tài khoản
@@ -93,18 +91,21 @@
                         </div>
                     </div>
                 </div>
+                <hr class="mx-4 my-0 border-secondary-subtle">
 
-                <div class="card-footer text-end bg-transparent border-top p-3">
+                <div class="card-footer text-end bg-transparent border-0 p-3">
                     <a href="/nvkAdmin/accounts" class="btn btn-secondary me-2">Quay lại</a>
                     <button type="submit" class="btn btn-primary px-4 fw-bold">Lưu dữ liệu</button>
                 </div>
             </form>
         </div>
     </div>
-
 </div>
-<script>function toggleSidebar() {
-    document.body.classList.toggle('sidebar-closed');
-}</script>
+
+<script>
+    function toggleSidebar() {
+        document.body.classList.toggle('sidebar-closed');
+    }
+</script>
 </body>
 </html>

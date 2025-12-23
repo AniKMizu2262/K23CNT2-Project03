@@ -30,6 +30,22 @@
         </a>
     </div>
 
+    <div th:if="${nvkMsg}" class="alert alert-success alert-dismissible fade show shadow-sm mb-4">
+        <i class="bi bi-check-circle-fill me-2"></i> [[${nvkMsg}]]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <div class="input-group">
+                <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                <input type="text" id="searchInput" class="form-control"
+                       placeholder="Nhập tên, email hoặc số điện thoại..." th:value="${keyword}">
+                <a href="/nvkAdmin/customer" class="btn btn-light border">Reset</a>
+            </div>
+        </div>
+    </div>
+
     <div class="content">
         <div class="card shadow-lg border-0">
 
@@ -52,7 +68,8 @@
                         <th class="text-center py-3">Thao tác</th>
                     </tr>
                     </thead>
-                    <tbody>
+
+                    <tbody id="tableBody" th:fragment="customer_rows">
                     <tr th:each="c : ${nvkCustomers}">
                         <td class="text-center text-muted fw-bold">[[${c.nvkId}]]</td>
 
@@ -110,8 +127,25 @@
     </div>
 </div>
 
-<script>function toggleSidebar() {
-    document.body.classList.toggle('sidebar-closed');
-}</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById('searchInput');
+        const tableBody = document.getElementById('tableBody');
+
+        searchInput.addEventListener('input', function () {
+            const url = `/nvkAdmin/customer/search-results?keyword=${encodeURIComponent(this.value)}`;
+            fetch(url)
+                .then(res => res.text())
+                .then(html => tableBody.innerHTML = html)
+                .catch(err => console.error(err));
+        });
+    });
+
+    function toggleSidebar() {
+        document.body.classList.toggle('sidebar-closed');
+    }
+</script>
 </body>
 </html>

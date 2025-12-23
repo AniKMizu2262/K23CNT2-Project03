@@ -92,40 +92,29 @@
                             </div>
 
                             <div class="row mb-3">
-
-                                <div class="row mb-3">
-
-                                    <div class="col-md-6">
-                                        <label class="form-label small text-uppercase text-muted fw-bold">Giá gốc (Niêm
-                                            yết)</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i
-                                                    class="bi bi-currency-dollar text-muted"></i></span>
-
-                                            <input type="number" step="0.01"
-                                                   name="nvkOldPrice" id="nvkOldPrice"
-                                                   th:value="${nvkProduct.nvkOldPrice != null ? #numbers.formatDecimal(nvkProduct.nvkOldPrice, 0, 'NONE', 0, 'POINT') : ''}"
-                                                   class="form-control"
-                                                   placeholder="Nhập giá gốc...">
-                                        </div>
-                                        <div class="form-text small fst-italic text-muted">Giá này sẽ hiện gạch ngang
-                                            trên web.
-                                        </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small text-uppercase text-muted fw-bold">Giá gốc</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-currency-dollar text-muted"></i></span>
+                                        <input type="number" step="0.01"
+                                               name="nvkOldPrice"
+                                               th:value="${nvkProduct.nvkOldPrice != null ? #numbers.formatInteger(nvkProduct.nvkOldPrice, 0) : ''}"
+                                               class="form-control"
+                                               placeholder="Nhập giá gốc...">
                                     </div>
+                                </div>
 
-                                    <div class="col-md-6 mt-3 mt-md-0">
-                                        <label class="form-label small text-uppercase text-muted fw-bold">Giá bán thực
-                                            tế <span class="text-danger">*</span></label>
-                                        <div class="input-group">
-                                            <span class="input-group-text bg-success text-white border-success"><i
-                                                    class="bi bi-cash-stack"></i></span>
-
-                                            <input type="number" step="0.01"
-                                                   name="nvkPrice" id="nvkPrice"
-                                                   th:value="${nvkProduct.nvkPrice != null ? #numbers.formatDecimal(nvkProduct.nvkPrice, 0, 'NONE', 0, 'POINT') : ''}"
-                                                   class="form-control fw-bold text-success" required
-                                                   placeholder="Nhập giá bán...">
-                                        </div>
+                                <div class="col-md-6 mt-3 mt-md-0">
+                                    <label class="form-label small text-uppercase text-muted fw-bold">Giá bán <span
+                                            class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-success text-white border-success"><i
+                                                class="bi bi-cash-stack"></i></span>
+                                        <input type="number" step="0.01"
+                                               name="nvkPrice"
+                                               th:value="${nvkProduct.nvkPrice != null ? #numbers.formatInteger(nvkProduct.nvkPrice, 0) : ''}"
+                                               class="form-control fw-bold text-success" required
+                                               placeholder="Nhập giá bán...">
                                     </div>
                                 </div>
                             </div>
@@ -143,15 +132,20 @@
 
                                     <div class="d-flex align-items-center gap-3 border rounded bg-body px-2 py-1"
                                          style="min-height: 45px;">
-                                        <img th:src="${nvkProduct.nvkImgUrl != null && nvkProduct.nvkImgUrl != '' ? nvkProduct.nvkImgUrl : 'https://ui-avatars.com/api/?name=' + (nvkProduct.nvkName != null ? nvkProduct.nvkName : 'New Product') + '&background=random&size=128'}"
+
+                                        <img th:src="${(nvkProduct.nvkImgUrl != null && nvkProduct.nvkImgUrl != '')
+                                                ? '/nvk-product-img/' + nvkProduct.nvkImgUrl
+                                                : 'https://placehold.co/100'}"
+                                             id="imagePreview"
                                              width="38" height="38"
                                              class="rounded border shadow-sm flex-shrink-0"
                                              style="object-fit: cover;"
-                                             onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Product&background=random';">
+                                             onerror="this.src='https://placehold.co/100';">
 
                                         <div class="flex-grow-1">
                                             <input type="file" name="nvkImageFile"
-                                                   class="form-control form-control-sm border-0 bg-transparent p-0">
+                                                   class="form-control form-control-sm border-0 bg-transparent p-0"
+                                                   onchange="previewImage(this)">
                                         </div>
                                     </div>
                                 </div>
@@ -198,8 +192,22 @@
     </div>
 </div>
 
-<script>function toggleSidebar() {
-    document.body.classList.toggle('sidebar-closed');
-}</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function toggleSidebar() {
+        document.body.classList.toggle('sidebar-closed');
+    }
+
+    // [MỚI] Hàm xem trước ảnh khi chọn
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('imagePreview').src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
 </body>
 </html>

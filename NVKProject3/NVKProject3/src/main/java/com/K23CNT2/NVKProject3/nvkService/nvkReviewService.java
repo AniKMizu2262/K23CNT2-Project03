@@ -22,4 +22,10 @@ public class nvkReviewService {
     public void deleteReview(Long id) {
         nvkReviewRepository.deleteById(id);
     }
+
+    // Lấy danh sách có lọc
+    public List<nvkReview> searchAndFilter(Integer rating, String keyword) {
+        if (keyword != null && keyword.trim().isEmpty()) keyword = null;
+        return nvkReviewRepository.findByRatingAndKeyword(rating, keyword);
+    }
 }

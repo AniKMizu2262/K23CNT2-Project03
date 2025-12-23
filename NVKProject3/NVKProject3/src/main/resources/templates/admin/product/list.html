@@ -2,21 +2,21 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Sản phẩm</title>
+    <title>Quản lý Sản phẩm</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/css/style.css">
 </head>
-<body class="bg-body">
+<body class="bg-body-tertiary">
 
 <aside th:replace="~{fragments/sidebar :: sidebar('product')}"></aside>
 
 <div class="content-wrapper">
 
-    <div class="content-header mb-4 p-4 rounded shadow-sm d-flex justify-content-between align-items-center">
+    <div class="content-header mb-4 p-4 rounded shadow-sm bg-white d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center gap-3">
             <button class="btn btn-outline-secondary border-0"
-                    onclick="document.body.classList.toggle('sidebar-closed')" title="Menu">
+                    onclick="document.body.classList.toggle('sidebar-closed')" title="Toggle Menu">
                 <i class="bi bi-list fs-4"></i>
             </button>
             <div>
@@ -30,10 +30,50 @@
         </a>
     </div>
 
+    <div th:if="${nvkMsg}" class="alert alert-success alert-dismissible fade show shadow-sm mb-4" role="alert">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-check-circle-fill fs-4 me-2"></i>
+            <strong th:text="${nvkMsg}"></strong>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <form onsubmit="return false;">
+                <div class="row g-2 align-items-center">
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                            <input type="text" id="searchInput" name="keyword" class="form-control"
+                                   placeholder="Gõ tên sản phẩm để tìm ngay..."
+                                   th:value="${keyword}">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <select class="form-select" id="categorySelect" name="categoryId">
+                            <option value="">-- Tất cả loại --</option>
+                            <option th:each="c : ${nvkCategories}"
+                                    th:value="${c.nvkId}"
+                                    th:text="${c.nvkName}"
+                                    th:selected="${c.nvkId == categoryId}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3 text-end">
+                        <a th:href="@{/nvkAdmin/product}" class="btn btn-light border w-100">
+                            <i class="bi bi-arrow-counterclockwise"></i> Reset
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="content">
         <div class="card shadow-lg border-0">
-
-            <div class="card-header py-3 bg-transparent border-bottom">
+            <div class="card-header py-3 bg-white border-bottom">
                 <h6 class="m-0 font-weight-bold text-primary text-uppercase small">
                     <i class="bi bi-box-seam-fill me-1"></i> Kho hàng hiện tại
                 </h6>
@@ -41,9 +81,9 @@
 
             <div class="card-body p-0 table-responsive">
                 <table class="table table-hover mb-0 align-middle">
-                    <thead>
-                    <tr class="text-uppercase small text-muted">
-                        <th class="text-center py-3" width="5%">Ảnh</th>
+                    <thead class="table-primary">
+                    <tr class="text-uppercase small fw-bold">
+                        <th class="text-center py-3" width="80">Ảnh</th>
                         <th class="py-3">Thông tin sản phẩm</th>
                         <th class="text-end py-3">Giá bán</th>
                         <th class="text-center py-3">Tồn kho</th>
@@ -51,10 +91,13 @@
                         <th class="text-center py-3">Thao tác</th>
                     </tr>
                     </thead>
-                    <tbody>
+
+                    <tbody id="tableBody" th:fragment="product_rows">
                     <tr th:each="p : ${nvkProducts}">
                         <td class="text-center">
-                            <img th:src="${p.nvkImgUrl != null && p.nvkImgUrl != '' ? p.nvkImgUrl : 'https://ui-avatars.com/api/?name=' + p.nvkName + '&background=random&size=128'}"
+                            <img th:src="${(p.nvkImgUrl != null && p.nvkImgUrl != '')
+            ? '/nvk-product-img/' + p.nvkImgUrl
+            : 'https://ui-avatars.com/api/?name=' + p.nvkName + '&background=random&size=128'}"
                                  width="50" height="50"
                                  class="rounded border shadow-sm"
                                  style="object-fit: cover;"
@@ -65,11 +108,15 @@
                             <div class="d-flex flex-column">
                                 <span class="fw-bold text-primary">[[${p.nvkName}]]</span>
                                 <div class="small mt-1">
-                                        <span class="badge border border-secondary text-info bg-transparent fw-normal me-2">
-                                            <i class="bi bi-qr-code me-1"></i>[[${p.nvkCode}]]
-                                        </span>
-                                    <span class="text-muted"><i
-                                            class="bi bi-tag-fill me-1"></i> [[${p.nvkBrand}]]</span>
+                                    <span class="badge border border-secondary text-info bg-transparent fw-normal me-2">
+                                        <i class="bi bi-qr-code me-1"></i>[[${p.nvkCode}]]
+                                    </span>
+                                    <span class="text-muted">
+                                        <i class="bi bi-tag-fill me-1"></i> [[${p.nvkBrand}]]
+                                    </span>
+                                    <span class="text-muted ms-2" th:if="${p.nvkCategory != null}">
+                                        <i class="bi bi-folder2-open"></i> [[${p.nvkCategory.nvkName}]]
+                                    </span>
                                 </div>
                             </div>
                         </td>
@@ -79,7 +126,7 @@
                         </td>
 
                         <td class="text-center">
-                            <span class="fw-bold text-light">[[${p.nvkQuantity}]]</span>
+                            <span class="fw-bold text-secondary">[[${p.nvkQuantity}]]</span>
                         </td>
 
                         <td class="text-center">
@@ -106,8 +153,8 @@
 
                     <tr th:if="${#lists.isEmpty(nvkProducts)}">
                         <td colspan="6" class="text-center py-5 text-muted">
-                            <i class="bi bi-box2 fs-1 d-block mb-3 opacity-50"></i>
-                            <p class="mb-0">Kho hàng đang trống.</p>
+                            <i class="bi bi-inbox fs-1 d-block mb-3 opacity-50"></i>
+                            <p class="mb-0">Không tìm thấy sản phẩm nào.</p>
                             <a href="/nvkAdmin/product/create" class="btn btn-sm btn-primary mt-2">Nhập hàng ngay</a>
                         </td>
                     </tr>
@@ -118,8 +165,42 @@
     </div>
 </div>
 
-<script>function toggleSidebar() {
-    document.body.classList.toggle('sidebar-closed');
-}</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById('searchInput');
+        const categorySelect = document.getElementById('categorySelect');
+        const tableBody = document.getElementById('tableBody');
+
+        // Hàm gọi API Live Search
+        function performSearch() {
+            const keyword = searchInput.value;
+            const categoryId = categorySelect.value;
+
+            // Gọi API Search Results
+            const url = `/nvkAdmin/product/search-results?keyword=${encodeURIComponent(keyword)}&categoryId=${categoryId}`;
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) throw new Error('Mạng lỗi hoặc URL sai');
+                    return response.text();
+                })
+                .then(html => {
+                    // Cập nhật lại nội dung bảng
+                    tableBody.innerHTML = html;
+                })
+                .catch(error => console.error('Lỗi tìm kiếm:', error));
+        }
+
+        // Bắt sự kiện Live Search
+        searchInput.addEventListener('input', performSearch);
+        categorySelect.addEventListener('change', performSearch);
+    });
+
+    function toggleSidebar() {
+        document.body.classList.toggle('sidebar-closed');
+    }
+</script>
 </body>
 </html>
