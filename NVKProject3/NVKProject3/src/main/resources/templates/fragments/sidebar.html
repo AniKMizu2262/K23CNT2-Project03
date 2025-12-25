@@ -3,7 +3,8 @@
 <body>
 
 <aside th:fragment="sidebar(activePage)" class="sidebar">
-    <a href="/nvkAdmin" class="brand-link">
+
+    <a th:href="@{/nvkAdmin}" class="brand-link">
         <i class="bi bi-shield-check me-2 text-primary"></i>
         <span class="fw-bold">NVK ADMIN</span>
     </a>
@@ -18,14 +19,15 @@
                  alt="User Image">
         </div>
         <div class="info ps-2">
-            <a href="/nvkAdmin/profile" class="d-block text-decoration-none text-light fw-bold"
-               th:text="${session.nvkAdminLogin.nvkFullName}">Admin</a>
+            <a th:href="@{/nvkAdmin/profile}" class="d-block text-decoration-none text-light fw-bold"
+               th:text="${session.nvkAdminLogin.nvkFullName}">Admin Name</a>
         </div>
     </div>
 
     <ul class="nav-sidebar">
+
         <li class="nav-item">
-            <a href="/nvkAdmin" class="nav-link" th:classappend="${activePage == 'home' ? 'active' : ''}">
+            <a th:href="@{/nvkAdmin}" class="nav-link" th:classappend="${activePage == 'home' ? 'active' : ''}">
                 <i class="bi bi-speedometer2 me-2"></i> Dashboard
             </a>
         </li>
@@ -33,13 +35,15 @@
         <li class="nav-header">KHO HÀNG</li>
 
         <li class="nav-item">
-            <a href="/nvkAdmin/category" class="nav-link" th:classappend="${activePage == 'category' ? 'active' : ''}">
+            <a th:href="@{/nvkAdmin/category}" class="nav-link"
+               th:classappend="${activePage == 'category' ? 'active' : ''}">
                 <i class="bi bi-tags-fill me-2"></i> Danh mục
             </a>
         </li>
 
         <li class="nav-item">
-            <a href="/nvkAdmin/product" class="nav-link" th:classappend="${activePage == 'product' ? 'active' : ''}">
+            <a th:href="@{/nvkAdmin/product}" class="nav-link"
+               th:classappend="${activePage == 'product' ? 'active' : ''}">
                 <i class="bi bi-box-seam-fill me-2"></i> Sản phẩm
             </a>
         </li>
@@ -47,19 +51,21 @@
         <li class="nav-header">KINH DOANH</li>
 
         <li class="nav-item">
-            <a href="/nvkAdmin/customer" class="nav-link" th:classappend="${activePage == 'customer' ? 'active' : ''}">
+            <a th:href="@{/nvkAdmin/customer}" class="nav-link"
+               th:classappend="${activePage == 'customer' ? 'active' : ''}">
                 <i class="bi bi-people-fill me-2"></i> Khách hàng
             </a>
         </li>
 
         <li class="nav-item">
-            <a href="/nvkAdmin/review" class="nav-link" th:classappend="${activePage == 'review' ? 'active' : ''}">
-                <i class="bi bi-chat-right-quote-fill me-2"></i> Đánh giá/Bình luận
+            <a th:href="@{/nvkAdmin/review}" class="nav-link"
+               th:classappend="${activePage == 'review' ? 'active' : ''}">
+                <i class="bi bi-chat-right-quote-fill me-2"></i> Đánh giá
             </a>
         </li>
 
         <li class="nav-item">
-            <a href="/nvkAdmin/order" class="nav-link" th:classappend="${activePage == 'order' ? 'active' : ''}">
+            <a th:href="@{/nvkAdmin/order}" class="nav-link" th:classappend="${activePage == 'order' ? 'active' : ''}">
                 <i class="bi bi-cart-check-fill me-2"></i> Đơn hàng
             </a>
         </li>
@@ -67,13 +73,15 @@
         <li class="nav-header">HỆ THỐNG</li>
 
         <li class="nav-item">
-            <a href="/nvkAdmin/accounts" class="nav-link" th:classappend="${activePage == 'accounts' ? 'active' : ''}">
+            <a th:href="@{/nvkAdmin/accounts}" class="nav-link"
+               th:classappend="${activePage == 'accounts' ? 'active' : ''}">
                 <i class="bi bi-person-lines-fill me-2"></i> Tài khoản Admin
             </a>
         </li>
 
-        <li class="nav-item">
-            <a href="/nvkLogout" class="nav-link text-danger fw-bold">
+        <li class="nav-item mt-3">
+            <a th:href="@{/nvkLogout}"
+               class="nav-link text-danger fw-bold border border-danger bg-danger bg-opacity-10">
                 <i class="bi bi-box-arrow-right me-2"></i> Đăng xuất
             </a>
         </li>

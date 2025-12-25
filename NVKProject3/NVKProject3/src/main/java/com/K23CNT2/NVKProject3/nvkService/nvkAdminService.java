@@ -13,16 +13,19 @@ public class nvkAdminService {
     @Autowired
     private nvkAdminRepository repo;
 
-    // --- Xử lý Đăng nhập ---
+    /**
+     * Xử lý đăng nhập cho Admin
+     *
+     * @param username Tên đăng nhập
+     * @param password Mật khẩu (thường)
+     * @return Đối tượng nvkAdmin nếu thành công, null nếu thất bại
+     */
     public nvkAdmin login(String username, String password) {
-        // Tìm user theo tên đăng nhập
         Optional<nvkAdmin> adminOp = repo.findByNvkUsername(username);
 
-        // Nếu tồn tại và mật khẩu khớp
         if (adminOp.isPresent() && adminOp.get().getNvkPassword().equals(password)) {
             return adminOp.get();
         }
-
-        return null; // Đăng nhập thất bại
+        return null;
     }
 }

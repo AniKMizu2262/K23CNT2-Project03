@@ -15,9 +15,9 @@ public class nvkOrderDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long nvkId;
 
-    // --- Thông tin chi tiết ---
-    private Integer nvkQuantity; // Số lượng mua
-    private Double nvkPrice;     // Giá tại thời điểm mua
+    // --- Thông tin chi tiết tại thời điểm mua ---
+    private Integer nvkQuantity;
+    private Double nvkPrice;     // Giá này được lưu cứng, phòng trường hợp sau này giá SP thay đổi
 
     // --- Quan hệ ---
     @ManyToOne

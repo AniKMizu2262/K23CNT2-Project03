@@ -11,28 +11,38 @@ import java.util.List;
 @Repository
 public interface nvkProductRepository extends JpaRepository<nvkProduct, Long> {
 
-    // 1. Lấy 8 sản phẩm ngẫu nhiên (Cho Slider)
+    // === 1. CÁC HÀM CƠ BẢN (JPA AUTO) ===
+
+    // Tìm theo Danh mục (Có sắp xếp)
+    List<nvkProduct> findByNvkCategory_NvkId(Long categoryId);
+
+    List<nvkProduct> findByNvkCategory_NvkId(Long categoryId, Sort sort);
+
+    // Tìm theo Danh mục + Còn hàng
+    List<nvkProduct> findByNvkCategory_NvkIdAndNvkQuantityGreaterThan(Long categoryId, Integer quantity, Sort sort);
+
+    // Tìm tất cả SP còn hàng
+    List<nvkProduct> findByNvkQuantityGreaterThan(Integer quantity, Sort sort);
+
+    // Tìm theo tên (Search cơ bản)
+    List<nvkProduct> findByNvkNameContainingIgnoreCase(String name);
+
+    // Tìm kết hợp Danh mục + Tên (Search nâng cao)
+    List<nvkProduct> findByNvkCategory_NvkIdAndNvkNameContainingIgnoreCase(Long categoryId, String name);
+
+    // === 2. CUSTOM QUERIES (NATIVE & JPQL) ===
+
+    /**
+     * Lấy 8 sản phẩm ngẫu nhiên để hiển thị Slider/Gợi ý.
+     * Sử dụng Native Query để tận dụng hàm RAND() của MySQL.
+     */
     @Query(value = "SELECT * FROM nvk_products ORDER BY RAND() LIMIT 8", nativeQuery = true)
     List<nvkProduct> findRandomProducts();
 
-    // 2. Tìm theo Danh mục (Có sắp xếp)
-    List<nvkProduct> findByNvkCategory_NvkId(Long categoryId, Sort sort);
-
-    // 3. Tìm theo Danh mục VÀ Số lượng > 0 (Có sắp xếp)
-    List<nvkProduct> findByNvkCategory_NvkIdAndNvkQuantityGreaterThan(Long categoryId, Integer quantity, Sort sort);
-
-    // 4. Tìm tất cả SP có số lượng > 0 (Có sắp xếp)
-    List<nvkProduct> findByNvkQuantityGreaterThan(Integer quantity, Sort sort);
-
-    // 5. Hàm tìm kiếm này:
-    List<nvkProduct> findByNvkNameContainingIgnoreCase(String name);
-
-    // 2. Tìm theo Loại (Mới)
-    List<nvkProduct> findByNvkCategory_NvkId(Long categoryId);
-
-    // 3. Tìm kết hợp cả Tên và Loại (Mới)
-    List<nvkProduct> findByNvkCategory_NvkIdAndNvkNameContainingIgnoreCase(Long categoryId, String name);
-
+    /**
+     * [OPTIMIZED] Lấy tất cả sản phẩm kèm theo thông tin Danh mục (JOIN FETCH).
+     * Giúp tránh lỗi N+1 Query (Hibernate không phải query lại bảng Category cho từng sản phẩm).
+     */
     @Query("SELECT p FROM nvkProduct p LEFT JOIN FETCH p.nvkCategory")
     List<nvkProduct> findAllWithCategory();
 }

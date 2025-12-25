@@ -19,18 +19,23 @@ public class nvkOrder {
     private Long nvkId;
 
     // --- Thông tin chung ---
-    private String nvkCode;             // Mã đơn hàng
-    private Double nvkTotalAmount;      // Tổng tiền
+    private String nvkCode;             // Mã đơn hàng (VD: ORD-12345)
+    private Double nvkTotalAmount;      // Tổng tiền thanh toán
 
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime nvkCreatedDate; // Ngày đặt
+    private LocalDateTime nvkCreatedDate; // Ngày tạo đơn
 
     // --- Thông tin người nhận ---
     private String nvkReceiverName;
     private String nvkReceiverPhone;
     private String nvkReceiverAddress;
 
-    // --- Trạng thái (0:Mới, 1:Xác nhận, 2:Giao, 3:Xong, 4:Hủy) ---
+    // --- Trạng thái đơn hàng ---
+    // 0: Mới đặt (Chờ xác nhận)
+    // 1: Đã xác nhận
+    // 2: Đang giao hàng
+    // 3: Đã giao thành công
+    // 4: Đã hủy
     private Integer nvkStatus;
 
     // --- Quan hệ ---
@@ -39,7 +44,8 @@ public class nvkOrder {
     @ToString.Exclude
     private nvkCustomer nvkCustomer;
 
-    @OneToMany(mappedBy = "nvkOrder", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "nvkOrder", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<nvkOrderDetail> nvkOrderDetails;
 }

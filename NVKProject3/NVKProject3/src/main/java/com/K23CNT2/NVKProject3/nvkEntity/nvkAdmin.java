@@ -19,15 +19,16 @@ public class nvkAdmin {
     private Long nvkId;
 
     // --- Thông tin đăng nhập ---
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String nvkUsername;
+
+    @Column(nullable = false)
     private String nvkPassword;
 
     // --- Thông tin cá nhân ---
     private String nvkFullName;
     private String nvkAvatar;
-    
 
-    // --- Trạng thái ---
+    // --- Trạng thái (true: Hoạt động, false: Khóa) ---
     private Boolean nvkActive;
 }

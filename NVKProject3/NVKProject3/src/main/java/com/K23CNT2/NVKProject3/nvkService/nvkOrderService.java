@@ -13,19 +13,21 @@ public class nvkOrderService {
     @Autowired
     private nvkOrderRepository orderRepository;
 
-    // Lấy chi tiết đơn hàng
     public nvkOrder getOrderById(Long id) {
         return orderRepository.findById(id).orElse(null);
     }
 
-    // Lưu đơn hàng
     public void saveOrder(nvkOrder order) {
         orderRepository.save(order);
     }
 
-    // --- [QUAN TRỌNG] HÀM GỌI LIVE SEARCH ---
+    /**
+     * Tìm kiếm và lọc đơn hàng (Live Search)
+     *
+     * @param status  Trạng thái đơn hàng (0,1,2...)
+     * @param keyword Tên khách/SĐT/Mã đơn
+     */
     public List<nvkOrder> searchAndFilter(Integer status, String keyword) {
-        // Xử lý keyword: nếu rỗng thì cho null để Repository biết là không tìm theo tên
         if (keyword != null && keyword.trim().isEmpty()) {
             keyword = null;
         }

@@ -1,6 +1,8 @@
 package com.K23CNT2.NVKProject3.nvkController;
 
 import com.K23CNT2.NVKProject3.nvkEntity.nvkOrder;
+import com.K23CNT2.NVKProject3.nvkEntity.nvkOrderDetail;
+import com.K23CNT2.NVKProject3.nvkRepository.nvkOrderDetailRepository;
 import com.K23CNT2.NVKProject3.nvkService.nvkOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,74 +17,60 @@ import java.util.List;
 public class nvkOrderController {
 
     @Autowired
-    private nvkOrderService orderService; // Dùng Service thay vì Repository
+    private nvkOrderService orderService;
+    @Autowired
+    private nvkOrderDetailRepository orderDetailRepo;
 
-    // ==========================================================
-    // 1. HIỂN THỊ DANH SÁCH (Kết hợp Tìm kiếm + Lọc)
-    // ==========================================================
+    // 1. Danh sách
     @GetMapping("")
     public String listOrder(Model model,
                             @RequestParam(value = "status", required = false) Integer status,
                             @RequestParam(value = "keyword", required = false) String keyword) {
-
-        // Gọi Service tìm kiếm và lọc
-        List<nvkOrder> list = orderService.searchAndFilter(status, keyword);
-        model.addAttribute("nvkOrders", list);
-
-        // Giữ lại giá trị để hiển thị trên ô input/dropdown
+        model.addAttribute("nvkOrders", orderService.searchAndFilter(status, keyword));
         model.addAttribute("currStatus", status);
         model.addAttribute("currKeyword", keyword);
-
         return "admin/order/list";
     }
 
-    // ==========================================================
-    // 2. API LIVE SEARCH (Trả về Fragment HTML cho bảng)
-    // ==========================================================
+    // 2. Live Search
     @GetMapping("/search-results")
     public String searchResults(Model model,
                                 @RequestParam(value = "status", required = false) Integer status,
                                 @RequestParam(value = "keyword", required = false) String keyword) {
-
-        // Gọi hàm searchAndFilter vừa viết bên Service
-        List<nvkOrder> list = orderService.searchAndFilter(status, keyword);
-        model.addAttribute("nvkOrders", list);
-
-        // Trả về Fragment (chỉ cái bảng)
+        model.addAttribute("nvkOrders", orderService.searchAndFilter(status, keyword));
         return "admin/order/list :: order_rows";
     }
 
-    // ==========================================================
-    // 3. XEM CHI TIẾT ĐƠN HÀNG
-    // ==========================================================
-    @GetMapping("/view/{id}")
+    // ==============================================================
+    // 3. XEM CHI TIẾT (ĐÃ SỬA LẠI THÀNH 'view' CHO KHỚP HTML)
+    // ==============================================================
+    @GetMapping("/view/{id}") // <--- QUAN TRỌNG: Để là 'view' nhé
     public String viewOrder(@PathVariable("id") Long id, Model model) {
         nvkOrder order = orderService.getOrderById(id);
         if (order == null) {
             return "redirect:/nvkAdmin/order";
         }
+
+        // Lấy danh sách sản phẩm trong đơn
+        List<nvkOrderDetail> details = orderDetailRepo.findByNvkOrder(order);
+
         model.addAttribute("nvkOrder", order);
-        return "admin/order/detail"; // Bro nhớ tạo file detail.html nhé
+        model.addAttribute("nvkOrderDetails", details);
+
+        return "admin/order/detail";
     }
 
-    // ==========================================================
-    // 4. CẬP NHẬT TRẠNG THÁI ĐƠN HÀNG
-    // ==========================================================
+    // 4. Cập nhật trạng thái
     @PostMapping("/update-status")
-    public String updateOrderStatus(@RequestParam("id") Long id,
-                                    @RequestParam("status") Integer status,
-                                    RedirectAttributes redirectAttributes) { // <--- 1. Thêm cái này
-
+    public String updateStatus(@RequestParam("id") Long id,
+                               @RequestParam("status") Integer status,
+                               RedirectAttributes ra) {
         nvkOrder order = orderService.getOrderById(id);
         if (order != null) {
             order.setNvkStatus(status);
             orderService.saveOrder(order);
-
-            // 2. Gửi thông báo xanh
-            redirectAttributes.addFlashAttribute("nvkMsg", "Đã cập nhật trạng thái đơn hàng thành công!");
+            ra.addFlashAttribute("nvkMsg", "Cập nhật trạng thái đơn hàng thành công!");
         }
-
-        // 3. Chuyển hướng về trang Danh sách (cho đồng bộ với Product/Category)
         return "redirect:/nvkAdmin/order";
     }
 }

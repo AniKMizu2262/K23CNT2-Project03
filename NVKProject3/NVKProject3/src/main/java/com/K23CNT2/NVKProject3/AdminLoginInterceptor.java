@@ -6,6 +6,10 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+/**
+ * Interceptor: Chặn các request vào đường dẫn /nvkAdmin/**
+ * Nếu chưa đăng nhập (Session null) -> Đá về trang Login
+ */
 @Component
 public class AdminLoginInterceptor implements HandlerInterceptor {
 
@@ -14,14 +18,14 @@ public class AdminLoginInterceptor implements HandlerInterceptor {
         // Lấy session hiện tại
         HttpSession session = request.getSession();
 
-        // Kiểm tra session "nvkAdminLogin"
+        // Kiểm tra xem đã có Admin trong session chưa
         if (session.getAttribute("nvkAdminLogin") == null) {
-            // Chưa đăng nhập -> Đá về trang Login
+            // Chưa đăng nhập -> Chuyển hướng về trang Login
             response.sendRedirect("/nvkLogin");
-            return false; // Chặn request lại
+            return false; // Chặn không cho đi tiếp
         }
 
-        // Đã đăng nhập -> Cho phép đi tiếp
+        // Đã đăng nhập -> Cho phép đi tiếp vào Controller
         return true;
     }
 }

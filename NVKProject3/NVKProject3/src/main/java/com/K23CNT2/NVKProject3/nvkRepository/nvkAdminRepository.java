@@ -9,6 +9,11 @@ import java.util.Optional;
 @Repository
 public interface nvkAdminRepository extends JpaRepository<nvkAdmin, Long> {
 
-    // --- Custom Queries ---
+    /**
+     * Tìm kiếm Admin theo username (Dùng cho đăng nhập)
+     *
+     * @param nvkUsername Tên đăng nhập
+     * @return Optional chứa thông tin Admin nếu tìm thấy
+     */
     Optional<nvkAdmin> findByNvkUsername(String nvkUsername);
 }

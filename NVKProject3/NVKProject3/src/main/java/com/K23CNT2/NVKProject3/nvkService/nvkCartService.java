@@ -19,6 +19,7 @@ public class nvkCartService {
     private static final String CART_SESSION_KEY = "nvkCart";
 
     // 1. Lấy giỏ hàng từ Session
+    @SuppressWarnings("unchecked")
     public List<nvkCartItem> getCart(HttpSession session) {
         List<nvkCartItem> cart = (List<nvkCartItem>) session.getAttribute(CART_SESSION_KEY);
         if (cart == null) {
@@ -34,14 +35,14 @@ public class nvkCartService {
         nvkProduct product = productRepo.findById(productId).orElse(null);
 
         if (product != null) {
-            // Kiểm tra xem sản phẩm đã có trong giỏ chưa
+            // Check trùng sản phẩm -> Cộng dồn
             for (nvkCartItem item : cart) {
                 if (item.getProductId().equals(productId)) {
-                    item.setQuantity(item.getQuantity() + quantity); // Cộng dồn số lượng
+                    item.setQuantity(item.getQuantity() + quantity);
                     return;
                 }
             }
-            // Nếu chưa có thì thêm mới
+            // Chưa có -> Thêm mới
             nvkCartItem newItem = new nvkCartItem(
                     product.getNvkId(),
                     product.getNvkName(),
@@ -61,11 +62,12 @@ public class nvkCartService {
 
     // 4. Tính tổng tiền
     public double getTotalAmount(HttpSession session) {
-        List<nvkCartItem> cart = getCart(session);
-        return cart.stream().mapToDouble(nvkCartItem::getTotalPrice).sum();
+        return getCart(session).stream()
+                .mapToDouble(nvkCartItem::getTotalPrice)
+                .sum();
     }
 
-    // 5. Xóa sạch giỏ (sau khi thanh toán)
+    // 5. Xóa sạch giỏ (sau khi Checkout)
     public void clearCart(HttpSession session) {
         session.removeAttribute(CART_SESSION_KEY);
     }

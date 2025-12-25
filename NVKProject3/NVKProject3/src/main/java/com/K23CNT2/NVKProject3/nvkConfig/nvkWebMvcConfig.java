@@ -12,31 +12,34 @@ public class nvkWebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // 1. Lấy đường dẫn gốc của dự án
+        // 1. Lấy đường dẫn gốc tuyệt đối của dự án (Dynamic Path)
         Path rootPath = Paths.get(System.getProperty("user.dir"));
-
-        // 2. Trỏ tới thư mục uploads
         Path uploadDir = rootPath.resolve("uploads");
 
-        // --- CẤU HÌNH ẢNH USER & ADMIN ---
-        // Web gọi /nvk-images/** -> Nó sẽ tìm lần lượt trong 2 thư mục này:
-        // 1. uploads/admin/ (Cho Admin)
-        // 2. uploads/user/  (Cho Khách hàng - ĐÃ SỬA TỪ 'images' SANG 'user')
+        // ========================================================================
+        // CẤU HÌNH MAPPING ĐƯỜNG DẪN TĨNH (STATIC RESOURCES)
+        // ========================================================================
+
+        // 1. Cấu hình ảnh Avatar (Admin & User)
+        // Logic: Web gọi /nvk-images/** -> Spring tìm file vật lý trong uploads/admin/ HOẶC uploads/user/
         registry.addResourceHandler("/nvk-images/**")
                 .addResourceLocations(
                         "file:/" + uploadDir.resolve("admin").toAbsolutePath().toString().replace("\\", "/") + "/",
                         "file:/" + uploadDir.resolve("user").toAbsolutePath().toString().replace("\\", "/") + "/"
                 );
 
-        // --- CẤU HÌNH SẢN PHẨM ---
+        // 2. Cấu hình ảnh Sản phẩm
+        // Logic: Web gọi /nvk-product-img/** -> Spring tìm file vật lý trong uploads/product/
         registry.addResourceHandler("/nvk-product-img/**")
-                .addResourceLocations("file:/" + uploadDir.resolve("product").toAbsolutePath().toString().replace("\\", "/") + "/");
+                .addResourceLocations(
+                        "file:/" + uploadDir.resolve("product").toAbsolutePath().toString().replace("\\", "/") + "/"
+                );
 
-        System.out.println("--------------------------------------");
-        System.out.println("DA CAU HINH DOC ANH TU:");
-        System.out.println("   - Admin:   uploads/admin");
-        System.out.println("   - User:    uploads/user");
-        System.out.println("   - Product: uploads/product");
-        System.out.println("--------------------------------------");
+        // In log ra console để kiểm tra đường dẫn (Dùng cho Debug)
+        System.out.println("=======================================================");
+        System.out.println("[CONFIG] CẤU HÌNH ĐỌC ẢNH TĨNH THÀNH CÔNG:");
+        System.out.println("   - Admin/User Avatar:  " + uploadDir.resolve("admin").toAbsolutePath());
+        System.out.println("   - Product Images:     " + uploadDir.resolve("product").toAbsolutePath());
+        System.out.println("=======================================================");
     }
 }

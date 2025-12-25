@@ -1,6 +1,11 @@
-/* --- DARK MODE THEME --- */
+/* ==========================================================================
+   NVK PROJECT 3 - CLIENT STYLESHEET
+   Description: Style riêng cho giao diện người dùng mua hàng
+   ========================================================================== */
+
+/* --- 1. GLOBAL & LAYOUT --- */
 body {
-    background-color: #0f172a; /* Đây là màu nền đen xanh */
+    background-color: #0f172a; /* Màu nền Dark Mode */
     color: #f1f5f9;
     font-family: 'Segoe UI', sans-serif;
     min-height: 100vh;
@@ -8,7 +13,11 @@ body {
     flex-direction: column;
 }
 
-/* Navbar */
+.bg-body-tertiary {
+    background-color: #0f172a !important; /* Ghi đè nền xám của Bootstrap */
+}
+
+/* --- 2. HEADER (NAVBAR) --- */
 .navbar {
     background-color: #1e293b;
     border-bottom: 1px solid #334155;
@@ -21,27 +30,29 @@ body {
 }
 
 .nav-link:hover, .nav-link.active {
-    color: #3b82f6 !important;
+    color: #3b82f6 !important; /* Màu xanh Neon */
 }
 
-/* Product Card */
+/* --- 3. PRODUCT CARD --- */
 .card {
     background-color: #1e293b;
     border: 1px solid #334155;
-    transition: transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .card:hover {
     transform: translateY(-5px);
     border-color: #3b82f6;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
 }
 
 .card-title {
     color: #f8fafc;
 }
 
+/* Giá sản phẩm */
 .price-new {
-    color: #10b981;
+    color: #10b981; /* Màu xanh lá */
     font-weight: bold;
     font-size: 1.1rem;
 }
@@ -52,18 +63,12 @@ body {
     font-size: 0.9rem;
 }
 
-.bg-body-tertiary {
-    background-color: #0f172a !important;
-}
-
-/* Fix nền main */
-
-/* Badge */
+/* Badge Giảm giá */
 .badge-discount {
     position: absolute;
     top: 10px;
     right: 10px;
-    background: #ef4444;
+    background: #ef4444; /* Màu đỏ */
     color: white;
     padding: 5px 10px;
     border-radius: 5px;
@@ -72,11 +77,13 @@ body {
     z-index: 10;
 }
 
-/* Footer */
+/* --- 4. FOOTER --- */
 footer {
     background-color: #0f172a;
     border-top: 1px solid #334155;
-    margin-top: auto;
+    margin-top: auto; /* Đẩy footer xuống đáy */
+    padding: 20px 0;
+    text-align: center;
 }
 
 footer a {

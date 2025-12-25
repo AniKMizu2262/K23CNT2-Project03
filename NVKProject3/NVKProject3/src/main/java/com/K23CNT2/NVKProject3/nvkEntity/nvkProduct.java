@@ -18,40 +18,42 @@ public class nvkProduct {
     private Long nvkId;
 
     // --- Thông tin cơ bản ---
-    private String nvkCode;       // Mã sản phẩm
+    private String nvkCode;       // Mã sản phẩm (SKU)
     private String nvkName;       // Tên sản phẩm
-    private String nvkBrand;      // Hãng sản xuất
+    private String nvkBrand;      // Thương hiệu
 
     // --- Giá & Kho ---
-    private Double nvkPrice;      // Giá bán hiện tại
-    private Double nvkOldPrice;   // Giá gốc (để gạch ngang)
-    private Integer nvkQuantity;  // Số lượng tồn kho
+    private Double nvkPrice;      // Giá bán thực tế
+    private Double nvkOldPrice;   // Giá gốc (để hiển thị gạch ngang)
+    private Integer nvkQuantity;  // Tồn kho
 
     // --- Chi tiết & Hình ảnh ---
     @Column(length = 1000)
-    private String nvkImgUrl;     // Đường dẫn ảnh
+    private String nvkImgUrl;     // Link ảnh
 
     @Column(columnDefinition = "TEXT")
-    private String nvkDescription; // Mô tả chi tiết
+    private String nvkDescription;
 
-    // --- Trạng thái (0: Ngừng, 1: Bán, 2: Sắp về) ---
+    // --- Trạng thái ---
+    // 0: Ngừng kinh doanh | 1: Đang bán | 2: Sắp về
     private Integer nvkStatus;
 
     // --- Quan hệ ---
+
     @ManyToOne
     @JoinColumn(name = "nvk_cate_id")
-    @EqualsAndHashCode.Exclude // <--- THÊM DÒNG NÀY (Chống lag)
+    @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private nvkCategory nvkCategory;
 
-    // --- MỚI THÊM: Danh sách đánh giá của sản phẩm này ---
     @OneToMany(mappedBy = "nvkProduct", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<nvkReview> nvkReviews;
 
-    // --- Logic ảo (Computed) ---
+    // --- Computed Properties (Tính toán ảo, không lưu DB) ---
 
-    // 1. Tính phần trăm giảm giá
+    // 1. Tính % giảm giá (VD: Giảm 20%)
     @Transient
     public Integer getNvkDiscountPercentage() {
         if (nvkOldPrice == null || nvkOldPrice <= 0 || nvkPrice == null) {
@@ -60,7 +62,7 @@ public class nvkProduct {
         return (int) Math.round(((nvkOldPrice - nvkPrice) / nvkOldPrice) * 100);
     }
 
-    // 2. Tính điểm trung bình (1.0 -> 5.0)
+    // 2. Tính điểm đánh giá trung bình (VD: 4.5 sao)
     @Transient
     public Double getNvkAverageRating() {
         if (nvkReviews == null || nvkReviews.isEmpty()) {
@@ -70,7 +72,6 @@ public class nvkProduct {
         for (nvkReview review : nvkReviews) {
             sum += review.getNvkRating();
         }
-        // Làm tròn 1 chữ số thập phân (Ví dụ: 4.5)
         return Math.round((sum / nvkReviews.size()) * 10.0) / 10.0;
     }
 

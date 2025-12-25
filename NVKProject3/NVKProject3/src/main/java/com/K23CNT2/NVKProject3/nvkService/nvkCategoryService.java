@@ -10,31 +10,30 @@ import java.util.List;
 @Service
 public class nvkCategoryService {
 
-    // LỖI 1 ĐÃ SỬA: Bỏ chữ "static" đi. @Autowired chỉ tiêm vào biến thường.
     @Autowired
     private nvkCategoryRepository repo;
 
-    // --- Lấy danh sách ---
+    // Lấy tất cả danh mục
     public List<nvkCategory> getAllCategories() {
         return repo.findAll();
     }
 
-    // --- Lấy chi tiết ---
+    // Lấy chi tiết danh mục theo ID
     public nvkCategory getCategoryById(Long id) {
         return repo.findById(id).orElse(null);
     }
 
-    // --- Thêm / Sửa ---
+    // Thêm mới hoặc Cập nhật danh mục
     public void saveCategory(nvkCategory category) {
         repo.save(category);
     }
 
-    // --- Xóa ---
+    // Xóa danh mục
     public void deleteCategory(Long id) {
         repo.deleteById(id);
     }
 
-    // LỖI 2 & 3 ĐÃ SỬA: Bỏ "static" ở tên hàm và bỏ dòng @Autowired vô duyên ở trong
+    // Tìm kiếm danh mục theo tên
     public List<nvkCategory> searchCategories(String keyword) {
         if (keyword != null && !keyword.isEmpty()) {
             return repo.findByNvkNameContainingIgnoreCase(keyword);

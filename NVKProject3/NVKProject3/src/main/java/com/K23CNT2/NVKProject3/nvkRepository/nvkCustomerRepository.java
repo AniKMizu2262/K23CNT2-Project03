@@ -10,10 +10,20 @@ import java.util.List;
 
 @Repository
 public interface nvkCustomerRepository extends JpaRepository<nvkCustomer, Long> {
-    // Tìm khách hàng theo Email (Trả về Object hoặc Null)
+
+    /**
+     * Tìm khách hàng theo Email (Dùng cho Login/Register check trùng)
+     */
     nvkCustomer findByNvkEmail(String nvkEmail);
 
+    /**
+     * Tìm kiếm khách hàng theo Tên, Email hoặc Số điện thoại
+     *
+     * @param keyword Từ khóa tìm kiếm
+     */
     @Query("SELECT c FROM nvkCustomer c WHERE " +
-            "(:keyword IS NULL OR c.nvkFullName LIKE %:keyword% OR c.nvkEmail LIKE %:keyword% OR c.nvkPhone LIKE %:keyword%)")
+            "(:keyword IS NULL OR c.nvkFullName LIKE %:keyword% " +
+            "OR c.nvkEmail LIKE %:keyword% " +
+            "OR c.nvkPhone LIKE %:keyword%)")
     List<nvkCustomer> findByKeyword(@Param("keyword") String keyword);
 }

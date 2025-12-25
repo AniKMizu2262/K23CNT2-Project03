@@ -1,40 +1,45 @@
+/* ==========================================================================
+   NVK PROJECT 3 - MAIN STYLESHEET (ADMIN & GLOBAL)
+   Theme: Slate Dark Mode (Neon Blue Accent)
+   ========================================================================== */
+
 /* =========================================
-   1. BẢNG MÀU PREMIUM DARK (Slate Theme)
+   1. VARIABLES (BẢNG MÀU)
    ========================================= */
 :root {
-    /* Màu chính: Xanh dương Neon hiện đại */
-    --primary: #3b82f6; /* Blue 500 */
-    --primary-hover: #2563eb; /* Blue 600 */
+    /* --- Màu chủ đạo (Brand Colors) --- */
+    --primary: #3b82f6; /* Blue 500 - Màu chính */
+    --primary-hover: #2563eb; /* Blue 600 - Hover */
 
-    /* Màu nền */
+    /* --- Màu nền (Backgrounds) --- */
     --bg-body: #0f172a; /* Nền web: Xám xanh rất tối */
-    --bg-card: #1e293b; /* Nền Card/Sidebar: Sáng hơn nền web 1 chút */
-    --bg-input: #334155; /* Nền ô nhập liệu */
+    --bg-card: #1e293b; /* Nền Card/Sidebar: Sáng hơn chút */
+    --bg-input: #334155; /* Nền Input form */
 
-    /* Màu chữ */
+    /* --- Màu chữ (Typography) --- */
     --text-main: #f8fafc; /* Trắng sáng */
     --text-muted: #94a3b8; /* Xám nhạt */
 
-    /* Màu trạng thái */
+    /* --- Màu trạng thái (Status) --- */
     --success: #10b981; /* Emerald */
     --info: #0ea5e9; /* Sky */
     --warning: #f59e0b; /* Amber */
     --danger: #ef4444; /* Red */
 
-    /* Hiệu ứng */
+    /* --- Hiệu ứng (Effects) --- */
     --border-color: #334155; /* Viền mỏng */
     --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
 }
 
 /* =========================================
-   2. CẤU TRÚC CHUNG (Global)
+   2. GLOBAL RESET & STRUCTURE
    ========================================= */
-body {
-    background-color: var(--bg-body);
-    color: var(--text-main);
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+html, body {
+    height: 100%;
     margin: 0;
-    min-height: 100vh;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-body) !important; /* Ép màu nền tối */
+    color: var(--text-main) !important;
 }
 
 a {
@@ -47,8 +52,26 @@ a:hover {
     color: var(--primary-hover);
 }
 
+/* Scrollbar đẹp (Chrome/Edge) */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-body);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #475569;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+}
+
 /* =========================================
-   3. SIDEBAR (Menu Trái - Giao diện kính)
+   3. SIDEBAR (MENU TRÁI)
    ========================================= */
 .sidebar {
     width: 250px;
@@ -56,14 +79,16 @@ a:hover {
     position: fixed;
     top: 0;
     left: 0;
-    background-color: var(--bg-card); /* Nền tối */
+    background-color: var(--bg-card);
     border-right: 1px solid var(--border-color);
     z-index: 1000;
     display: flex;
     flex-direction: column;
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+    transition: margin-left 0.3s ease;
 }
 
+/* Logo Brand */
 .brand-link {
     display: flex;
     align-items: center;
@@ -76,10 +101,7 @@ a:hover {
     text-transform: uppercase;
 }
 
-.brand-link i {
-    font-size: 1.5rem;
-}
-
+/* User Info Panel */
 .user-panel {
     padding: 20px;
     border-bottom: 1px solid var(--border-color);
@@ -92,17 +114,13 @@ a:hover {
 .user-panel img {
     width: 45px;
     height: 45px;
-    border-radius: 12px; /* Bo góc vuông mềm thay vì tròn hẳn */
+    border-radius: 12px;
     border: 2px solid var(--primary);
     padding: 2px;
+    object-fit: cover;
 }
 
-.user-panel div {
-    font-weight: 600;
-    font-size: 0.95rem;
-}
-
-/* Menu Item */
+/* Navigation Links */
 .nav-sidebar {
     list-style: none;
     padding: 15px 10px;
@@ -120,8 +138,9 @@ a:hover {
     align-items: center;
     padding: 12px 15px;
     color: var(--text-muted);
-    border-radius: 8px; /* Bo góc nút menu */
+    border-radius: 8px;
     font-weight: 500;
+    transition: all 0.2s;
 }
 
 .nav-link i {
@@ -131,17 +150,17 @@ a:hover {
     text-align: center;
 }
 
-/* Hover & Active hiệu ứng đèn Neon */
+/* Hover & Active Effects */
 .nav-link:hover {
     background-color: rgba(59, 130, 246, 0.1);
     color: var(--primary);
-    transform: translateX(5px); /* Trượt nhẹ sang phải */
+    transform: translateX(5px);
 }
 
 .nav-link.active {
     background: linear-gradient(90deg, var(--primary), var(--primary-hover));
     color: #fff;
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); /* Bóng xanh neon */
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
 }
 
 .nav-header {
@@ -154,36 +173,52 @@ a:hover {
 }
 
 /* =========================================
-   4. CONTENT WRAPPER & NAVBAR
+   4. LAYOUT CONTAINER
    ========================================= */
 .content-wrapper {
     margin-left: 250px;
     padding: 25px;
-    transition: 0.3s;
+    transition: margin-left 0.3s ease;
+    background-color: var(--bg-body) !important;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Navbar trên cùng (Transparent) */
+.content {
+    flex: 1; /* Đẩy footer xuống dưới cùng */
+}
+
+/* Sidebar Toggle Logic */
+.sidebar-closed .sidebar {
+    margin-left: -250px;
+}
+
+.sidebar-closed .content-wrapper {
+    margin-left: 0;
+}
+
+.sidebar-closed .main-header {
+    margin-left: 0;
+}
+
+/* Header/Navbar trong trang con */
 .main-header {
     background-color: var(--bg-card);
     border-bottom: 1px solid var(--border-color);
     padding: 10px 25px;
-    margin-left: 250px; /* Thêm dòng này nếu navbar bro đang để position fixed */
     margin: 0 0 20px 0;
     border-radius: 10px;
 }
 
-.content-header h1 {
-    color: var(--text-main);
-    font-weight: 700;
-    font-size: 1.8rem;
-}
-
 /* =========================================
-   5. CARD & TABLE (Khối nội dung)
+   5. COMPONENTS (CARD, TABLE, FORM)
    ========================================= */
+
+/* --- Card --- */
 .card {
-    background-color: var(--bg-card);
-    border: 1px solid var(--border-color);
+    background-color: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
     border-radius: 12px;
     box-shadow: var(--shadow);
     color: var(--text-main);
@@ -191,34 +226,32 @@ a:hover {
 }
 
 .card-header {
-    background-color: rgba(255, 255, 255, 0.02);
-    border-bottom: 1px solid var(--border-color);
+    background-color: rgba(255, 255, 255, 0.02) !important;
+    border-bottom: 1px solid var(--border-color) !important;
     padding: 15px 20px;
     font-weight: 700;
     text-transform: uppercase;
     font-size: 0.9rem;
-    color: var(--primary);
+    color: var(--primary) !important;
 }
 
 .card-body {
-    padding: 0;
+    padding: 0; /* Để bảng tràn viền */
 }
 
-/* Padding 0 để bảng tràn viền đẹp hơn */
-
-/* Table Styling */
+/* --- Table --- */
 .table {
-    color: var(--text-main);
+    color: var(--text-main) !important;
     margin-bottom: 0;
+    border-color: var(--border-color) !important;
 }
 
 .table th {
-    background-color: #273548; /* Header bảng tối hơn chút */
+    background-color: #273548;
     color: var(--text-main);
     border-bottom: 2px solid var(--border-color);
     text-transform: uppercase;
     font-size: 0.8rem;
-    letter-spacing: 0.5px;
     padding: 15px;
 }
 
@@ -228,42 +261,40 @@ a:hover {
     vertical-align: middle;
 }
 
-.table-striped tbody tr:nth-of-type(odd) {
-    background-color: rgba(255, 255, 255, 0.02); /* Dòng chẵn lẻ mờ */
+/* Fix sọc trắng của table-striped */
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+    --bs-table-accent-bg: rgba(255, 255, 255, 0.03) !important;
+    color: var(--text-main) !important;
 }
 
-.table-hover tbody tr:hover {
-    background-color: rgba(59, 130, 246, 0.05); /* Hover dòng màu xanh nhạt */
+.table-hover > tbody > tr:hover > * {
+    --bs-table-accent-bg: rgba(59, 130, 246, 0.1) !important;
+    color: #fff !important;
 }
 
-/* =========================================
-   6. FORM INPUT (Quan trọng trong Dark Mode)
-   ========================================= */
-.form-control, .form-select {
-    background-color: var(--bg-input);
-    border: 1px solid var(--border-color);
-    color: var(--text-main);
+/* --- Form Input --- */
+.form-control, .form-select, .input-group-text {
+    background-color: var(--bg-input) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-main) !important;
     border-radius: 8px;
     padding: 10px 15px;
 }
 
 .form-control:focus, .form-select:focus {
-    background-color: #404b5c;
-    border-color: var(--primary);
-    color: #fff;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+    background-color: #404b5c !important;
+    border-color: var(--primary) !important;
+    color: #fff !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
 }
 
-/* Label */
 .form-label {
     color: var(--text-muted);
     font-weight: 600;
     font-size: 0.9rem;
 }
 
-/* =========================================
-   7. SMALL BOX (Dashboard Widget - Gradient)
-   ========================================= */
+/* --- Dashboard Widgets (Small Box) --- */
 .small-box {
     border-radius: 12px;
     position: relative;
@@ -278,24 +309,6 @@ a:hover {
 
 .small-box:hover {
     transform: translateY(-5px);
-}
-
-/* Tạo màu Gradient cho đẹp hơn màu bệt */
-.bg-info {
-    background: linear-gradient(45deg, #0ea5e9, #2563eb) !important;
-}
-
-.bg-success {
-    background: linear-gradient(45deg, #10b981, #059669) !important;
-}
-
-.bg-warning {
-    background: linear-gradient(45deg, #f59e0b, #d97706) !important;
-    color: white !important;
-}
-
-.bg-danger {
-    background: linear-gradient(45deg, #ef4444, #b91c1c) !important;
 }
 
 .small-box h3 {
@@ -330,25 +343,40 @@ a:hover {
     font-weight: 600;
 }
 
-.small-box-footer:hover {
-    background: rgba(0, 0, 0, 0.3);
-    color: #fff;
+/* Gradient Backgrounds */
+.bg-info {
+    background: linear-gradient(45deg, #0ea5e9, #2563eb) !important;
+}
+
+.bg-success {
+    background: linear-gradient(45deg, #10b981, #059669) !important;
+}
+
+.bg-warning {
+    background: linear-gradient(45deg, #f59e0b, #d97706) !important;
+    color: white !important;
+}
+
+.bg-danger {
+    background: linear-gradient(45deg, #ef4444, #b91c1c) !important;
 }
 
 /* =========================================
-   8. UTILITIES & BUTTONS
+   6. UTILITIES (BUTTONS & BADGES)
    ========================================= */
 .text-muted {
-    color: #94a3b8 !important;
+    color: var(--text-muted) !important;
 }
 
 .text-dark {
     color: var(--text-main) !important;
 }
 
-/* Ghi đè text-dark của bootstrap */
+.bg-white {
+    background-color: var(--bg-card) !important;
+    color: var(--text-main) !important;
+}
 
-/* Buttons */
 .btn {
     border-radius: 8px;
     font-weight: 600;
@@ -367,137 +395,30 @@ a:hover {
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
 }
 
-/* Badge */
 .badge {
     padding: 6px 10px;
     border-radius: 6px;
 }
 
-/* Scrollbar đẹp (Chrome/Edge) */
-::-webkit-scrollbar {
-    width: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: var(--bg-body);
-}
-
-::-webkit-scrollbar-thumb {
-    background: #475569;
-    border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #64748b;
-}
-
-/* Ẩn hiện Sidebar */
-.sidebar-closed .sidebar {
-    margin-left: -250px;
-}
-
-.sidebar-closed .content-wrapper {
-    margin-left: 0;
-}
-
 /* =========================================
-   9. FIX LỖI NỀN TRẮNG (Dark Mode Patch)
+   7. BOOTSTRAP OVERRIDES (DARK MODE PATCH)
    ========================================= */
-
-/* Ép Content Wrapper phải theo màu nền body */
-.content-wrapper {
+/* Fix lỗi nền trắng cứng đầu của Bootstrap */
+.bg-body {
     background-color: var(--bg-body) !important;
 }
 
-/* Ép các class nền trắng của Bootstrap thành màu tối */
-.bg-white {
-    background-color: var(--bg-card) !important;
-    color: var(--text-main) !important;
+.bg-body-tertiary {
+    background-color: var(--bg-body) !important;
 }
 
-/* Đổi màu chữ text-dark thành màu sáng */
-.text-dark {
-    color: var(--text-main) !important;
-}
-
-/* Header chào mừng ở Dashboard */
-.content-header {
-    background-color: var(--bg-card) !important;
-    border-bottom: 1px solid var(--border-color) !important;
-}
-
-/* Sửa màu đồng hồ/lịch */
-#live-time, #live-date {
-    color: var(--text-main) !important;
-}
-
-.text-muted {
-    color: var(--text-muted) !important;
-}
-
-/* =================================================================
-   9. DARK MODE PATCH (FIX LỖI TRẮNG/XÁM CỦA BOOTSTRAP)
-   ================================================================= */
-
-/* 1. Ép màu cho Ô Nhập Liệu (Input) & Select */
-.form-control, .form-select, .input-group-text {
-    background-color: var(--bg-input) !important;
-    border-color: var(--border-color) !important;
-    color: var(--text-main) !important;
-}
-
-/* Khi bấm vào ô nhập liệu (Focus) */
-.form-control:focus, .form-select:focus {
-    background-color: #1e293b !important; /* Màu nền tối hơn chút */
-    border-color: var(--primary) !important;
-    color: #fff !important;
-    box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25) !important;
-}
-
-/* Placeholder (Chữ mờ hướng dẫn) */
+/* Placeholder color */
 ::placeholder {
     color: var(--text-muted) !important;
     opacity: 0.7 !important;
 }
 
-/* 2. Fix màu Bảng (Table) bị sọc trắng */
-.table {
-    color: var(--text-main) !important;
-    border-color: var(--border-color) !important;
-}
-
-/* Dòng kẻ ngang của bảng */
-.table > :not(caption) > * > * {
-    background-color: transparent !important; /* Xóa nền trắng mặc định */
-    border-bottom-color: var(--border-color) !important;
-    color: var(--text-main) !important;
-}
-
-/* Table Striped (Dòng chẵn lẻ) - Chỉnh lại màu mờ tối */
-.table-striped > tbody > tr:nth-of-type(odd) > * {
-    --bs-table-accent-bg: rgba(255, 255, 255, 0.03) !important;
-    color: var(--text-main) !important;
-}
-
-/* Table Hover (Rê chuột vào dòng) */
-.table-hover > tbody > tr:hover > * {
-    --bs-table-accent-bg: rgba(59, 130, 246, 0.1) !important; /* Màu xanh nhạt */
-    color: #fff !important;
-}
-
-/* 3. Các thành phần khác */
-.card {
-    background-color: var(--bg-card) !important;
-    border-color: var(--border-color) !important;
-}
-
-.card-header {
-    background-color: rgba(0, 0, 0, 0.2) !important;
-    border-bottom: 1px solid var(--border-color) !important;
-    color: var(--primary) !important;
-}
-
-/* Modal (Popup) nếu có dùng */
+/* Modal Fix */
 .modal-content {
     background-color: var(--bg-card) !important;
     border: 1px solid var(--border-color) !important;
@@ -509,36 +430,5 @@ a:hover {
 }
 
 .btn-close {
-    filter: invert(1) grayscale(100%) brightness(200%); /* Đổi màu nút X đóng thành trắng */
-}
-
-/* =========================================================
-   10. ULTIMATE DARK MODE FIX (TRỊ DỨT ĐIỂM NỀN TRẮNG)
-   ========================================================= */
-
-/* 1. Ép toàn bộ trang web phải cao 100% và màu tối */
-html, body {
-    height: 100%;
-    margin: 0;
-    background-color: var(--bg-body) !important; /* Màu #0f172a */
-    color: var(--text-main) !important;
-}
-
-/* 2. Ép class bg-body của Bootstrap (thủ phạm chính) */
-.bg-body {
-    background-color: var(--bg-body) !important;
-    min-height: 100vh;
-}
-
-/* 3. Content Wrapper: Phải co giãn để đẩy nền xuống hết màn hình */
-.content-wrapper {
-    min-height: 100vh !important;
-    background-color: var(--bg-body) !important;
-    display: flex;
-    flex-direction: column;
-}
-
-/* 4. Content: Chiếm hết khoảng trống còn lại */
-.content {
-    flex: 1;
+    filter: invert(1) grayscale(100%) brightness(200%);
 }

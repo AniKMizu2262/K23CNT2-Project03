@@ -8,5 +8,11 @@ import java.util.List;
 
 @Repository
 public interface nvkCategoryRepository extends JpaRepository<nvkCategory, Long> {
+
+    /**
+     * Tìm kiếm danh mục theo tên (Không phân biệt hoa thường)
+     *
+     * @param keyword Từ khóa tìm kiếm
+     */
     List<nvkCategory> findByNvkNameContainingIgnoreCase(String keyword);
 }

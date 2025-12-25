@@ -11,21 +11,23 @@ import java.util.List;
 public class nvkReviewService {
 
     @Autowired
-    private nvkReviewRepository nvkReviewRepository;
+    private nvkReviewRepository repo;
 
-    // 1. Lấy tất cả đánh giá
     public List<nvkReview> getAllReviews() {
-        return nvkReviewRepository.findAll();
+        return repo.findAll();
     }
 
-    // 2. Xóa đánh giá theo ID
     public void deleteReview(Long id) {
-        nvkReviewRepository.deleteById(id);
+        repo.deleteById(id);
     }
 
-    // Lấy danh sách có lọc
+    /**
+     * Lọc đánh giá theo Số sao và Từ khóa
+     */
     public List<nvkReview> searchAndFilter(Integer rating, String keyword) {
-        if (keyword != null && keyword.trim().isEmpty()) keyword = null;
-        return nvkReviewRepository.findByRatingAndKeyword(rating, keyword);
+        if (keyword != null && keyword.trim().isEmpty()) {
+            keyword = null;
+        }
+        return repo.findByRatingAndKeyword(rating, keyword);
     }
 }

@@ -2,43 +2,32 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/client/head :: head}"></head>
 
-<body style="background-color: #1a1d29; color: #fff;">
+<body class="bg-body-tertiary">
 
 <nav th:replace="~{fragments/client/header :: header}"></nav>
 
 <main class="py-5">
     <div class="container">
-        <nav aria-label="breadcrumb" class="mb-4">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a th:href="@{/}" class="text-decoration-none text-info">Trang chủ</a></li>
-                <li class="breadcrumb-item active text-white opacity-75" aria-current="page">Hồ sơ cá nhân</li>
-            </ol>
-        </nav>
 
         <div class="row">
             <div class="col-lg-4 mb-4">
-                <div class="card border-0 shadow-lg rounded-4 overflow-hidden text-center sticky-top"
-                     style="top: 20px; background-color: #262b3c; color: white;">
+                <div class="card border-0 shadow-lg rounded-4 text-center sticky-top"
+                     style="top: 20px; background-color: #1e293b;">
                     <div class="card-body p-5">
-                        <div class="position-relative d-inline-block mb-4">
-                            <img th:src="${(nvkCustomer.nvkAvatar != null && nvkCustomer.nvkAvatar.trim() != '')
-                                    ? nvkCustomer.nvkAvatar + '?v=' + #dates.createNow().getTime()
-                                    : 'https://ui-avatars.com/api/?name=' + nvkCustomer.nvkFullName + '&background=random&size=150'}"
+                        <div class="mb-4">
+                            <img th:src="${(nvkCustomer.nvkAvatar != null && nvkCustomer.nvkAvatar != '') ? nvkCustomer.nvkAvatar : 'https://placehold.co/150'}"
                                  class="rounded-circle border border-4 border-primary shadow"
                                  style="width: 150px; height: 150px; object-fit: cover;"
-                                 alt="Avatar"
-                                 id="avatarPreviewSide"
+                                 id="avatarPreview"
                                  onerror="this.src='https://ui-avatars.com/api/?name=User&background=random'">
                         </div>
-                        <h4 class="fw-bold mb-1" th:text="${nvkCustomer.nvkFullName}">Tên Khách Hàng</h4>
-                        <p class="text-info mb-3 small" th:text="${nvkCustomer.nvkEmail}">email@example.com</p>
+                        <h4 class="fw-bold text-white">[[${nvkCustomer.nvkFullName}]]</h4>
+                        <p class="text-info small">[[${nvkCustomer.nvkEmail}]]</p>
 
                         <hr class="border-secondary my-4">
                         <div class="d-grid gap-2">
-                            <a href="/" class="btn btn-outline-light rounded-pill"><i class="bi bi-house-door me-2"></i>
-                                Quay lại trang chủ</a>
-                            <a href="/nvk-logout" class="btn btn-outline-danger rounded-pill"><i
-                                    class="bi bi-box-arrow-right me-2"></i> Đăng xuất</a>
+                            <a href="/nvk-order/history" class="btn btn-outline-light rounded-pill">Lịch sử mua hàng</a>
+                            <a href="/nvk-logout" class="btn btn-outline-danger rounded-pill">Đăng xuất</a>
                         </div>
                     </div>
                 </div>
@@ -46,107 +35,91 @@
 
             <div class="col-lg-8">
 
-                <div th:if="${success}"
-                     class="alert alert-success alert-dismissible fade show rounded-3 border-0 shadow-sm">
+                <div th:if="${success}" class="alert alert-success alert-dismissible fade show shadow-sm">
                     <i class="bi bi-check-circle-fill me-2"></i> [[${success}]]
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
-                <div th:if="${error}"
-                     class="alert alert-danger alert-dismissible fade show rounded-3 border-0 shadow-sm">
+                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show shadow-sm">
                     <i class="bi bi-exclamation-triangle-fill me-2"></i> [[${error}]]
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
 
-                <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-4"
-                     style="background-color: #262b3c; color: white;">
+                <div class="card border-0 shadow-lg rounded-4 mb-4" style="background-color: #1e293b;">
                     <div class="card-header bg-transparent border-bottom border-secondary p-4">
                         <h5 class="mb-0 fw-bold text-primary"><i class="bi bi-person-lines-fill me-2"></i> Thông tin cá
                             nhân</h5>
                     </div>
                     <div class="card-body p-4">
-
                         <form th:action="@{/nvk-profile/update}" method="post" th:object="${nvkCustomer}"
                               enctype="multipart/form-data">
 
                             <input type="hidden" th:field="*{nvkId}">
                             <input type="hidden" th:field="*{nvkEmail}">
-                            <input type="hidden" th:field="*{nvkPassword}">
-                            <input type="hidden" th:field="*{nvkActive}">
+                            <input type="hidden" th:field="*{nvkPassword}"> <input type="hidden"
+                                                                                   th:field="*{nvkActive}">
                             <input type="hidden" th:field="*{nvkAvatar}">
-
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold text-white-50">Họ và tên</label>
+                                    <label class="form-label text-white-50">Họ tên</label>
                                     <input type="text" class="form-control bg-dark text-white border-secondary"
                                            th:field="*{nvkFullName}" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold text-white-50">Số điện thoại</label>
+                                    <label class="form-label text-white-50">Số điện thoại</label>
                                     <input type="text" class="form-control bg-dark text-white border-secondary"
                                            th:field="*{nvkPhone}" required>
                                 </div>
-
                                 <div class="col-12">
-                                    <label class="form-label fw-bold text-white-50">Ảnh đại diện</label>
-                                    <div class="input-group">
-                                        <input type="file" name="nvkImageFile"
-                                               class="form-control bg-dark text-white border-secondary"
-                                               accept="image/*" onchange="previewImage(event)">
-                                        <span class="input-group-text bg-secondary border-secondary text-light">
-                                            <i class="bi bi-image"></i>
-                                        </span>
-                                    </div>
-                                    <div class="form-text text-white-50">Chọn ảnh từ máy tính của bạn (JPG, PNG).</div>
+                                    <label class="form-label text-white-50">Thay đổi ảnh đại diện</label>
+                                    <input type="file" name="nvkImageFile"
+                                           class="form-control bg-dark text-white border-secondary"
+                                           accept="image/*" onchange="previewImage(event)">
                                 </div>
-
                                 <div class="col-12">
-                                    <label class="form-label fw-bold text-warning">Địa chỉ nhận hàng</label>
-                                    <input type="text" class="form-control bg-dark text-white border-secondary"
-                                           th:field="*{nvkAddress}" required>
+                                    <label class="form-label text-white-50">Địa chỉ</label>
+                                    <textarea class="form-control bg-dark text-white border-secondary" rows="2"
+                                              th:field="*{nvkAddress}" required></textarea>
                                 </div>
                             </div>
                             <div class="mt-4 text-end">
-                                <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm">
-                                    <i class="bi bi-save me-2"></i> Lưu thông tin
+                                <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">Lưu thay đổi
                                 </button>
                             </div>
                         </form>
                     </div>
                 </div>
 
-                <div class="card border-0 shadow-lg rounded-4 overflow-hidden"
-                     style="background-color: #262b3c; color: white;">
+                <div class="card border-0 shadow-lg rounded-4" style="background-color: #1e293b;">
                     <div class="card-header bg-transparent border-bottom border-secondary p-4">
-                        <h5 class="mb-0 fw-bold text-danger"><i class="bi bi-shield-lock-fill me-2"></i> Đổi mật khẩu
-                        </h5>
+                        <h5 class="mb-0 fw-bold text-danger"><i class="bi bi-shield-lock me-2"></i> Đổi mật khẩu</h5>
                     </div>
                     <div class="card-body p-4">
                         <form th:action="@{/nvk-profile/change-password}" method="post">
-                            <div class="row g-3 align-items-end">
+                            <div class="row g-3">
                                 <div class="col-md-4">
-                                    <label class="form-label fw-bold text-white-50">Mật khẩu cũ</label>
+                                    <label class="form-label text-white-50">Mật khẩu cũ</label>
                                     <input type="password" name="currentPassword"
                                            class="form-control bg-dark text-white border-secondary" required>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label fw-bold text-white-50">Mật khẩu mới</label>
+                                    <label class="form-label text-white-50">Mật khẩu mới</label>
                                     <input type="password" name="newPassword"
                                            class="form-control bg-dark text-white border-secondary" required>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label fw-bold text-white-50">Xác nhận</label>
+                                    <label class="form-label text-white-50">Xác nhận mới</label>
                                     <input type="password" name="confirmPassword"
                                            class="form-control bg-dark text-white border-secondary" required>
                                 </div>
                             </div>
                             <div class="mt-4 text-end">
-                                <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold shadow-sm">
-                                    <i class="bi bi-key-fill me-2"></i> Đổi mật khẩu
+                                <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold">Đổi mật khẩu
                                 </button>
                             </div>
                         </form>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -158,13 +131,10 @@
     function previewImage(event) {
         const reader = new FileReader();
         reader.onload = function () {
-            // Cập nhật ảnh ở sidebar bên trái
-            const outputSide = document.getElementById('avatarPreviewSide');
-            if (outputSide) outputSide.src = reader.result;
+            const output = document.getElementById('avatarPreview');
+            output.src = reader.result;
         };
-        if (event.target.files[0]) {
-            reader.readAsDataURL(event.target.files[0]);
-        }
+        reader.readAsDataURL(event.target.files[0]);
     }
 </script>
 

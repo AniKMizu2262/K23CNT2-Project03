@@ -14,10 +14,13 @@ public class nvkProductService {
     @Autowired
     private nvkProductRepository repo;
 
-    // === CÁC HÀM CƠ BẢN ===
+    // === CÁC HÀM CƠ BẢN (CRUD) ===
 
+    /**
+     * Lấy tất cả sản phẩm.
+     * Sử dụng JOIN FETCH trong Repository để tối ưu hóa hiệu năng (tránh lỗi N+1 query).
+     */
     public List<nvkProduct> getAllProducts() {
-        // [FIX LAG Ở ĐÂY]: Thay vì dùng repo.findAll() (bị chậm), ta dùng hàm tối ưu:
         return repo.findAllWithCategory();
     }
 
@@ -29,6 +32,11 @@ public class nvkProductService {
         repo.save(product);
     }
 
+    // Hàm save trả về đối tượng (Dùng cho API/Ajax)
+    public nvkProduct save(nvkProduct product) {
+        return repo.save(product);
+    }
+
     public void updateProduct(nvkProduct product) {
         repo.save(product);
     }
@@ -37,15 +45,18 @@ public class nvkProductService {
         repo.deleteById(id);
     }
 
-    // === CHỨC NĂNG NÂNG CAO (LỌC & TÌM KIẾM) ===
+    // === CHỨC NĂNG CLIENT (LỌC & TÌM KIẾM) ===
 
     public List<nvkProduct> findRandomProducts() {
         return repo.findRandomProducts();
     }
 
+    /**
+     * Bộ lọc sản phẩm tổng hợp (Category, Sort, Stock)
+     */
     public List<nvkProduct> filterProducts(Long categoryId, String sortType, boolean inStock) {
-        // --- BƯỚC 1: XỬ LÝ SORT ---
-        Sort sort = Sort.by(Sort.Direction.DESC, "nvkId");
+        // 1. Xử lý sắp xếp
+        Sort sort = Sort.by(Sort.Direction.DESC, "nvkId"); // Mặc định: Mới nhất trước
 
         if (sortType != null) {
             switch (sortType) {
@@ -64,35 +75,28 @@ public class nvkProductService {
             }
         }
 
-        // --- BƯỚC 2: GỌI REPO ---
+        // 2. Gọi Repository theo điều kiện
         if (categoryId != null) {
-            if (inStock) {
-                return repo.findByNvkCategory_NvkIdAndNvkQuantityGreaterThan(categoryId, 0, sort);
-            } else {
-                return repo.findByNvkCategory_NvkId(categoryId, sort);
-            }
+            return inStock
+                    ? repo.findByNvkCategory_NvkIdAndNvkQuantityGreaterThan(categoryId, 0, sort)
+                    : repo.findByNvkCategory_NvkId(categoryId, sort);
         } else {
-            if (inStock) {
-                return repo.findByNvkQuantityGreaterThan(0, sort);
-            } else {
-                return repo.findAll(sort);
-            }
+            return inStock
+                    ? repo.findByNvkQuantityGreaterThan(0, sort)
+                    : repo.findAll(sort);
         }
     }
-
-    // === 2 HÀM CỦA BRO ===
 
     public List<nvkProduct> searchProducts(String keyword) {
         if (keyword != null && !keyword.isEmpty()) {
             return repo.findByNvkNameContainingIgnoreCase(keyword);
         }
-        return repo.findAllWithCategory(); // Search rỗng thì trả về list tối ưu
+        return repo.findAllWithCategory();
     }
 
-    public nvkProduct save(nvkProduct product) {
-        return repo.save(product);
-    }
-
+    /**
+     * Tìm kiếm kết hợp lọc danh mục (Dùng cho trang Admin)
+     */
     public List<nvkProduct> searchAndFilter(String keyword, Long categoryId) {
         if (keyword != null && !keyword.isEmpty() && categoryId != null) {
             return repo.findByNvkCategory_NvkIdAndNvkNameContainingIgnoreCase(categoryId, keyword);
@@ -101,7 +105,7 @@ public class nvkProductService {
         } else if (keyword != null && !keyword.isEmpty()) {
             return repo.findByNvkNameContainingIgnoreCase(keyword);
         } else {
-            return repo.findAllWithCategory(); // Lấy hết thì dùng hàm tối ưu
+            return repo.findAllWithCategory();
         }
     }
 }

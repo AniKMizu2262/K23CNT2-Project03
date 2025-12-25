@@ -18,10 +18,10 @@ public class nvkCustomer {
     private Long nvkId;
 
     // --- Tài khoản ---
-    @Column(unique = true)
-    private String nvkEmail;    // Dùng làm tên đăng nhập
+    @Column(unique = true, nullable = false)
+    private String nvkEmail;    // Tên đăng nhập
     private String nvkPassword;
-    private Boolean nvkActive;  // Trạng thái khóa/mở
+    private Boolean nvkActive;  // Trạng thái hoạt động
 
     // --- Thông tin cá nhân ---
     private String nvkFullName;
@@ -30,7 +30,8 @@ public class nvkCustomer {
     private String nvkAvatar;
 
     // --- Quan hệ ---
-    @OneToMany(mappedBy = "nvkCustomer")
-    @ToString.Exclude
+    @OneToMany(mappedBy = "nvkCustomer", fetch = FetchType.LAZY)
+    @ToString.Exclude // Ngắt vòng lặp khi in log
+    @EqualsAndHashCode.Exclude
     private List<nvkOrder> nvkOrders;
 }

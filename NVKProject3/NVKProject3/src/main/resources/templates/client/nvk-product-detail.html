@@ -1,181 +1,50 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <th:block th:replace="~{fragments/client/head :: head}"></th:block>
     <style>
-        /* 1. CẤU HÌNH MÀU SẮC CHỦ ĐẠO */
-        body {
-            background-color: #1a1d20;
-            color: #ffffff;
-        }
-
-        /* 2. KHUNG ẢNH */
-        .product-image-container {
+        .product-gallery {
             background: #fff;
             border-radius: 12px;
             padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 500px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .product-image-container img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            transition: transform 0.5s ease;
-        }
-
-        .product-image-container:hover img {
-            transform: scale(1.05);
-        }
-
-        /* Badge trạng thái */
-        .status-badge-lg {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            padding: 8px 16px;
-            font-weight: 800;
-            border-radius: 6px;
-            z-index: 10;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            letter-spacing: 1px;
-        }
-
-        /* 3. KHUNG THÔNG TIN */
-        .product-info-card {
-            background-color: #262b3c; /* Màu khớp với theme các trang khác */
-            border: 1px solid #343a40;
-            border-radius: 12px;
-            padding: 35px;
-            height: 100%;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .price-current {
-            font-size: 2.2rem;
-            color: #3b82f6;
-            font-weight: 800;
-            text-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
-        }
-
-        .price-old {
-            font-size: 1.3rem;
-            color: #adb5bd;
-            text-decoration: line-through;
-            margin-left: 15px;
-        }
-
-        /* 4. INPUT SỐ LƯỢNG */
-        .quantity-control {
-            display: flex;
-            align-items: center;
-            background: #1a1d20;
-            border: 1px solid #495057;
-            border-radius: 50px;
-            padding: 5px;
-            width: fit-content;
-        }
-
-        .btn-qty {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: none;
-            background: #343a40;
-            color: white;
-            font-weight: bold;
-            transition: 0.2s;
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .btn-qty:hover {
-            background: #0d6efd;
-            box-shadow: 0 0 10px #0d6efd;
-        }
-
-        .input-qty {
-            width: 60px;
-            background: transparent;
-            border: none;
-            color: white;
             text-align: center;
-            font-weight: bold;
-            font-size: 1.2rem;
         }
 
-        .input-qty:focus {
-            outline: none;
-        }
-
-        /* 5. PHẦN ĐÁNH GIÁ */
-        .review-section {
-            background-color: #262b3c;
-            border-radius: 12px;
-            padding: 30px;
-            margin-top: 40px;
-            border: 1px solid #343a40;
-        }
-
-        .review-item {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 20px;
-            margin-bottom: 20px;
-        }
-
-        .review-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
+        .product-gallery img {
+            max-height: 400px;
+            object-fit: contain;
         }
 
         .avatar-circle {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
+            background: #3b82f6;
+            color: #fff;
             border-radius: 50%;
-            background-color: #0d6efd;
-            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 1.2rem;
-            text-transform: uppercase;
         }
 
-        /* STYLE ẢNH AVATAR THẬT */
         .avatar-img {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid #0d6efd;
         }
 
-        /* Star Rating */
+        /* Rating Star Input */
         .rate {
             float: left;
             height: 46px;
             padding: 0 10px;
-            position: relative;
         }
 
         .rate:not(:checked) > input {
             position: absolute;
             opacity: 0;
             pointer-events: none;
-            width: 0;
-            height: 0;
         }
 
         .rate:not(:checked) > label {
@@ -196,141 +65,81 @@
             color: #ffc700;
         }
 
-        .rate:not(:checked) > label:hover,
-        .rate:not(:checked) > label:hover ~ label {
+        .rate:not(:checked) > label:hover, .rate:not(:checked) > label:hover ~ label {
             color: #deb217;
         }
 
-        .rate > input:checked + label:hover,
-        .rate > input:checked + label:hover ~ label,
-        .rate > input:checked ~ label:hover,
-        .rate > input:checked ~ label:hover ~ label,
-        .rate > label:hover ~ input:checked ~ label {
+        .rate > input:checked + label:hover, .rate > input:checked + label:hover ~ label, .rate > input:checked ~ label:hover, .rate > input:checked ~ label:hover ~ label, .rate > label:hover ~ input:checked ~ label {
             color: #c59b08;
         }
     </style>
 </head>
 
-<body>
+<body class="bg-body-tertiary">
 
 <nav th:replace="~{fragments/client/header :: header}"></nav>
 
-<main class="pt-5 pb-5">
+<main class="py-5">
     <div class="container">
 
-        <div class="d-flex align-items-center mb-4 gap-3">
-            <button onclick="window.history.back()"
-                    class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center"
-                    style="width: 40px; height: 40px;">
-                <i class="bi bi-arrow-left fs-5"></i>
-            </button>
-
-            <nav aria-label="breadcrumb" class="m-0">
-                <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-info">Trang chủ</a></li>
-                    <li class="breadcrumb-item"><a href="/nvk-categories" class="text-decoration-none text-info">Sản
-                        phẩm</a></li>
-                    <li class="breadcrumb-item active text-white fw-bold" aria-current="page"
-                        th:text="${nvkProduct.nvkName}">Tên SP
-                    </li>
-                </ol>
-            </nav>
-        </div>
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a href="/nvk-categories" class="text-decoration-none text-muted">Sản
+                    phẩm</a></li>
+                <li class="breadcrumb-item active text-white" aria-current="page" th:text="${nvkProduct.nvkName}"></li>
+            </ol>
+        </nav>
 
         <div class="row g-5">
             <div class="col-lg-6">
-                <div class="product-image-container">
-                    <span class="status-badge-lg bg-danger text-white"
-                          th:if="${nvkProduct.nvkStatus == 0}">NGỪNG BÁN</span>
-                    <span class="status-badge-lg bg-warning text-dark"
-                          th:if="${nvkProduct.nvkStatus == 2}">SẮP VỀ</span>
-                    <span class="status-badge-lg bg-secondary text-white"
-                          th:if="${nvkProduct.nvkStatus == 1 and nvkProduct.nvkQuantity == 0}">HẾT HÀNG</span>
-
-                    <img th:src="${(nvkProduct.nvkImgUrl != null && nvkProduct.nvkImgUrl != '')
-                            ? '/nvk-product-img/' + nvkProduct.nvkImgUrl
-                            : 'https://placehold.co/500x500?text=No+Image'}"
-                         class="img-fluid"
-                         alt="Product Image"
-                         onerror="this.src='https://placehold.co/500x500?text=Error'">
+                <div class="product-gallery shadow-lg">
+                    <img th:src="${(nvkProduct.nvkImgUrl != null && nvkProduct.nvkImgUrl != '') ? '/nvk-product-img/' + nvkProduct.nvkImgUrl : 'https://placehold.co/500'}"
+                         class="img-fluid" onerror="this.src='https://placehold.co/500x500?text=No+Image'">
                 </div>
             </div>
 
             <div class="col-lg-6">
-                <div class="product-info-card">
-                    <h2 class="fw-bold text-white mb-2" th:text="${nvkProduct.nvkName}">Tên Sản Phẩm</h2>
-                    <div class="mb-3">
-                        <span class="badge bg-primary me-2" th:text="${nvkProduct.nvkCategory?.nvkName ?: 'KHÁC'}">Danh mục</span>
-                        <span class="text-secondary small">Mã SP: #[[${nvkProduct.nvkCode}]]</span>
-                    </div>
+                <div class="h-100 p-4 rounded-4" style="background-color: #1e293b;">
+                    <div class="badge bg-primary mb-2">[[${nvkProduct.nvkCategory?.nvkName ?: 'KHÁC'}]]</div>
+                    <h2 class="fw-bold text-white mb-3">[[${nvkProduct.nvkName}]]</h2>
 
-                    <div class="mb-4 d-flex align-items-center">
-                        <span class="price-current">
-                            <span th:if="${nvkProduct.nvkPrice != null}">[[${#numbers.formatDecimal(nvkProduct.nvkPrice, 0, 'COMMA', 0, 'POINT')}]] ₫</span>
-                            <span th:unless="${nvkProduct.nvkPrice != null}">Liên hệ</span>
-                        </span>
-                        <span class="price-old"
-                              th:if="${nvkProduct.nvkOldPrice != null && nvkProduct.nvkPrice != null && nvkProduct.nvkOldPrice > nvkProduct.nvkPrice}">
+                    <div class="mb-4">
+                        <span class="text-info display-6 fw-bold">[[${#numbers.formatDecimal(nvkProduct.nvkPrice, 0, 'COMMA', 0, 'POINT')}]] ₫</span>
+                        <span class="text-decoration-line-through text-muted ms-3 fs-5"
+                              th:if="${nvkProduct.nvkOldPrice > nvkProduct.nvkPrice}">
                             [[${#numbers.formatDecimal(nvkProduct.nvkOldPrice, 0, 'COMMA', 0, 'POINT')}]] ₫
                         </span>
                     </div>
 
-                    <div class="mb-4 text-light opacity-75" style="font-size: 1.05rem; line-height: 1.6;">
-                        <p th:text="${nvkProduct.nvkDescription ?: 'Đang cập nhật mô tả...'}"></p>
-                    </div>
+                    <p class="text-white-50 mb-4" th:text="${nvkProduct.nvkDescription}"></p>
 
-                    <hr class="border-secondary opacity-25 mb-4">
-
-                    <div th:if="${nvkProduct.nvkStatus == 1 and nvkProduct.nvkQuantity > 0}">
-                        <form class="d-flex flex-column gap-3" onsubmit="return false;">
-                            <input type="hidden" id="valProductId" th:value="${nvkProduct.nvkId}">
-
-                            <div class="d-flex align-items-center gap-3">
-                                <span class="text-white fw-bold">Số lượng:</span>
-                                <div class="quantity-control">
-                                    <button type="button" class="btn-qty" onclick="decreaseQty()">-</button>
-                                    <input type="number" id="quantityInput" value="1" min="1"
-                                           th:max="${nvkProduct.nvkQuantity}" class="input-qty" readonly>
-                                    <button type="button" class="btn-qty" onclick="increaseQty()">+</button>
-                                </div>
-                                <span class="text-info small ms-2 fw-bold">(Còn [[${nvkProduct.nvkQuantity}]])</span>
-                            </div>
-
-                            <div class="mt-2">
-                                <button type="button" onclick="ajaxAddToCart()"
-                                        class="btn btn-primary btn-lg rounded-pill fw-bold px-5 w-100 shadow-lg border-0"
-                                        style="height: 55px; font-size: 1.2rem; background: linear-gradient(45deg, #0d6efd, #0a58ca);">
-                                    <i class="bi bi-cart-plus-fill me-2"></i> THÊM VÀO GIỎ NGAY
+                    <div th:if="${nvkProduct.nvkStatus == 1 && nvkProduct.nvkQuantity > 0}">
+                        <div class="d-flex align-items-center gap-3 mb-4">
+                            <span class="text-white fw-bold">Số lượng:</span>
+                            <div class="input-group" style="width: 140px;">
+                                <button class="btn btn-outline-secondary text-white" type="button"
+                                        onclick="adjustQty(-1)">-
+                                </button>
+                                <input type="number" id="qtyInput"
+                                       class="form-control text-center bg-dark text-white border-secondary" value="1"
+                                       min="1" th:max="${nvkProduct.nvkQuantity}" readonly>
+                                <button class="btn btn-outline-secondary text-white" type="button"
+                                        onclick="adjustQty(1)">+
                                 </button>
                             </div>
-                        </form>
-                    </div>
-
-                    <div th:if="${nvkProduct.nvkStatus == 2}">
-                        <button class="btn btn-warning btn-lg rounded-pill fw-bold w-100 opacity-75 text-dark" disabled>
-                            <i class="bi bi-hourglass-split me-2"></i> CHỜ NGÀY MỞ BÁN
-                        </button>
-                    </div>
-                    <div th:if="${nvkProduct.nvkStatus == 1 and nvkProduct.nvkQuantity == 0}">
-                        <button class="btn btn-secondary btn-lg rounded-pill fw-bold w-100 opacity-75" disabled>
-                            <i class="bi bi-box-seam me-2"></i> TẠM HẾT HÀNG
-                        </button>
-                    </div>
-                    <div th:if="${nvkProduct.nvkStatus == 0}">
-                        <button class="btn btn-danger btn-lg rounded-pill fw-bold w-100 opacity-75" disabled>
-                            <i class="bi bi-slash-circle me-2"></i> NGỪNG KINH DOANH
-                        </button>
-                    </div>
-
-                    <div class="mt-4 pt-4 border-top border-secondary opacity-75 small text-light">
-                        <div class="row row-cols-2 g-3">
-                            <div class="col"><i class="bi bi-truck me-2 text-primary"></i>Freeship toàn quốc</div>
-                            <div class="col"><i class="bi bi-shield-check me-2 text-primary"></i>Bảo hành chính hãng
-                            </div>
-                            <div class="col"><i class="bi bi-arrow-repeat me-2 text-primary"></i>Đổi trả trong 30 ngày
-                            </div>
-                            <div class="col"><i class="bi bi-headset me-2 text-primary"></i>Hỗ trợ 24/7</div>
+                            <small class="text-muted">(Còn [[${nvkProduct.nvkQuantity}]] sản phẩm)</small>
                         </div>
+
+                        <button class="btn btn-primary rounded-pill px-5 py-3 fw-bold w-100 shadow-sm"
+                                onclick="addToCartAjax()">
+                            <i class="bi bi-cart-plus-fill me-2"></i> THÊM VÀO GIỎ
+                        </button>
+                    </div>
+
+                    <div th:if="${nvkProduct.nvkStatus != 1 || nvkProduct.nvkQuantity <= 0}"
+                         class="alert alert-secondary text-center">
+                        <i class="bi bi-exclamation-circle me-2"></i> Sản phẩm đang tạm hết hàng
                     </div>
                 </div>
             </div>
@@ -338,115 +147,76 @@
 
         <div class="row mt-5">
             <div class="col-12">
-                <div class="review-section">
-                    <h3 class="text-white fw-bold border-start border-4 border-primary ps-3 mb-4">Đánh giá & Nhận
-                        xét</h3>
+                <div class="card border-0 shadow-lg rounded-4" style="background-color: #1e293b;">
+                    <div class="card-header bg-transparent border-secondary p-4">
+                        <h4 class="text-white fw-bold m-0"><i class="bi bi-star-fill text-warning me-2"></i> Đánh giá
+                            sản phẩm</h4>
+                    </div>
+                    <div class="card-body p-4">
 
-                    <div class="row">
-                        <div class="col-lg-4 mb-4 mb-lg-0 border-end border-secondary pe-lg-4">
-                            <h5 class="text-white mb-3">Gửi đánh giá của bạn</h5>
-
-                            <div th:if="${session.nvkUserLogin == null}" class="text-center py-4 bg-dark rounded">
-                                <i class="bi bi-person-lock fs-1 text-muted"></i>
-                                <p class="mb-3 text-secondary">Vui lòng đăng nhập để đánh giá.</p>
-                                <a href="/nvk-login" class="btn btn-outline-primary btn-sm rounded-pill">Đăng nhập
-                                    ngay</a>
-                            </div>
-
-                            <div th:if="${session.nvkUserLogin != null}">
-                                <form id="reviewForm">
-                                    <input type="hidden" id="productId" th:value="${nvkProduct.nvkId}">
-                                    <div class="mb-3">
-                                        <label class="text-secondary small mb-1">Chọn mức độ hài lòng:</label>
-                                        <div class="rate">
-                                            <input type="radio" id="star5" name="rate" value="5" checked/>
-                                            <label for="star5" title="5 sao">5 stars</label>
-                                            <input type="radio" id="star4" name="rate" value="4"/>
-                                            <label for="star4" title="4 sao">4 stars</label>
-                                            <input type="radio" id="star3" name="rate" value="3"/>
-                                            <label for="star3" title="3 sao">3 stars</label>
-                                            <input type="radio" id="star2" name="rate" value="2"/>
-                                            <label for="star2" title="2 sao">2 stars</label>
-                                            <input type="radio" id="star1" name="rate" value="1"/>
-                                            <label for="star1" title="1 sao">1 star</label>
-                                        </div>
-                                        <div class="clearfix"></div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="text-white mb-2">Nội dung đánh giá:</label>
-                                        <textarea class="form-control bg-dark text-white border-secondary"
-                                                  id="reviewComment" rows="4"
-                                                  placeholder="Sản phẩm dùng thế nào? Hãy chia sẻ cảm nhận..."></textarea>
-                                    </div>
-                                    <button type="button" class="btn btn-primary w-100 rounded-pill fw-bold"
-                                            onclick="submitReview()">
-                                        Gửi đánh giá
-                                    </button>
-                                </form>
-                            </div>
+                        <div class="mb-5 border-bottom border-secondary pb-4" th:if="${session.nvkUserLogin != null}">
+                            <h6 class="text-white mb-3">Viết đánh giá của bạn:</h6>
+                            <form id="reviewForm">
+                                <input type="hidden" id="pId" th:value="${nvkProduct.nvkId}">
+                                <div class="rate mb-3">
+                                    <input type="radio" id="star5" name="rate" value="5" checked/><label
+                                        for="star5">5</label>
+                                    <input type="radio" id="star4" name="rate" value="4"/><label for="star4">4</label>
+                                    <input type="radio" id="star3" name="rate" value="3"/><label for="star3">3</label>
+                                    <input type="radio" id="star2" name="rate" value="2"/><label for="star2">2</label>
+                                    <input type="radio" id="star1" name="rate" value="1"/><label for="star1">1</label>
+                                </div>
+                                <textarea class="form-control bg-dark text-white border-secondary mb-3" id="cmt"
+                                          rows="3" placeholder="Chia sẻ cảm nhận..."></textarea>
+                                <button type="button" class="btn btn-outline-light rounded-pill px-4"
+                                        onclick="postReview()">Gửi đánh giá
+                                </button>
+                            </form>
+                        </div>
+                        <div class="text-center py-4" th:if="${session.nvkUserLogin == null}">
+                            <p class="text-muted">Vui lòng <a href="/nvk-login" class="text-primary">đăng nhập</a> để
+                                đánh giá.</p>
                         </div>
 
-                        <div class="col-lg-8 ps-lg-4">
-                            <h5 class="text-white mb-3">Các bài đánh giá gần đây</h5>
-                            <div id="reviewContainer">
-                                <div th:if="${nvkProduct.nvkReviews == null || nvkProduct.nvkReviews.isEmpty()}"
-                                     class="text-center py-5 text-muted" id="noReviewMsg">
-                                    <i class="bi bi-chat-square-text fs-1 opacity-50"></i>
-                                    <p class="mt-2">Chưa có đánh giá nào. Hãy là người đầu tiên!</p>
+                        <div id="reviewList">
+                            <div th:each="r : ${nvkProduct.nvkReviews}"
+                                 class="d-flex mb-4 border-bottom border-secondary pb-3">
+                                <div class="me-3">
+                                    <img th:if="${r.nvkCustomer?.nvkAvatar != null}" th:src="${r.nvkCustomer.nvkAvatar}"
+                                         class="avatar-img"
+                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                                    <div class="avatar-circle" th:unless="${r.nvkCustomer?.nvkAvatar != null}"
+                                         th:text="${#strings.substring(r.nvkCustomer?.nvkFullName ?: 'U', 0, 1)}">U
+                                    </div>
                                 </div>
-                                <div id="reviewList">
-                                    <div th:each="r : ${nvkProduct.nvkReviews}" class="review-item">
-                                        <div class="d-flex">
-                                            <div class="me-3">
-                                                <img th:if="${r.nvkCustomer?.nvkAvatar != null && r.nvkCustomer.nvkAvatar != ''}"
-                                                     th:src="${r.nvkCustomer.nvkAvatar}"
-                                                     class="avatar-img"
-                                                     alt="Avatar"
-                                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-
-                                                <div class="avatar-circle"
-                                                     th:unless="${r.nvkCustomer?.nvkAvatar != null && r.nvkCustomer.nvkAvatar != ''}">
-                                                    [[${r.nvkCustomer?.nvkFullName != null ?
-                                                    #strings.substring(r.nvkCustomer.nvkFullName, 0, 1) : 'U'}]]
-                                                </div>
-                                            </div>
-
-                                            <div class="flex-grow-1">
-                                                <div class="d-flex justify-content-between align-items-center mb-1">
-                                                    <h6 class="mb-0 fw-bold text-white"
-                                                        th:text="${r.nvkCustomer?.nvkFullName ?: 'Người dùng ẩn danh'}">
-                                                        Tên user</h6>
-                                                    <small class="text-secondary"
-                                                           th:text="${#temporals.format(r.nvkCreatedDate, 'dd/MM/yyyy')}">Ngày
-                                                        đăng</small>
-                                                </div>
-                                                <div class="mb-2 text-warning">
-                                                    <i class="bi bi-star-fill"
-                                                       th:each="i : ${#numbers.sequence(1, r.nvkRating)}"></i>
-                                                    <i class="bi bi-star"
-                                                       th:each="i : ${#numbers.sequence(r.nvkRating + 1, 5)}"
-                                                       th:if="${r.nvkRating < 5}"></i>
-                                                </div>
-                                                <p class="text-light opacity-90 mb-0" th:text="${r.nvkComment}">
-                                                    Comment</p>
-                                            </div>
+                                <div>
+                                    <div class="d-flex align-items-center mb-1">
+                                        <h6 class="text-white fw-bold mb-0 me-2">[[${r.nvkCustomer?.nvkFullName ?: 'Ẩn
+                                            danh'}]]</h6>
+                                        <div class="text-warning small">
+                                            <i class="bi bi-star-fill"
+                                               th:each="i : ${#numbers.sequence(1, r.nvkRating)}"></i>
                                         </div>
                                     </div>
+                                    <small class="text-muted d-block mb-2">[[${#temporals.format(r.nvkCreatedDate,
+                                        'dd/MM/yyyy')}]]</small>
+                                    <p class="text-light opacity-90 m-0">[[${r.nvkComment}]]</p>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 </main>
 
-<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
     <div id="liveToast" class="toast align-items-center text-bg-success border-0 shadow-lg" role="alert">
         <div class="d-flex">
-            <div class="toast-body fw-bold" id="toastMessage">Thông báo ở đây!</div>
+            <div class="toast-body fw-bold">Đã thêm vào giỏ! <a href="/nvk-cart" class="text-white ms-2">Xem giỏ</a>
+            </div>
             <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
         </div>
     </div>
@@ -454,124 +224,55 @@
 
 <footer th:replace="~{fragments/client/footer :: footer}"></footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
-    function increaseQty() {
-        var qtyInput = document.getElementById('quantityInput');
-        if (qtyInput) {
-            var currentVal = parseInt(qtyInput.value);
-            var maxVal = parseInt(qtyInput.getAttribute('max'));
-            if (currentVal < maxVal) qtyInput.value = currentVal + 1;
-        }
+    function adjustQty(delta) {
+        const input = document.getElementById('qtyInput');
+        let val = parseInt(input.value) + delta;
+        const max = parseInt(input.getAttribute('max'));
+        if (val >= 1 && val <= max) input.value = val;
     }
 
-    function decreaseQty() {
-        var qtyInput = document.getElementById('quantityInput');
-        if (qtyInput) {
-            var currentVal = parseInt(qtyInput.value);
-            if (currentVal > 1) qtyInput.value = currentVal - 1;
-        }
-    }
+    function addToCartAjax() {
+        const pId = document.getElementById('pId').value;
+        const qty = document.getElementById('qtyInput').value;
 
-    function ajaxAddToCart() {
-        var pId = $('#valProductId').val();
-        var qty = $('#quantityInput').val();
-
-        $.ajax({
-            url: '/api/nvk-cart/add',
-            type: 'POST',
-            data: {productId: pId, quantity: qty},
-            success: function (res) {
-                if (res.status === 'success') {
+        fetch('/api/nvk-cart/add?productId=' + pId + '&quantity=' + qty, {method: 'POST'})
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    new bootstrap.Toast(document.getElementById('liveToast')).show();
                     if (document.getElementById('cartBadge')) {
-                        document.getElementById('cartBadge').innerText = res.cartCount;
+                        document.getElementById('cartBadge').innerText = data.cartCount;
                         document.getElementById('cartBadge').style.display = 'inline-block';
                     }
-                    document.getElementById('toastMessage').innerText = "Đã thêm vào giỏ hàng!";
-                    new bootstrap.Toast(document.getElementById('liveToast')).show();
-                } else if (res.status === 'login_required') {
-                    window.location.href = '/nvk-login';
-                } else {
-                    alert(res.message || 'Lỗi thêm giỏ hàng!');
-                }
-            },
-            error: function (err) {
-                console.log(err);
-                alert("Lỗi kết nối Server!");
-            }
-        });
+                } else if (data.status === 'login_required') window.location.href = '/nvk-login';
+                else alert(data.message);
+            });
     }
 
-    function submitReview() {
-        var productId = $('#productId').val();
-        var rating = $('input[name="rate"]:checked').val();
-        var comment = $('#reviewComment').val();
+    function postReview() {
+        const pId = document.getElementById('pId').value;
+        const cmt = document.getElementById('cmt').value;
+        const rate = document.querySelector('input[name="rate"]:checked')?.value;
 
-        if (!rating) {
-            alert("Bạn chưa chọn số sao!");
-            return;
-        }
-        if (!comment.trim()) {
-            alert("Vui lòng nhập nội dung đánh giá!");
+        if (!rate || !cmt) {
+            alert("Vui lòng chọn sao và viết nội dung!");
             return;
         }
 
-        $.ajax({
-            url: '/api/nvk-review/submit',
-            type: 'POST',
-            data: {productId: productId, rating: rating, reviewComment: comment},
-            success: function (res) {
-                if (res.status === 'success') {
-                    document.getElementById('toastMessage').innerText = "Đánh giá thành công!";
-                    new bootstrap.Toast(document.getElementById('liveToast')).show();
-                    $('#noReviewMsg').hide();
+        const formData = new FormData();
+        formData.append('productId', pId);
+        formData.append('rating', rate);
+        formData.append('reviewComment', cmt);
 
-                    // --- LOGIC MỚI: DÙNG JS ĐỂ VẼ AVATAR NGAY LẬP TỨC ---
-                    var avatarHtml = '';
-                    if (res.avatarUrl && res.avatarUrl.trim() !== '') {
-                        // Nếu server trả về link ảnh -> Vẽ thẻ IMG
-                        avatarHtml = `<img src="${res.avatarUrl}" class="avatar-img" alt="Avatar">`;
-                    } else {
-                        // Nếu không -> Vẽ vòng tròn chữ cái
-                        var firstChar = res.userName ? res.userName.charAt(0).toUpperCase() : 'U';
-                        avatarHtml = `<div class="avatar-circle">${firstChar}</div>`;
-                    }
-
-                    var starsHtml = '';
-                    for (var i = 1; i <= 5; i++) {
-                        starsHtml += (i <= res.rating) ? '<i class="bi bi-star-fill"></i> ' : '<i class="bi bi-star"></i> ';
-                    }
-
-                    var newReviewHtml = `
-                        <div class="review-item animate__animated animate__fadeIn">
-                            <div class="d-flex">
-                                <div class="me-3">
-                                    ${avatarHtml}
-                                </div>
-                                <div class="flex-grow-1">
-                                    <div class="d-flex justify-content-between align-items-center mb-1">
-                                        <h6 class="mb-0 fw-bold text-white">${res.userName}</h6>
-                                        <small class="text-secondary">Vừa xong</small>
-                                    </div>
-                                    <div class="mb-2 text-warning">${starsHtml}</div>
-                                    <p class="text-light opacity-90 mb-0">${res.comment}</p>
-                                </div>
-                            </div>
-                        </div>`;
-
-                    $('#reviewList').prepend(newReviewHtml);
-                    $('#reviewComment').val('');
-                    $('input[name="rate"][value="5"]').prop('checked', true);
-                } else if (res.status === 'login_required') {
-                    window.location.href = '/nvk-login';
-                } else {
-                    alert(res.message || "Có lỗi xảy ra!");
-                }
-            },
-            error: function () {
-                alert("Lỗi kết nối server!");
-            }
-        });
+        fetch('/api/nvk-review/submit', {method: 'POST', body: formData})
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    location.reload(); // Reload để hiện review mới (Đơn giản hóa)
+                } else if (data.status === 'login_required') window.location.href = '/nvk-login';
+                else alert("Lỗi hệ thống");
+            });
     }
 </script>
 

@@ -9,15 +9,13 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
 
     <style>
-        /* [GIỮ NGUYÊN CSS CỦA BRO - KHÔNG THAY ĐỔI MÀU NỀN] */
-
         /* 1. BANNER */
         .main-banner-item {
             position: relative;
             width: 100%;
             height: 400px;
             overflow: hidden;
-            border-radius: 15px;
+            border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
@@ -27,58 +25,51 @@
             object-fit: cover;
         }
 
-        /* DOTS BANNER */
+        /* Customize Dots */
         .owl-theme .owl-dots .owl-dot span {
-            width: 12px;
-            height: 12px;
-            margin: 5px 7px;
-            background: rgba(255, 255, 255, 0.5);
+            width: 10px;
+            height: 10px;
+            margin: 5px 5px;
+            background: rgba(255, 255, 255, 0.3);
+            transition: 0.3s;
         }
 
         .owl-theme .owl-dots .owl-dot.active span {
-            background: #0d6efd;
-            transform: scale(1.2);
+            background: #3b82f6; /* Màu Primary */
+            width: 25px; /* Kéo dài dot active */
         }
 
-        /* 2. CARD SẢN PHẨM */
+        /* 2. STYLE CARD (Ghi đè để phù hợp Slider) */
         .card {
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background-color: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            background-color: #1e293b;
             transition: all 0.3s ease;
         }
 
         .card:hover {
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
-            border-color: #0d6efd;
             transform: translateY(-5px);
+            border-color: #3b82f6;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
 
-        /* KHUNG ẢNH CĂN GIỮA (Đã căn chỉnh) */
+        /* Khung ảnh sản phẩm */
         .card-img-container {
             width: 100%;
             height: 230px;
-            display: flex; /* Dùng Flexbox để căn giữa */
-            align-items: center; /* Căn giữa dọc */
-            justify-content: center; /* Căn giữa ngang */
+            display: flex;
+            align-items: center;
+            justify-content: center;
             background-color: #fff;
-            padding: 15px;
+            padding: 20px;
             border-radius: 8px 8px 0 0;
             overflow: hidden;
             position: relative;
         }
 
-        .card-img-container a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-        }
-
         .card-img-container img {
             max-width: 100%;
             max-height: 100%;
-            object-fit: contain; /* Ảnh giữ tỷ lệ, không bị méo */
+            object-fit: contain;
             transition: transform 0.4s ease;
         }
 
@@ -86,53 +77,69 @@
             transform: scale(1.08);
         }
 
-        /* BADGES */
+        /* 3. BADGES & LABELS */
         .badge-discount {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #dc3545;
+            top: 12px;
+            right: 12px;
+            background-color: #ef4444;
             color: white;
             padding: 4px 8px;
-            border-radius: 4px;
-            font-weight: 700;
-            font-size: 0.8rem;
-            z-index: 10;
-        }
-
-        .badge-coming-soon {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background-color: #ffc107;
-            color: #000;
-            padding: 4px 8px;
-            border-radius: 4px;
+            border-radius: 6px;
             font-weight: 700;
             font-size: 0.75rem;
             z-index: 10;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
+        .badge-coming-soon {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background-color: #f59e0b;
+            color: #000;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 0.7rem;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
         .badge-category {
-            background-color: #0d6efd;
-            color: white;
-            font-size: 0.65rem;
-            font-weight: 700;
+            background-color: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+            font-size: 0.7rem;
+            font-weight: 600;
             padding: 4px 8px;
             border-radius: 4px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
             display: inline-block;
             margin-bottom: 8px;
         }
 
+        /* 4. TYPOGRAPHY */
+        .price-current {
+            color: #3b82f6;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
         .price-old {
-            color: #adb5bd !important;
-            opacity: 0.7;
-            font-size: 0.9rem;
+            color: #64748b;
             text-decoration: line-through;
+            font-size: 0.9rem;
             margin-left: 8px;
+        }
+
+        .section-title {
+            border-left: 4px solid #3b82f6;
+            padding-left: 15px;
+            margin-bottom: 25px;
+            color: #f8fafc;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
     </style>
 </head>
@@ -146,34 +153,37 @@
     <section class="container mt-4 mb-5">
         <div class="owl-carousel owl-theme" id="nvkBannerSlider">
             <div class="item">
-                <div class="main-banner-item"><img
-                        src="https://placehold.co/1200x400/111/fff?text=SIEU+SALE+IPHONE+15+PRO+MAX&font=roboto"
-                        alt="Banner 1"></div>
+                <div class="main-banner-item">
+                    <img src="https://placehold.co/1200x400/1e293b/3b82f6?text=IPHONE+15+PRO+MAX+-+SAN+SANG+GIAO+NGAY&font=roboto"
+                         alt="Banner 1">
+                </div>
             </div>
             <div class="item">
-                <div class="main-banner-item"><img
-                        src="https://placehold.co/1200x400/0d6efd/fff?text=LAPTOP+GAMING+GIAM+SOC+20%25&font=roboto"
-                        alt="Banner 2"></div>
+                <div class="main-banner-item">
+                    <img src="https://placehold.co/1200x400/0f172a/10b981?text=LAPTOP+GAMING+-+GIAM+GIA+SOC+DEN+20%25&font=roboto"
+                         alt="Banner 2">
+                </div>
             </div>
             <div class="item">
-                <div class="main-banner-item"><img
-                        src="https://placehold.co/1200x400/ffc107/000?text=PHU+KIEN+CHINH+HANG+-+MUA+1+TANG+1&font=roboto"
-                        alt="Banner 3"></div>
+                <div class="main-banner-item">
+                    <img src="https://placehold.co/1200x400/334155/f59e0b?text=PHU+KIEN+CHINH+HANG+-+MUA+1+TANG+1&font=roboto"
+                         alt="Banner 3">
+                </div>
             </div>
         </div>
     </section>
 
     <section class="container my-5">
-        <h3 class="mb-4 text-white border-start border-4 border-warning ps-3">🔥 Có thể bạn quan tâm</h3>
+        <h4 class="section-title">🔥 Có thể bạn quan tâm</h4>
 
-        <div th:if="${listRandom == null || listRandom.isEmpty()}" class="text-white opacity-50 fst-italic">
+        <div th:if="${listRandom == null || listRandom.isEmpty()}" class="text-white opacity-50 fst-italic py-3">
             Đang cập nhật sản phẩm gợi ý...
         </div>
 
         <div class="owl-carousel owl-theme" id="nvkRandomSlider" th:if="${listRandom != null && !listRandom.isEmpty()}">
             <div class="item"
                  th:each="sp : ${listRandom.?[nvkStatus == 1 and nvkQuantity != null and nvkQuantity > 0]}">
-                <div class="card h-100 shadow-sm border-0 overflow-hidden position-relative">
+                <div class="card h-100 shadow-sm">
 
                     <div class="badge-discount"
                          th:if="${sp.nvkOldPrice != null && sp.nvkPrice != null && sp.nvkOldPrice > sp.nvkPrice}">
@@ -190,17 +200,16 @@
                         </a>
                     </div>
 
-                    <div class="card-body d-flex flex-column bg-dark bg-opacity-25 pt-4">
-                        <h5 class="card-title text-truncate fw-bold mb-2">
+                    <div class="card-body d-flex flex-column pt-3 p-3">
+                        <span class="badge-category" th:text="${sp.nvkCategory?.nvkName ?: 'KHÁC'}">Category</span>
+
+                        <h6 class="card-title text-truncate fw-bold mb-2">
                             <a th:href="@{'/nvk-product/detail/' + ${sp.nvkId}}" class="text-decoration-none text-white"
                                th:text="${sp.nvkName}">Tên SP</a>
-                        </h5>
-
-                        <div><span class="badge-category" th:text="${sp.nvkCategory?.nvkName ?: 'KHÁC'}">Category</span>
-                        </div>
+                        </h6>
 
                         <div class="mb-3 mt-auto">
-                            <span class="text-primary fw-bold fs-5">
+                            <span class="price-current">
                                 <span th:if="${sp.nvkPrice != null}">[[${#numbers.formatDecimal(sp.nvkPrice, 0, 'POINT', 0, 'COMMA')}]] ₫</span>
                                 <span th:unless="${sp.nvkPrice != null}">Liên hệ</span>
                             </span>
@@ -209,6 +218,7 @@
                                 [[${#numbers.formatDecimal(sp.nvkOldPrice, 0, 'POINT', 0, 'COMMA')}]] ₫
                             </span>
                         </div>
+
                         <a th:href="@{'/nvk-product/detail/' + ${sp.nvkId}}"
                            class="btn btn-outline-primary btn-sm rounded-pill w-100 fw-bold">Xem chi tiết</a>
                     </div>
@@ -218,9 +228,9 @@
     </section>
 
     <section class="container my-5" th:if="${nvkProducts != null}">
-        <h3 class="mb-4 text-white border-start border-4 border-info ps-3">🚀 Sản phẩm sắp về</h3>
+        <h4 class="section-title text-info" style="border-color: #0ea5e9;">🚀 Sản phẩm sắp về</h4>
 
-        <div th:if="${nvkProducts.?[nvkStatus == 2].isEmpty()}" class="text-white opacity-50 fst-italic">
+        <div th:if="${nvkProducts.?[nvkStatus == 2].isEmpty()}" class="text-white opacity-50 fst-italic py-3">
             Hiện chưa có sản phẩm sắp về.
         </div>
 
@@ -228,7 +238,7 @@
              th:unless="${nvkProducts.?[nvkStatus == 2].isEmpty()}">
 
             <div class="item" th:each="p : ${nvkProducts.?[nvkStatus == 2]}">
-                <div class="card h-100 shadow-sm border-0 overflow-hidden position-relative">
+                <div class="card h-100 shadow-sm">
                     <div class="badge-coming-soon"><i class="bi bi-clock-history me-1"></i> SẮP VỀ</div>
 
                     <div class="card-img-container">
@@ -240,13 +250,13 @@
                         </a>
                     </div>
 
-                    <div class="card-body d-flex flex-column bg-dark bg-opacity-25 pt-4">
-                        <h5 class="card-title text-truncate fw-bold mb-2">
+                    <div class="card-body d-flex flex-column pt-3 p-3">
+                        <span class="badge-category" th:text="${p.nvkCategory?.nvkName ?: 'KHÁC'}">Category</span>
+
+                        <h6 class="card-title text-truncate fw-bold mb-2">
                             <a th:href="@{'/nvk-product/detail/' + ${p.nvkId}}" class="text-decoration-none text-white"
                                th:text="${p.nvkName}">Tên SP</a>
-                        </h5>
-                        <div><span class="badge-category" th:text="${p.nvkCategory?.nvkName ?: 'KHÁC'}">Category</span>
-                        </div>
+                        </h6>
 
                         <div class="mb-3 mt-auto">
                             <span class="text-info fw-bold fs-5">
@@ -254,8 +264,8 @@
                                 <span th:unless="${p.nvkPrice != null && p.nvkPrice > 0}">Giá dự kiến</span>
                             </span>
                         </div>
-                        <button class="btn btn-secondary btn-sm rounded-pill w-100 fw-bold opacity-75" disabled
-                                style="cursor: not-allowed;">
+
+                        <button class="btn btn-secondary btn-sm rounded-pill w-100 fw-bold opacity-75" disabled>
                             <i class="bi bi-hourglass-split me-1"></i> Chờ ngày mở bán
                         </button>
                     </div>
@@ -266,9 +276,10 @@
 
     <div class="container py-5" id="products" th:if="${nvkProducts != null}">
         <div class="d-flex align-items-center justify-content-between mb-4">
-            <h3 class="fw-bold text-white m-0 border-start border-4 border-primary ps-3">Sản phẩm nổi bật</h3>
-            <a href="/nvk-categories" class="btn btn-outline-primary btn-sm fw-bold">Xem tất cả <i
-                    class="bi bi-arrow-right ms-1"></i></a>
+            <h4 class="section-title m-0">Sản phẩm nổi bật</h4>
+            <a href="/nvk-categories" class="btn btn-outline-primary btn-sm fw-bold rounded-pill px-3">
+                Xem tất cả <i class="bi bi-arrow-right ms-1"></i>
+            </a>
         </div>
 
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
@@ -276,7 +287,7 @@
                  th:each="p, loopStat : ${nvkProducts.?[nvkStatus == 1 and nvkQuantity != null and nvkQuantity > 0]}"
                  th:if="${loopStat.index < 8}">
 
-                <div class="card h-100 shadow-sm border-0 overflow-hidden position-relative">
+                <div class="card h-100 shadow-sm">
                     <div class="badge-discount"
                          th:if="${p.nvkOldPrice != null && p.nvkPrice != null && p.nvkOldPrice > p.nvkPrice}">
                         -[[${#numbers.formatInteger((p.nvkOldPrice - p.nvkPrice) / p.nvkOldPrice * 100, 0)}]]%
@@ -291,16 +302,16 @@
                         </a>
                     </div>
 
-                    <div class="card-body d-flex flex-column bg-dark bg-opacity-25 pt-4">
-                        <h5 class="card-title text-truncate fw-bold mb-2">
+                    <div class="card-body d-flex flex-column pt-3 p-3">
+                        <span class="badge-category" th:text="${p.nvkCategory?.nvkName ?: 'KHÁC'}">Category</span>
+
+                        <h6 class="card-title text-truncate fw-bold mb-2">
                             <a th:href="@{'/nvk-product/detail/' + ${p.nvkId}}" class="text-decoration-none text-white"
                                th:text="${p.nvkName}">Tên sản phẩm</a>
-                        </h5>
-                        <div><span class="badge-category" th:text="${p.nvkCategory?.nvkName ?: 'KHÁC'}">Category</span>
-                        </div>
+                        </h6>
 
                         <div class="mt-auto mb-3">
-                            <span class="text-primary fw-bold fs-5">
+                            <span class="price-current">
                                 <span th:if="${p.nvkPrice != null}">[[${#numbers.formatDecimal(p.nvkPrice, 0, 'POINT', 0, 'COMMA')}]] ₫</span>
                                 <span th:unless="${p.nvkPrice != null}">Liên hệ</span>
                             </span>
@@ -319,20 +330,22 @@
             </div>
 
             <div class="col-12 text-center text-muted py-5" th:if="${nvkProducts.empty}">
-                <p>Chưa có sản phẩm nào.</p>
+                <p class="fs-5">Chưa có sản phẩm nào.</p>
             </div>
         </div>
     </div>
 </main>
 
-<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-    <div id="liveToast" class="toast align-items-center text-bg-success border-0 shadow-lg" role="alert">
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+    <div id="liveToast" class="toast align-items-center text-bg-success border-0 shadow-lg" role="alert"
+         aria-live="assertive" aria-atomic="true">
         <div class="d-flex">
             <div class="toast-body fw-bold" id="toastMessage">
                 <i class="bi bi-check-circle-fill me-2"></i> Đã thêm vào giỏ!
                 <a href="/nvk-cart" class="text-white text-decoration-underline ms-2 small">Xem giỏ hàng</a>
             </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
         </div>
     </div>
 </div>
@@ -344,20 +357,36 @@
 
 <script>
     $(document).ready(function () {
-        // SLIDER CONFIG (GIỮ NGUYÊN)
+        // 1. BANNER SLIDER
         $("#nvkBannerSlider").owlCarousel({
-            items: 1, loop: true, margin: 10, nav: false, dots: true,
-            autoplay: true, autoplayTimeout: 5000, autoplaySpeed: 1500, smartSpeed: 1500
+            items: 1,
+            loop: true,
+            margin: 10,
+            nav: false,
+            dots: true,
+            autoplay: true,
+            autoplayTimeout: 5000,
+            autoplaySpeed: 1000,
+            animateOut: 'fadeOut' // Hiệu ứng mờ dần
         });
 
+        // 2. PRODUCT SLIDER CONFIG
         function initSmartSlider(selector) {
             var $slider = $(selector);
             if (!$slider.length) return;
+
             var itemCount = $slider.children('.item').length;
             var shouldLoop = itemCount > 4;
+
             $slider.owlCarousel({
-                margin: 20, nav: false, dots: false, autoplay: true, autoplayTimeout: 4000,
-                autoplayHoverPause: true, loop: shouldLoop, smartSpeed: 1000, autoplaySpeed: 1000,
+                margin: 20,
+                nav: false,
+                dots: false,
+                autoplay: true,
+                autoplayTimeout: 4000,
+                autoplayHoverPause: true,
+                loop: shouldLoop,
+                smartSpeed: 800,
                 responsive: {
                     0: {items: 1, loop: itemCount > 1},
                     600: {items: 2, loop: itemCount > 2},
@@ -370,7 +399,7 @@
         initSmartSlider("#nvkComingSoonSlider");
     });
 
-    // [QUAN TRỌNG] HÀM CẬP NHẬT SỐ GIỎ HÀNG TRÊN MENU
+    // 3. ADD TO CART AJAX (Đồng bộ số trên header)
     function nvkAddToCart(productId) {
         fetch('/api/nvk-cart/add?productId=' + productId + '&quantity=1', {method: 'POST'})
             .then(response => response.json())
@@ -378,16 +407,17 @@
                 if (data.status === 'login_required') {
                     window.location.href = '/nvk-login';
                 } else if (data.status === 'success') {
+                    // Show Toast thông báo
                     const toast = new bootstrap.Toast(document.getElementById('liveToast'));
                     toast.show();
 
-                    // [ĐÃ SỬA] Tìm badge giỏ hàng trên Menu và cập nhật số
+                    // Cập nhật số trên Header (Nếu có element)
                     if (document.getElementById('cartBadge')) {
                         document.getElementById('cartBadge').innerText = data.cartCount;
                         document.getElementById('cartBadge').style.display = 'inline-block';
                     }
                 } else if (data.status === 'error') {
-                    alert(data.message);
+                    alert(data.message); // Lỗi tồn kho
                 }
             })
             .catch(error => console.error('Error:', error));

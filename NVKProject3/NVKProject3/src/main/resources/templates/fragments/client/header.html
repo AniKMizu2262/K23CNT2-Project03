@@ -1,5 +1,6 @@
 <nav th:fragment="header" class="navbar navbar-expand-lg navbar-dark py-3 sticky-top shadow-sm"
      style="background-color: #262b3c; border-bottom: 1px solid #333; z-index: 1050;">
+
     <div class="container">
         <a class="navbar-brand fw-bold fs-4 text-primary me-4" href="/">
             <i class="bi bi-bag-heart-fill"></i> NVK STORE
@@ -12,22 +13,15 @@
         <div class="collapse navbar-collapse" id="navbarNav">
 
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Trang chủ</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/nvk-categories">Danh mục</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/nvk-order/history">Tra cứu đơn</a>
-                </li>
+                <li class="nav-item"><a class="nav-link" href="/">Trang chủ</a></li>
+                <li class="nav-item"><a class="nav-link" href="/nvk-categories">Danh mục</a></li>
+                <li class="nav-item"><a class="nav-link" href="/nvk-order/history">Tra cứu đơn</a></li>
             </ul>
 
             <form class="d-flex mx-lg-4 my-2 my-lg-0 flex-grow-1" role="search" action="/nvk-search" method="get">
                 <div class="input-group">
                     <input class="form-control bg-dark text-light border-secondary" type="search"
-                           placeholder="Bạn tìm gì hôm nay?..."
-                           name="keyword" aria-label="Search"
+                           placeholder="Bạn tìm gì hôm nay?..." name="keyword" aria-label="Search"
                            th:value="${keyword}">
                     <button class="btn btn-outline-secondary border-start-0 bg-dark" type="submit">
                         <i class="bi bi-search text-white"></i>
@@ -41,28 +35,8 @@
                     <i class="bi bi-cart3 fs-4"></i>
                     <span id="cartBadge"
                           class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                          style="font-size: 0.7rem;">
-        0
-    </span>
+                          style="font-size: 0.7rem; display: none;">0</span>
                 </a>
-
-                <script>
-                    document.addEventListener("DOMContentLoaded", function () {
-                        // Gọi API lấy số lượng ngay khi trang vừa load xong
-                        fetch('/api/nvk-cart/count')
-                            .then(response => response.json())
-                            .then(data => {
-                                const badge = document.getElementById('cartBadge');
-                                if (badge) {
-                                    badge.innerText = data.count; // Cập nhật số
-
-                                    // (Tuỳ chọn) Nếu số > 0 thì hiện, = 0 thì ẩn cho gọn
-                                    badge.style.display = data.count > 0 ? 'inline-block' : 'none';
-                                }
-                            })
-                            .catch(err => console.error('Lỗi lấy giỏ hàng:', err));
-                    });
-                </script>
 
                 <div class="vr text-secondary mx-2 d-none d-lg-block"></div>
 
@@ -79,8 +53,7 @@
                                 ? session.nvkUserLogin.nvkAvatar + '?v=' + #dates.createNow().getTime()
                                 : 'https://ui-avatars.com/api/?name=' + session.nvkUserLogin.nvkFullName}"
                              class="rounded-circle border border-2 border-primary"
-                             width="38" height="38"
-                             style="object-fit: cover;"
+                             width="38" height="38" style="object-fit: cover;"
                              onerror="this.src='https://ui-avatars.com/api/?name=User&background=random'">
 
                         <div class="ms-2 d-none d-xl-block text-start">
@@ -107,4 +80,19 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch('/api/nvk-cart/count')
+                .then(response => response.json())
+                .then(data => {
+                    const badge = document.getElementById('cartBadge');
+                    if (badge) {
+                        badge.innerText = data.count;
+                        badge.style.display = data.count > 0 ? 'inline-block' : 'none';
+                    }
+                })
+                .catch(err => console.error('Lỗi lấy giỏ hàng:', err));
+        });
+    </script>
 </nav>

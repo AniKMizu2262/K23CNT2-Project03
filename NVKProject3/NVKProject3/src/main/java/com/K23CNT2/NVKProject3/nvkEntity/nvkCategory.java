@@ -17,12 +17,14 @@ public class nvkCategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long nvkId;
 
-    @Column(name = "nvk_name")
+    @Column(name = "nvk_name", nullable = false)
     private String nvkName;
 
     // --- Quan hệ (Relations) ---
-    @OneToMany(mappedBy = "nvkCategory", fetch = FetchType.LAZY) // 1. Thêm LAZY cho chắc
+
+    // Sử dụng LAZY để không load toàn bộ sản phẩm khi chỉ cần lấy danh mục
+    @OneToMany(mappedBy = "nvkCategory", fetch = FetchType.LAZY)
     @ToString.Exclude
-    @EqualsAndHashCode.Exclude // 2. [QUAN TRỌNG] Ngăn Lombok quét qua list này gây chậm
+    @EqualsAndHashCode.Exclude // Ngăn Lombok quét qua list này gây chậm/tràn bộ nhớ
     private List<nvkProduct> nvkProducts;
 }

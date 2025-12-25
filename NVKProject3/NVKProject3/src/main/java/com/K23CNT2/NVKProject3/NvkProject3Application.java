@@ -6,9 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class NvkProject3Application {
 
-	public static void main(String[] args) {
-        System.out.println("Set Up done !");
-		SpringApplication.run(NvkProject3Application.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(NvkProject3Application.class, args);
+        System.out.println("-----------------------------------");
+        System.out.println("   NVK PROJECT 3 - APP STARTED ✅");
+        System.out.println("-----------------------------------");
+    }
 }

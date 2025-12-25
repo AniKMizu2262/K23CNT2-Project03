@@ -17,30 +17,32 @@ public class nvkReview {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long nvkId;
 
-    private Integer nvkRating; // Điểm đánh giá (1-5)
+    private Integer nvkRating; // Số sao (1 đến 5)
 
     @Column(columnDefinition = "TEXT")
-    private String nvkComment; // Nội dung bình luận
+    private String nvkComment; // Bình luận
 
-    private LocalDate nvkCreatedDate; // Ngày đánh giá
+    private LocalDate nvkCreatedDate; // Ngày viết đánh giá
 
     // --- Quan hệ ---
 
-    // Nối với Khách hàng (nvkCustomer)
     @ManyToOne
     @JoinColumn(name = "nvk_customer_id")
     @ToString.Exclude
     private nvkCustomer nvkCustomer;
 
-    // Nối với Sản phẩm (nvkProduct)
     @ManyToOne
     @JoinColumn(name = "nvk_product_id")
     @ToString.Exclude
     private nvkProduct nvkProduct;
 
-    // Tự động lấy ngày hiện tại khi lưu
+    // --- Lifecycle Callbacks ---
+
     @PrePersist
     public void prePersist() {
-        this.nvkCreatedDate = LocalDate.now();
+        // Tự động set ngày hiện tại khi lưu vào DB
+        if (this.nvkCreatedDate == null) {
+            this.nvkCreatedDate = LocalDate.now();
+        }
     }
 }
