@@ -7,21 +7,22 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/css/style.css">
 </head>
-<body class="bg-body-tertiary">
+<body style="background-color: #0f172a;">
 
 <aside th:replace="~{fragments/sidebar :: sidebar('review')}"></aside>
 
 <div class="content-wrapper">
 
-    <div class="content-header mb-4 p-4 rounded shadow-sm bg-white d-flex justify-content-between align-items-center">
+    <div class="content-header mb-4 p-4 rounded shadow-sm d-flex justify-content-between align-items-center"
+         style="background-color: #1e293b;">
         <div class="d-flex align-items-center gap-3">
-            <button class="btn btn-outline-secondary border-0"
+            <button class="btn btn-outline-secondary border-0 text-white"
                     onclick="document.body.classList.toggle('sidebar-closed')">
                 <i class="bi bi-list fs-4"></i>
             </button>
             <div>
-                <h1 class="fw-bold fs-3 m-0">Đánh giá khách hàng</h1>
-                <small class="text-muted">Xem và quản lý phản hồi về sản phẩm</small>
+                <h1 class="fw-bold fs-3 m-0 text-white">Đánh giá khách hàng</h1>
+                <small class="text-white-50">Xem và quản lý phản hồi về sản phẩm</small>
             </div>
         </div>
     </div>
@@ -31,18 +32,19 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 
-    <div class="card shadow-sm border-0 mb-4">
+    <div class="card shadow-sm border-0 mb-4" style="background-color: #1e293b;">
         <div class="card-body">
             <div class="row g-2">
                 <div class="col-md-5">
                     <div class="input-group">
-                        <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
-                        <input type="text" id="searchInput" class="form-control"
+                        <span class="input-group-text bg-dark text-white border-secondary"><i class="bi bi-search"></i></span>
+                        <input type="text" id="searchInput"
+                               class="form-control bg-dark text-white border-secondary"
                                placeholder="Tìm nội dung hoặc tên sản phẩm..." th:value="${currKeyword}">
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <select class="form-select" id="ratingSelect">
+                    <select class="form-select bg-dark text-white border-secondary" id="ratingSelect">
                         <option value="">-- Tất cả đánh giá --</option>
                         <option value="5" th:selected="${currRating == 5}">⭐⭐⭐⭐⭐ (5 Sao)</option>
                         <option value="4" th:selected="${currRating == 4}">⭐⭐⭐⭐ (4 Sao)</option>
@@ -52,18 +54,19 @@
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <a href="/nvkAdmin/review" class="btn btn-light border w-100">Reset</a>
+                    <a href="/nvkAdmin/review" class="btn btn-outline-light w-100">Reset</a>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="content">
-        <div class="card shadow-lg border-0">
+        <div class="card shadow-lg border-0" style="background-color: #1e293b;">
             <div class="card-body p-0 table-responsive">
-                <table class="table table-hover mb-0 align-middle">
-                    <thead class="table-primary">
-                    <tr class="text-uppercase small fw-bold">
+
+                <table class="table table-dark table-hover mb-0 align-middle" style="background-color: transparent;">
+                    <thead style="background-color: #0f172a;">
+                    <tr class="text-uppercase small fw-bold text-secondary">
                         <th class="py-3 ps-4">Sản phẩm</th>
                         <th class="py-3">Khách hàng</th>
                         <th class="py-3 text-center">Số sao</th>
@@ -73,42 +76,41 @@
                     </tr>
                     </thead>
 
-                    <tbody id="tableBody" th:fragment="review_rows">
-                    <tr th:each="r : ${nvkReviews}">
+                    <tbody id="tableBody" th:fragment="review_rows" class="border-top-0">
+                    <tr th:each="r : ${nvkReviews}" style="border-bottom: 1px solid #334155;">
                         <td class="ps-4">
                             <div class="d-flex align-items-center">
-
                                 <img th:src="${(r.nvkProduct.nvkImgUrl != null && r.nvkProduct.nvkImgUrl != '')
                                         ? '/nvk-product-img/' + r.nvkProduct.nvkImgUrl
                                         : 'https://placehold.co/40?text=No+Img'}"
                                      width="40" height="40"
-                                     class="rounded border me-2"
-                                     style="object-fit: cover;"
+                                     class="rounded border border-secondary me-2"
+                                     style="object-fit: cover; background-color: transparent;"
                                      onerror="this.src='https://placehold.co/40?text=Err'">
-
-                                <span class="fw-bold text-dark">[[${r.nvkProduct.nvkName}]]</span>
+                                <span class="fw-bold text-info">[[${r.nvkProduct.nvkName}]]</span>
                             </div>
                         </td>
 
                         <td>
-                                <span class="fw-bold text-secondary">
-                                    <i class="bi bi-person-circle me-1"></i>
-                                    [[${r.nvkCustomer != null ? r.nvkCustomer.nvkFullName : 'Khách ẩn danh'}]]
-                                </span>
+                            <span class="fw-bold text-white">
+                                <i class="bi bi-person-circle me-1"></i>
+                                [[${r.nvkCustomer != null ? r.nvkCustomer.nvkFullName : 'Khách ẩn danh'}]]
+                            </span>
                         </td>
 
                         <td class="text-center">
-                                <span class="badge bg-light text-warning border border-warning fs-6">
-                                    [[${r.nvkRating}]] <i class="bi bi-star-fill"></i>
-                                </span>
+                            <span class="badge bg-transparent border border-warning text-warning fs-6">
+                                [[${r.nvkRating}]] <i class="bi bi-star-fill"></i>
+                            </span>
                         </td>
 
                         <td>
-                            <span class="fst-italic text-muted">"[[${r.nvkComment}]]"</span>
+                            <span class="fst-italic text-white-50">"[[${r.nvkComment}]]"</span>
                         </td>
 
                         <td>
-                            <small class="text-muted">[[${#temporals.format(r.nvkCreatedDate, 'dd/MM/yyyy')}]]</small>
+                            <small class="text-white-50">[[${#temporals.format(r.nvkCreatedDate,
+                                'dd/MM/yyyy')}]]</small>
                         </td>
 
                         <td class="text-center">

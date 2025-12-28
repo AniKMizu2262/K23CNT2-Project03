@@ -7,21 +7,22 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/css/style.css">
 </head>
-<body class="bg-body">
+<body style="background-color: #0f172a;">
 
 <aside th:replace="~{fragments/sidebar :: sidebar('accounts')}"></aside>
 
 <div class="content-wrapper">
 
-    <div class="content-header mb-4 p-4 rounded shadow-sm d-flex justify-content-between align-items-center">
+    <div class="content-header mb-4 p-4 rounded shadow-sm d-flex justify-content-between align-items-center"
+         style="background-color: #1e293b;">
         <div class="d-flex align-items-center gap-3">
-            <button class="btn btn-outline-secondary border-0"
+            <button class="btn btn-outline-secondary border-0 text-white"
                     onclick="document.body.classList.toggle('sidebar-closed')" title="Đóng/Mở Menu">
                 <i class="bi bi-list fs-4"></i>
             </button>
             <div>
-                <h1 class="fw-bold fs-3 m-0">Quản trị viên hệ thống</h1>
-                <small class="text-muted">Phân quyền và bảo mật tài khoản</small>
+                <h1 class="fw-bold fs-3 m-0 text-white">Quản trị viên hệ thống</h1>
+                <small class="text-white-50">Phân quyền và bảo mật tài khoản</small>
             </div>
         </div>
         <a href="/nvkAdmin/accounts/create" class="btn btn-primary fw-bold shadow-sm px-3">
@@ -44,40 +45,41 @@
     </div>
 
     <div class="content">
-        <div class="card shadow-lg border-0">
-            <div class="card-header py-3 bg-transparent border-bottom">
+        <div class="card shadow-lg border-0" style="background-color: #1e293b;">
+            <div class="card-header py-3 bg-transparent border-bottom border-secondary">
                 <h6 class="m-0 font-weight-bold text-primary text-uppercase small">
                     <i class="bi bi-people-fill me-1"></i> Danh sách admin
                 </h6>
             </div>
             <div class="card-body p-0 table-responsive">
-                <table class="table table-hover mb-0 align-middle">
-                    <thead class="table-primary">
-                    <tr>
-                        <th class="text-center" width="5%">ID</th>
-                        <th class="text-center" width="10%">Avatar</th>
-                        <th>Tài khoản</th>
-                        <th>Họ tên</th>
-                        <th class="text-center">Trạng thái</th>
-                        <th class="text-center">Hành động</th>
+
+                <table class="table table-dark table-hover mb-0 align-middle" style="background-color: transparent;">
+                    <thead style="background-color: #0f172a;">
+                    <tr class="text-white-50">
+                        <th class="text-center py-3" width="5%">ID</th>
+                        <th class="text-center py-3" width="10%">Avatar</th>
+                        <th class="py-3">Tài khoản</th>
+                        <th class="py-3">Họ tên</th>
+                        <th class="text-center py-3">Trạng thái</th>
+                        <th class="text-center py-3">Hành động</th>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="border-top-0">
 
-                    <tr th:each="ad : ${nvkAdmins}">
-                        <td class="text-center text-muted fw-bold">[[${ad.nvkId}]]</td>
+                    <tr th:each="ad : ${nvkAdmins}" style="border-bottom: 1px solid #334155;">
+                        <td class="text-center text-white-50 fw-bold">[[${ad.nvkId}]]</td>
 
                         <td class="text-center">
                             <img th:src="${(ad.nvkAvatar != null && ad.nvkAvatar != '')
                                     ? ad.nvkAvatar + '?v=' + #dates.createNow().getTime()
                                     : 'https://ui-avatars.com/api/?name=' + ad.nvkFullName + '&background=random'}"
                                  style="width: 35px; height: 35px; object-fit: cover;"
-                                 class="rounded-circle border"
+                                 class="rounded-circle border border-secondary"
                                  alt="Avatar">
                         </td>
 
-                        <td class="fw-bold text-primary">[[${ad.nvkUsername}]]</td>
-                        <td>[[${ad.nvkFullName}]]</td>
+                        <td class="fw-bold text-info">[[${ad.nvkUsername}]]</td>
+                        <td class="text-white">[[${ad.nvkFullName}]]</td>
 
                         <td class="text-center">
                             <span th:if="${ad.nvkActive}" class="badge bg-success bg-opacity-75">Active</span>
@@ -86,22 +88,22 @@
 
                         <td class="text-center">
                             <a th:href="@{/nvkAdmin/accounts/edit/{id}(id=${ad.nvkId})}"
-                               class="btn btn-sm btn-outline-primary" title="Sửa">
-                                <i class="bi bi-pencil-square"></i>
+                               class="btn btn-sm btn-outline-primary border-0" title="Sửa">
+                                <i class="bi bi-pencil-square fs-5"></i>
                             </a>
                             <a th:href="@{/nvkAdmin/accounts/delete/{id}(id=${ad.nvkId})}"
-                               class="btn btn-sm btn-outline-danger ms-1"
+                               class="btn btn-sm btn-outline-danger border-0 ms-1"
                                onclick="return confirm('Bạn có chắc muốn xóa admin này không? Hành động này không thể hoàn tác!');"
                                title="Xóa">
-                                <i class="bi bi-trash"></i>
+                                <i class="bi bi-trash fs-5"></i>
                             </a>
                         </td>
                     </tr>
 
                     <tr th:if="${#lists.isEmpty(nvkAdmins)}">
                         <td colspan="6" class="text-center py-5 text-muted">
-                            <i class="bi bi-inbox fs-1 d-block mb-2 text-secondary"></i>
-                            Chưa có dữ liệu quản trị viên nào.
+                            <i class="bi bi-inbox fs-1 d-block mb-2 text-secondary opacity-50"></i>
+                            <span class="text-white-50">Chưa có dữ liệu quản trị viên nào.</span>
                         </td>
                     </tr>
 
@@ -112,6 +114,7 @@
     </div>
 
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     function toggleSidebar() {
         document.body.classList.toggle('sidebar-closed');

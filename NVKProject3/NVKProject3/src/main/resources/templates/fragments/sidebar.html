@@ -81,9 +81,17 @@
 
         <li class="nav-item mt-3">
             <a th:href="@{/nvkLogout}"
-               class="nav-link text-danger fw-bold border border-danger bg-danger bg-opacity-10">
+               class="nav-link text-white-50 fw-bold hover-danger"
+               style="transition: 0.3s;">
                 <i class="bi bi-box-arrow-right me-2"></i> Đăng xuất
             </a>
+
+            <style>
+                .hover-danger:hover {
+                    color: #ef4444 !important; /* Màu đỏ */
+                    background-color: rgba(239, 68, 68, 0.1) !important; /* Nền đỏ mờ */
+                }
+            </style>
         </li>
     </ul>
 </aside>
