@@ -26,7 +26,7 @@ public class nvkWebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/images/**")
                 .addResourceLocations("file:/" + uploadDir.toAbsolutePath().toString().replace("\\", "/") + "/");
 
-        // (Bổ sung nếu bro muốn dùng chung logic với file kia)
+        // (Bổ sung nếu muốn dùng chung logic với file kia)
         registry.addResourceHandler("/nvk-images/**")
                 .addResourceLocations("file:/" + uploadDir.resolve("admin").toAbsolutePath().toString().replace("\\", "/") + "/",
                         "file:/" + uploadDir.resolve("user").toAbsolutePath().toString().replace("\\", "/") + "/");

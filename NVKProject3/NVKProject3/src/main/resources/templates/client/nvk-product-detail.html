@@ -3,74 +3,101 @@
 <head>
     <th:block th:replace="~{fragments/client/head :: head}"></th:block>
     <style>
+        /* --- Product Gallery --- */
         .product-gallery {
             background: #fff;
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 20px;
             text-align: center;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .product-gallery img {
-            max-height: 400px;
+            max-height: 450px;
+            max-width: 100%;
             object-fit: contain;
+            transition: transform 0.3s ease;
         }
 
+        .product-gallery:hover img {
+            transform: scale(1.05);
+        }
+
+        /* --- Avatar Styles --- */
         .avatar-circle {
-            width: 45px;
-            height: 45px;
-            background: #3b82f6;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
             color: #fff;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
+            font-size: 1.2rem;
+            border: 2px solid #1e293b;
         }
 
         .avatar-img {
-            width: 45px;
-            height: 45px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             object-fit: cover;
+            border: 2px solid #1e293b;
         }
 
-        /* Rating Star Input */
-        .rate {
-            float: left;
-            height: 46px;
-            padding: 0 10px;
+        /* --- Modern Star Rating --- */
+        .star-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            gap: 5px;
         }
 
-        .rate:not(:checked) > input {
-            position: absolute;
-            opacity: 0;
-            pointer-events: none;
+        .star-rating input {
+            display: none;
         }
 
-        .rate:not(:checked) > label {
-            float: right;
-            width: 1em;
-            overflow: hidden;
-            white-space: nowrap;
+        .star-rating label {
+            font-size: 2rem;
+            color: #475569;
             cursor: pointer;
-            font-size: 30px;
-            color: #ccc;
+            transition: color 0.2s;
         }
 
-        .rate:not(:checked) > label:before {
-            content: '★ ';
+        .star-rating label:before {
+            content: '★';
         }
 
-        .rate > input:checked ~ label {
-            color: #ffc700;
+        .star-rating input:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #fbbf24;
         }
 
-        .rate:not(:checked) > label:hover, .rate:not(:checked) > label:hover ~ label {
-            color: #deb217;
+        /* --- Review Item Hover --- */
+        .review-item {
+            transition: background-color 0.2s ease;
+            border-radius: 12px;
+            padding: 15px;
         }
 
-        .rate > input:checked + label:hover, .rate > input:checked + label:hover ~ label, .rate > input:checked ~ label:hover, .rate > input:checked ~ label:hover ~ label, .rate > label:hover ~ input:checked ~ label {
-            color: #c59b08;
+        .review-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* --- Glow Button --- */
+        .btn-warning-glow {
+            box-shadow: 0 0 15px rgba(255, 193, 7, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .btn-warning-glow:hover {
+            box-shadow: 0 0 25px rgba(255, 193, 7, 0.8);
+            transform: translateY(-2px);
         }
     </style>
 </head>
@@ -87,7 +114,8 @@
                 <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted">Trang chủ</a></li>
                 <li class="breadcrumb-item"><a href="/nvk-categories" class="text-decoration-none text-muted">Sản
                     phẩm</a></li>
-                <li class="breadcrumb-item active text-white" aria-current="page" th:text="${nvkProduct.nvkName}"></li>
+                <li class="breadcrumb-item active text-white fw-semibold" aria-current="page"
+                    th:text="${nvkProduct.nvkName}"></li>
             </ol>
         </nav>
 
@@ -100,19 +128,27 @@
             </div>
 
             <div class="col-lg-6">
-                <div class="h-100 p-4 rounded-4" style="background-color: #1e293b;">
-                    <div class="badge bg-primary mb-2">[[${nvkProduct.nvkCategory?.nvkName ?: 'KHÁC'}]]</div>
-                    <h2 class="fw-bold text-white mb-3">[[${nvkProduct.nvkName}]]</h2>
+                <div class="h-100 p-4 rounded-4 shadow-sm border border-secondary border-opacity-25"
+                     style="background-color: #1e293b;">
+                    <div class="badge bg-primary bg-gradient mb-3 px-3 py-2 rounded-pill">
+                        [[${nvkProduct.nvkCategory?.nvkName ?: 'KHÁC'}]]
+                    </div>
+                    <h1 class="fw-bold text-white mb-3 lh-base">[[${nvkProduct.nvkName}]]</h1>
 
-                    <div class="mb-4">
+                    <div class="mb-4 p-3 rounded-3 bg-dark bg-opacity-50 border border-secondary border-opacity-25">
                         <span class="text-info display-6 fw-bold">[[${#numbers.formatDecimal(nvkProduct.nvkPrice, 0, 'COMMA', 0, 'POINT')}]] ₫</span>
-                        <span class="text-decoration-line-through text-muted ms-3 fs-5"
+
+                        <span class="text-decoration-line-through text-white-50 ms-3 fs-5"
                               th:if="${nvkProduct.nvkOldPrice > nvkProduct.nvkPrice}">
                             [[${#numbers.formatDecimal(nvkProduct.nvkOldPrice, 0, 'COMMA', 0, 'POINT')}]] ₫
                         </span>
+
+                        <span class="badge bg-danger ms-2" th:if="${nvkProduct.nvkOldPrice > nvkProduct.nvkPrice}">
+                            Giảm -[[${#numbers.formatDecimal((nvkProduct.nvkOldPrice - nvkProduct.nvkPrice)/nvkProduct.nvkOldPrice * 100, 0, 'COMMA', 0, 'POINT')}]]%
+                        </span>
                     </div>
 
-                    <p class="text-white-50 mb-4" th:text="${nvkProduct.nvkDescription}"></p>
+                    <p class="text-white-50 mb-4 lh-lg" th:text="${nvkProduct.nvkDescription}"></p>
 
                     <div th:if="${nvkProduct.nvkStatus == 1 && nvkProduct.nvkQuantity > 0}">
                         <div class="d-flex align-items-center gap-3 mb-4">
@@ -122,89 +158,155 @@
                                         onclick="adjustQty(-1)">-
                                 </button>
                                 <input type="number" id="qtyInput"
-                                       class="form-control text-center bg-dark text-white border-secondary" value="1"
-                                       min="1" th:max="${nvkProduct.nvkQuantity}" readonly>
+                                       class="form-control text-center bg-dark text-white border-secondary fw-bold"
+                                       value="1" min="1" th:max="${nvkProduct.nvkQuantity}" readonly>
                                 <button class="btn btn-outline-secondary text-white" type="button"
                                         onclick="adjustQty(1)">+
                                 </button>
                             </div>
-                            <small class="text-muted">(Còn [[${nvkProduct.nvkQuantity}]] sản phẩm)</small>
+                            <span class="text-muted small">
+                                <i class="bi bi-box-seam me-1"></i>Còn [[${nvkProduct.nvkQuantity}]] sản phẩm
+                            </span>
                         </div>
 
-                        <button class="btn btn-primary rounded-pill px-5 py-3 fw-bold w-100 shadow-sm"
-                                onclick="addToCartAjax()">
-                            <i class="bi bi-cart-plus-fill me-2"></i> THÊM VÀO GIỎ
-                        </button>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary rounded-pill py-3 fw-bold shadow-lg"
+                                    onclick="addToCartAjax()">
+                                <i class="bi bi-cart-plus-fill me-2 fs-5"></i> THÊM VÀO GIỎ HÀNG
+                            </button>
+                        </div>
                     </div>
 
-                    <div th:if="${nvkProduct.nvkStatus != 1 || nvkProduct.nvkQuantity <= 0}"
-                         class="alert alert-secondary text-center">
-                        <i class="bi bi-exclamation-circle me-2"></i> Sản phẩm đang tạm hết hàng
+                    <div th:if="${nvkProduct.nvkStatus == 2}"
+                         class="alert alert-warning text-center rounded-3 border-warning">
+                        <i class="bi bi-hourglass-split me-2 fs-4"></i>
+                        <strong>Sản phẩm sắp về hàng</strong>
+                        <div class="small mt-1">Xin quý khách vui lòng chờ thêm một thời gian ngắn!</div>
                     </div>
+
+                    <div th:if="${(nvkProduct.nvkStatus == 1 && nvkProduct.nvkQuantity <= 0) || nvkProduct.nvkStatus == 0}"
+                         class="alert alert-secondary text-center rounded-3">
+                        <i class="bi bi-emoji-frown me-2 fs-4"></i>
+                        <strong>Sản phẩm đang tạm hết hàng</strong>
+                        <div class="small mt-1">Vui lòng quay lại sau!</div>
+                    </div>
+
                 </div>
             </div>
         </div>
 
         <div class="row mt-5">
             <div class="col-12">
-                <div class="card border-0 shadow-lg rounded-4" style="background-color: #1e293b;">
-                    <div class="card-header bg-transparent border-secondary p-4">
-                        <h4 class="text-white fw-bold m-0"><i class="bi bi-star-fill text-warning me-2"></i> Đánh giá
-                            sản phẩm</h4>
-                    </div>
-                    <div class="card-body p-4">
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden" style="background-color: #1e293b;">
 
-                        <div class="mb-5 border-bottom border-secondary pb-4" th:if="${session.nvkUserLogin != null}">
-                            <h6 class="text-white mb-3">Viết đánh giá của bạn:</h6>
+                    <div class="card-header bg-dark bg-opacity-50 border-bottom border-secondary border-opacity-25 p-4 d-flex align-items-center justify-content-between">
+                        <h4 class="text-white fw-bold m-0">
+                            <i class="bi bi-chat-square-quote-fill text-warning me-2"></i> Đánh giá khách hàng
+                        </h4>
+                        <span class="badge bg-secondary rounded-pill">[[${#lists.size(nvkProduct.nvkReviews)}]] lượt đánh giá</span>
+                    </div>
+
+                    <div class="card-body p-lg-5">
+
+                        <div class="mb-5 p-4 rounded-3 bg-dark bg-opacity-25 border border-secondary border-opacity-10"
+                             th:if="${session.nvkUserLogin != null}">
+                            <h5 class="text-white mb-3 fw-bold">Chia sẻ cảm nhận của bạn</h5>
                             <form id="reviewForm">
                                 <input type="hidden" id="pId" th:value="${nvkProduct.nvkId}">
-                                <div class="rate mb-3">
-                                    <input type="radio" id="star5" name="rate" value="5" checked/><label
-                                        for="star5">5</label>
-                                    <input type="radio" id="star4" name="rate" value="4"/><label for="star4">4</label>
-                                    <input type="radio" id="star3" name="rate" value="3"/><label for="star3">3</label>
-                                    <input type="radio" id="star2" name="rate" value="2"/><label for="star2">2</label>
-                                    <input type="radio" id="star1" name="rate" value="1"/><label for="star1">1</label>
+
+                                <div class="mb-3">
+                                    <label class="text-white-50 mb-1 small">Mức độ hài lòng:</label>
+                                    <div class="star-rating">
+                                        <input type="radio" id="star5" name="rate" value="5" checked/><label for="star5"
+                                                                                                             title="Tuyệt vời"></label>
+                                        <input type="radio" id="star4" name="rate" value="4"/><label for="star4"
+                                                                                                     title="Rất tốt"></label>
+                                        <input type="radio" id="star3" name="rate" value="3"/><label for="star3"
+                                                                                                     title="Bình thường"></label>
+                                        <input type="radio" id="star2" name="rate" value="2"/><label for="star2"
+                                                                                                     title="Tệ"></label>
+                                        <input type="radio" id="star1" name="rate" value="1"/><label for="star1"
+                                                                                                     title="Rất tệ"></label>
+                                    </div>
                                 </div>
-                                <textarea class="form-control bg-dark text-white border-secondary mb-3" id="cmt"
-                                          rows="3" placeholder="Chia sẻ cảm nhận..."></textarea>
-                                <button type="button" class="btn btn-outline-light rounded-pill px-4"
-                                        onclick="postReview()">Gửi đánh giá
-                                </button>
+
+                                <div class="form-floating mb-3">
+                                    <textarea class="form-control bg-dark text-white border-secondary" id="cmt"
+                                              style="height: 100px" placeholder="Viết đánh giá..."></textarea>
+                                    <label for="cmt" class="text-white-50">Nội dung đánh giá chi tiết...</label>
+                                </div>
+
+                                <div class="text-end">
+                                    <button type="button" class="btn btn-info text-white rounded-pill px-4 fw-bold"
+                                            onclick="postReview()">
+                                        <i class="bi bi-send-fill me-1"></i> Gửi đánh giá
+                                    </button>
+                                </div>
                             </form>
                         </div>
-                        <div class="text-center py-4" th:if="${session.nvkUserLogin == null}">
-                            <p class="text-muted">Vui lòng <a href="/nvk-login" class="text-primary">đăng nhập</a> để
-                                đánh giá.</p>
-                        </div>
 
+                        <div class="text-center py-5 mb-4 rounded-4 border border-warning border-opacity-50 border-dashed"
+                             style="background: rgba(255, 193, 7, 0.05);"
+                             th:if="${session.nvkUserLogin == null}">
+
+                            <div class="mb-3">
+                                <i class="bi bi-person-lock display-3 text-warning"></i>
+                            </div>
+
+                            <h4 class="text-white fw-bold mb-2">Bạn chưa đăng nhập?</h4>
+                            <p class="text-light opacity-75 mb-4">
+                                Hãy đăng nhập để chia sẻ đánh giá và giúp cộng đồng NVK Store chọn được sản phẩm tốt
+                                nhất nhé!
+                            </p>
+
+                            <a href="/nvk-login"
+                               class="btn btn-warning btn-warning-glow text-dark fw-bold rounded-pill px-5 py-3 fs-5">
+                                <i class="bi bi-box-arrow-in-right me-2"></i> Đăng nhập ngay
+                            </a>
+                        </div>
                         <div id="reviewList">
+                            <div th:if="${#lists.isEmpty(nvkProduct.nvkReviews)}" class="text-center py-5">
+                                <img src="https://cdn-icons-png.flaticon.com/512/4076/4076432.png" width="80"
+                                     class="opacity-50 mb-3" alt="No review">
+                                <p class="text-white-50">Chưa có đánh giá nào. Hãy là người đầu tiên nhận xét sản phẩm
+                                    này!</p>
+                            </div>
+
                             <div th:each="r : ${nvkProduct.nvkReviews}"
-                                 class="d-flex mb-4 border-bottom border-secondary pb-3">
-                                <div class="me-3">
+                                 class="review-item d-flex gap-3 mb-3 border-bottom border-secondary border-opacity-25 pb-3">
+                                <div class="flex-shrink-0">
                                     <img th:if="${r.nvkCustomer?.nvkAvatar != null}" th:src="${r.nvkCustomer.nvkAvatar}"
-                                         class="avatar-img"
+                                         class="avatar-img shadow-sm"
                                          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                                    <div class="avatar-circle" th:unless="${r.nvkCustomer?.nvkAvatar != null}"
+                                    <div class="avatar-circle shadow-sm" th:unless="${r.nvkCustomer?.nvkAvatar != null}"
                                          th:text="${#strings.substring(r.nvkCustomer?.nvkFullName ?: 'U', 0, 1)}">U
                                     </div>
                                 </div>
-                                <div>
-                                    <div class="d-flex align-items-center mb-1">
-                                        <h6 class="text-white fw-bold mb-0 me-2">[[${r.nvkCustomer?.nvkFullName ?: 'Ẩn
-                                            danh'}]]</h6>
-                                        <div class="text-warning small">
-                                            <i class="bi bi-star-fill"
-                                               th:each="i : ${#numbers.sequence(1, r.nvkRating)}"></i>
+
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h6 class="text-white fw-bold mb-1">[[${r.nvkCustomer?.nvkFullName ?: 'Người
+                                                dùng ẩn danh'}]]</h6>
+                                            <div class="text-warning small mb-2">
+                                                <i class="bi bi-star-fill"
+                                                   th:each="i : ${#numbers.sequence(1, r.nvkRating)}"></i>
+                                                <i class="bi bi-star text-secondary opacity-50"
+                                                   th:if="${r.nvkRating < 5}"
+                                                   th:each="i : ${#numbers.sequence(r.nvkRating + 1, 5)}"></i>
+                                            </div>
                                         </div>
+                                        <small class="text-white-50">
+                                            <i class="bi bi-clock me-1"></i>[[${#temporals.format(r.nvkCreatedDate,
+                                            'dd/MM/yyyy')}]]
+                                        </small>
                                     </div>
-                                    <small class="text-muted d-block mb-2">[[${#temporals.format(r.nvkCreatedDate,
-                                        'dd/MM/yyyy')}]]</small>
-                                    <p class="text-light opacity-90 m-0">[[${r.nvkComment}]]</p>
+                                    <div class="bg-dark bg-opacity-25 p-3 rounded-3 text-light opacity-90">
+                                        [[${r.nvkComment}]]
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -213,9 +315,12 @@
 </main>
 
 <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
-    <div id="liveToast" class="toast align-items-center text-bg-success border-0 shadow-lg" role="alert">
+    <div id="liveToast" class="toast align-items-center text-bg-success border-0 shadow-lg" role="alert"
+         aria-live="assertive" aria-atomic="true">
         <div class="d-flex">
-            <div class="toast-body fw-bold">Đã thêm vào giỏ! <a href="/nvk-cart" class="text-white ms-2">Xem giỏ</a>
+            <div class="toast-body fw-bold">
+                <i class="bi bi-check-circle-fill me-2"></i> Đã thêm vào giỏ!
+                <a href="/nvk-cart" class="text-white ms-2 text-decoration-underline">Xem giỏ hàng</a>
             </div>
             <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
         </div>
@@ -240,7 +345,8 @@
             .then(res => res.json())
             .then(data => {
                 if (data.status === 'success') {
-                    new bootstrap.Toast(document.getElementById('liveToast')).show();
+                    const toast = new bootstrap.Toast(document.getElementById('liveToast'));
+                    toast.show();
                     if (document.getElementById('cartBadge')) {
                         document.getElementById('cartBadge').innerText = data.cartCount;
                         document.getElementById('cartBadge').style.display = 'inline-block';
@@ -255,8 +361,12 @@
         const cmt = document.getElementById('cmt').value;
         const rate = document.querySelector('input[name="rate"]:checked')?.value;
 
-        if (!rate || !cmt) {
-            alert("Vui lòng chọn sao và viết nội dung!");
+        if (!rate) {
+            alert("Vui lòng chọn số sao đánh giá!");
+            return;
+        }
+        if (!cmt.trim()) {
+            alert("Vui lòng nhập nội dung đánh giá!");
             return;
         }
 
@@ -269,9 +379,17 @@
             .then(res => res.json())
             .then(data => {
                 if (data.status === 'success') {
-                    location.reload(); // Reload để hiện review mới (Đơn giản hóa)
-                } else if (data.status === 'login_required') window.location.href = '/nvk-login';
-                else alert("Lỗi hệ thống");
+                    // Reload để hiện review mới (Đơn giản hóa)
+                    window.location.reload();
+                } else if (data.status === 'login_required') {
+                    window.location.href = '/nvk-login';
+                } else {
+                    alert("Lỗi: " + (data.message || "Không thể gửi đánh giá"));
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Lỗi kết nối server");
             });
     }
 </script>

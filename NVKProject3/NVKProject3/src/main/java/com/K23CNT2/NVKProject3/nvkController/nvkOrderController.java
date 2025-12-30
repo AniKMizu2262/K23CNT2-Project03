@@ -21,7 +21,7 @@ public class nvkOrderController {
     @Autowired
     private nvkOrderDetailRepository orderDetailRepo;
 
-    // 1. Danh sách
+    // 1. Danh sách (Có tìm kiếm + Lọc)
     @GetMapping("")
     public String listOrder(Model model,
                             @RequestParam(value = "status", required = false) Integer status,
@@ -32,7 +32,7 @@ public class nvkOrderController {
         return "admin/order/list";
     }
 
-    // 2. Live Search
+    // 2. Live Search (Dành cho AJAX nếu có)
     @GetMapping("/search-results")
     public String searchResults(Model model,
                                 @RequestParam(value = "status", required = false) Integer status,
@@ -41,10 +41,8 @@ public class nvkOrderController {
         return "admin/order/list :: order_rows";
     }
 
-    // ==============================================================
-    // 3. XEM CHI TIẾT (ĐÃ SỬA LẠI THÀNH 'view' CHO KHỚP HTML)
-    // ==============================================================
-    @GetMapping("/view/{id}") // <--- QUAN TRỌNG: Để là 'view' nhé
+    // 3. XEM CHI TIẾT
+    @GetMapping("/detail/{id}")
     public String viewOrder(@PathVariable("id") Long id, Model model) {
         nvkOrder order = orderService.getOrderById(id);
         if (order == null) {
@@ -54,8 +52,9 @@ public class nvkOrderController {
         // Lấy danh sách sản phẩm trong đơn
         List<nvkOrderDetail> details = orderDetailRepo.findByNvkOrder(order);
 
-        model.addAttribute("nvkOrder", order);
-        model.addAttribute("nvkOrderDetails", details);
+        // 👇 SỬA LẠI 2 DÒNG NÀY (Thêm chữ "nvk" vào trước) 👇
+        model.addAttribute("nvkOrder", order);           // HTML đang chờ biến tên 'nvkOrder'
+        model.addAttribute("nvkOrderDetails", details);  // HTML khả năng cũng chờ 'nvkOrderDetails'
 
         return "admin/order/detail";
     }
@@ -71,6 +70,6 @@ public class nvkOrderController {
             orderService.saveOrder(order);
             ra.addFlashAttribute("nvkMsg", "Cập nhật trạng thái đơn hàng thành công!");
         }
-        return "redirect:/nvkAdmin/order";
+        return "redirect:/nvkAdmin/order/detail/" + id; // Redirect về trang chi tiết
     }
 }

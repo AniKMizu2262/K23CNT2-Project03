@@ -6,16 +6,55 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/css/style.css">
-</head>
-<body class="bg-body">
 
+    <style>
+        /* Nền tối cho toàn trang */
+        body {
+            background-color: #0f172a;
+            color: #fff;
+        }
+
+        /* Class riêng để biến nền trắng thành màu xanh đen công nghệ */
+        .bg-dark-custom {
+            background-color: #1e293b !important;
+            color: #fff !important;
+        }
+
+        /* Chỉnh lại màu chữ mờ cho dễ đọc trên nền tối */
+        .text-muted {
+            color: #94a3b8 !important;
+        }
+
+        /* Fix màu bảng */
+        .table {
+            --bs-table-bg: transparent;
+            --bs-table-color: #fff;
+            --bs-table-hover-color: #fff;
+            --bs-table-hover-bg: rgba(255, 255, 255, 0.05);
+            border-color: #334155;
+        }
+
+        /* Fix các ô input/select */
+        .form-select, .form-control {
+            background-color: #334155;
+            border-color: #475569;
+            color: #fff;
+        }
+
+        /* Fix đường viền */
+        .border-bottom, .border {
+            border-color: #334155 !important;
+        }
+    </style>
+</head>
+<body>
 <aside th:replace="~{fragments/sidebar :: sidebar('order')}"></aside>
 
 <div class="content-wrapper">
 
-    <div class="content-header mb-4 p-4 rounded shadow-sm d-flex justify-content-between align-items-center bg-white">
+    <div class="content-header mb-4 p-4 rounded shadow-sm d-flex justify-content-between align-items-center bg-dark-custom">
         <div class="d-flex align-items-center gap-3">
-            <button class="btn btn-outline-secondary border-0"
+            <button class="btn btn-outline-secondary border-0 text-white"
                     onclick="document.body.classList.toggle('sidebar-closed')" title="Menu">
                 <i class="bi bi-list fs-4"></i>
             </button>
@@ -36,7 +75,7 @@
     <div class="content">
         <div class="row">
             <div class="col-lg-8">
-                <div class="card shadow-lg border-0 mb-4">
+                <div class="card shadow-lg border-0 mb-4 bg-dark-custom">
                     <div class="card-header bg-transparent border-bottom py-3">
                         <h5 class="card-title m-0 fw-bold text-primary text-uppercase small">
                             <i class="bi bi-box-seam me-2"></i> Sản phẩm đã đặt
@@ -57,7 +96,7 @@
                             <tr th:each="detail : ${nvkOrder.nvkOrderDetails}">
                                 <td class="ps-4">
                                     <div class="d-flex align-items-center">
-                                        <img th:src="${detail.nvkProduct.nvkImgUrl != null ? detail.nvkProduct.nvkImgUrl : 'https://placehold.co/50'}"
+                                        <img th:src="${detail.nvkProduct.nvkImgUrl != null ? '/nvk-product-img/' + detail.nvkProduct.nvkImgUrl : 'https://placehold.co/50'}"
                                              width="50" height="50"
                                              class="rounded border me-3"
                                              style="object-fit: cover;"
@@ -94,7 +133,7 @@
             </div>
 
             <div class="col-lg-4">
-                <div class="card shadow-lg border-0 mb-4">
+                <div class="card shadow-lg border-0 mb-4 bg-dark-custom">
                     <div class="card-header bg-transparent border-bottom py-3">
                         <h5 class="card-title m-0 fw-bold text-info text-uppercase small">
                             <i class="bi bi-person-vcard me-2"></i> Thông tin giao hàng
@@ -116,7 +155,7 @@
                     </div>
                 </div>
 
-                <div class="card shadow-lg border-0">
+                <div class="card shadow-lg border-0 bg-dark-custom">
                     <div class="card-header bg-transparent border-bottom py-3">
                         <h5 class="card-title m-0 fw-bold text-warning text-uppercase small">
                             <i class="bi bi-gear-wide-connected me-2"></i> Xử lý đơn hàng
@@ -129,8 +168,8 @@
                             <label class="form-label small text-muted text-uppercase fw-bold">Trạng thái hiện
                                 tại</label>
                             <div class="input-group mb-3">
-                                <span class="input-group-text bg-light"><i
-                                        class="bi bi-activity text-primary"></i></span>
+                                <span class="input-group-text bg-secondary border-secondary"><i
+                                        class="bi bi-activity text-white"></i></span>
                                 <select name="status" class="form-select fw-bold">
                                     <option value="0" th:selected="${nvkOrder.nvkStatus == 0}">⏳ Mới đặt</option>
                                     <option value="1" th:selected="${nvkOrder.nvkStatus == 1}">✅ Đã xác nhận</option>
