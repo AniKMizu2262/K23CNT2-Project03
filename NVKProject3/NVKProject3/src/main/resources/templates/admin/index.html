@@ -6,13 +6,36 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* Fix riêng cho các Box thống kê nhìn gọn hơn */
+        .stat-box {
+            transition: transform 0.2s;
+            border: none;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            font-size: 4rem;
+            opacity: 0.15;
+            transform: rotate(15deg);
+            transition: all 0.3s;
+        }
+
+        .stat-box:hover .stat-icon {
+            transform: rotate(0deg) scale(1.1);
+            opacity: 0.25;
+        }
+    </style>
 </head>
 <body>
 
 <aside th:replace="~{fragments/sidebar :: sidebar('home')}"></aside>
 
 <div class="content-wrapper">
-    <div class="content-header mb-4 p-4 rounded" style="background-color: #1e293b;">
+    <div class="content-header mb-4 p-4 rounded shadow-sm" style="background-color: #1e293b;">
         <div class="container-fluid">
             <div class="row align-items-center py-2">
                 <div class="col-sm-8">
@@ -35,62 +58,74 @@
     </div>
 
     <div class="content px-2">
-        <div class="row g-3 mb-4">
-            <div class="col-lg-3 col-6">
-                <div class="small-box bg-primary text-white p-3 rounded shadow-sm h-100 position-relative overflow-hidden">
-                    <div class="inner">
-                        <h3 th:text="${#numbers.formatDecimal(revenue, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</h3>
-                        <p class="mb-0 opacity-75 fw-bold">Tổng Doanh Thu</p>
+        <div class="row g-4 mb-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-box bg-primary text-white p-4 rounded-4 shadow-sm h-100 position-relative overflow-hidden d-flex flex-column justify-content-between">
+                    <div class="inner z-1">
+                        <h3 class="fw-bold mb-1">
+                            [[${#numbers.formatDecimal(revenue, 0, 'COMMA', 0, 'POINT')}]]
+                            <span class="fs-5 opacity-75">₫</span>
+                        </h3>
+                        <p class="mb-0 text-white-50 fw-bold text-uppercase small ls-1">Tổng Doanh Thu</p>
                     </div>
-                    <div class="icon position-absolute top-0 end-0 p-3 opacity-25"><i
-                            class="bi bi-currency-dollar fs-1"></i></div>
+                    <div class="icon position-absolute top-0 end-0 p-3 z-0">
+                        <i class="bi bi-currency-dollar stat-icon text-white"></i>
+                    </div>
                     <a href="/nvkAdmin/order"
-                       class="small-box-footer text-white mt-2 d-block small text-decoration-none opacity-75">
-                        Chi tiết <i class="bi bi-arrow-right"></i>
+                       class="text-white mt-4 d-inline-block small text-decoration-none opacity-75 hover-opacity-100 z-1">
+                        Xem chi tiết <i class="bi bi-arrow-right-circle ms-1"></i>
                     </a>
                 </div>
             </div>
 
-            <div class="col-lg-3 col-6">
-                <div class="small-box bg-info text-white p-3 rounded shadow-sm h-100 position-relative overflow-hidden">
-                    <div class="inner">
-                        <h3 th:text="${orderCount}">0</h3>
-                        <p class="mb-0 opacity-75 fw-bold">Đơn Hàng Mới</p>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-box bg-info text-white p-4 rounded-4 shadow-sm h-100 position-relative overflow-hidden d-flex flex-column justify-content-between">
+                    <div class="inner z-1">
+                        <h3 class="fw-bold mb-1" th:text="${orderCount}">0</h3>
+                        <p class="mb-0 text-white-50 fw-bold text-uppercase small ls-1">Đơn Hàng Mới</p>
                     </div>
-                    <div class="icon position-absolute top-0 end-0 p-3 opacity-25"><i class="bi bi-bag fs-1"></i></div>
+                    <div class="icon position-absolute top-0 end-0 p-3 z-0">
+                        <i class="bi bi-bag-check stat-icon text-white"></i>
+                    </div>
                     <a href="/nvkAdmin/order"
-                       class="small-box-footer text-white mt-2 d-block small text-decoration-none opacity-75">
-                        Chi tiết <i class="bi bi-arrow-right"></i>
+                       class="text-white mt-4 d-inline-block small text-decoration-none opacity-75 hover-opacity-100 z-1">
+                        Xem chi tiết <i class="bi bi-arrow-right-circle ms-1"></i>
                     </a>
                 </div>
             </div>
 
-            <div class="col-lg-3 col-6">
-                <div class="small-box bg-warning text-dark p-3 rounded shadow-sm h-100 position-relative overflow-hidden">
-                    <div class="inner">
-                        <h3>[[${#numbers.formatDecimal(avgRating, 1, 1)}]] <i class="bi bi-star-fill fs-6"></i></h3>
-                        <p class="mb-0 opacity-75 fw-bold">Đánh Giá TB ([[${reviewCount}]])</p>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-box bg-warning text-dark p-4 rounded-4 shadow-sm h-100 position-relative overflow-hidden d-flex flex-column justify-content-between">
+                    <div class="inner z-1">
+                        <h3 class="fw-bold mb-1">
+                            [[${#numbers.formatDecimal(avgRating, 1, 1)}]]
+                            <i class="bi bi-star-fill fs-5 text-white"></i>
+                        </h3>
+                        <p class="mb-0 text-dark opacity-75 fw-bold text-uppercase small ls-1">Đánh Giá TB
+                            ([[${reviewCount}]])</p>
                     </div>
-                    <div class="icon position-absolute top-0 end-0 p-3 opacity-25"><i class="bi bi-chat-heart fs-1"></i>
+                    <div class="icon position-absolute top-0 end-0 p-3 z-0">
+                        <i class="bi bi-chat-quote stat-icon text-dark"></i>
                     </div>
                     <a href="/nvkAdmin/review"
-                       class="small-box-footer text-dark mt-2 d-block small text-decoration-none opacity-75">
-                        Chi tiết <i class="bi bi-arrow-right"></i>
+                       class="text-dark mt-4 d-inline-block small text-decoration-none opacity-75 hover-opacity-100 z-1">
+                        Xem chi tiết <i class="bi bi-arrow-right-circle ms-1"></i>
                     </a>
                 </div>
             </div>
 
-            <div class="col-lg-3 col-6">
-                <div class="small-box bg-danger text-white p-3 rounded shadow-sm h-100 position-relative overflow-hidden">
-                    <div class="inner">
-                        <h3 th:text="${userCount}">0</h3>
-                        <p class="mb-0 opacity-75 fw-bold">Khách Hàng</p>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-box bg-danger text-white p-4 rounded-4 shadow-sm h-100 position-relative overflow-hidden d-flex flex-column justify-content-between">
+                    <div class="inner z-1">
+                        <h3 class="fw-bold mb-1" th:text="${userCount}">0</h3>
+                        <p class="mb-0 text-white-50 fw-bold text-uppercase small ls-1">Khách Hàng</p>
                     </div>
-                    <div class="icon position-absolute top-0 end-0 p-3 opacity-25"><i
-                            class="bi bi-person-plus fs-1"></i></div>
+                    <div class="icon position-absolute top-0 end-0 p-3 z-0">
+                        <i class="bi bi-people stat-icon text-white"></i>
+                    </div>
                     <a href="/nvkAdmin/customer"
-                       class="small-box-footer text-white mt-2 d-block small text-decoration-none opacity-75">
-                        Chi tiết <i class="bi bi-arrow-right"></i>
+                       class="text-white mt-4 d-inline-block small text-decoration-none opacity-75 hover-opacity-100 z-1">
+                        Xem chi tiết <i class="bi bi-arrow-right-circle ms-1"></i>
                     </a>
                 </div>
             </div>
@@ -99,13 +134,11 @@
         <div class="row">
             <div class="col-12">
                 <div class="card border-0 shadow-lg rounded-3 overflow-hidden" style="background-color: #1e293b;">
-
                     <div class="card-header bg-transparent border-bottom border-secondary py-3">
                         <h5 class="card-title mb-0 fw-bold text-primary">
                             <i class="bi bi-clock-history me-2"></i> Đơn hàng vừa đặt
                         </h5>
                     </div>
-
                     <div class="card-body p-0">
                         <div class="table-responsive">
                             <table class="table table-dark table-hover align-middle mb-0 text-white"

@@ -99,6 +99,17 @@
             box-shadow: 0 0 25px rgba(255, 193, 7, 0.8);
             transform: translateY(-2px);
         }
+
+        /* Đổi màu dấu gạch chéo (/) sang trắng mờ */
+        .breadcrumb-item + .breadcrumb-item::before {
+            color: rgba(255, 255, 255, 0.5) !important;
+        }
+
+        /* Hiệu ứng hover cho link Breadcrumb sáng rực lên khi di chuột */
+        .hover-white:hover {
+            color: #fff !important;
+            text-decoration: underline !important;
+        }
     </style>
 </head>
 
@@ -111,9 +122,12 @@
 
         <nav aria-label="breadcrumb" class="mb-4">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted">Trang chủ</a></li>
-                <li class="breadcrumb-item"><a href="/nvk-categories" class="text-decoration-none text-muted">Sản
-                    phẩm</a></li>
+                <li class="breadcrumb-item">
+                    <a href="/" class="text-decoration-none text-white-50 hover-white">Trang chủ</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="/nvk-categories" class="text-decoration-none text-white-50 hover-white">Sản phẩm</a>
+                </li>
                 <li class="breadcrumb-item active text-white fw-semibold" aria-current="page"
                     th:text="${nvkProduct.nvkName}"></li>
             </ol>
@@ -133,7 +147,10 @@
                     <div class="badge bg-primary bg-gradient mb-3 px-3 py-2 rounded-pill">
                         [[${nvkProduct.nvkCategory?.nvkName ?: 'KHÁC'}]]
                     </div>
+
                     <h1 class="fw-bold text-white mb-3 lh-base">[[${nvkProduct.nvkName}]]</h1>
+
+                    <input type="hidden" id="pId" th:value="${nvkProduct.nvkId}">
 
                     <div class="mb-4 p-3 rounded-3 bg-dark bg-opacity-50 border border-secondary border-opacity-25">
                         <span class="text-info display-6 fw-bold">[[${#numbers.formatDecimal(nvkProduct.nvkPrice, 0, 'COMMA', 0, 'POINT')}]] ₫</span>
@@ -144,7 +161,7 @@
                         </span>
 
                         <span class="badge bg-danger ms-2" th:if="${nvkProduct.nvkOldPrice > nvkProduct.nvkPrice}">
-                            Giảm -[[${#numbers.formatDecimal((nvkProduct.nvkOldPrice - nvkProduct.nvkPrice)/nvkProduct.nvkOldPrice * 100, 0, 'COMMA', 0, 'POINT')}]]%
+                            Giảm -[[${#numbers.formatDecimal(((nvkProduct.nvkOldPrice - nvkProduct.nvkPrice) / nvkProduct.nvkOldPrice * 100), 0, 'COMMA', 0, 'POINT')}]]%
                         </span>
                     </div>
 
@@ -169,6 +186,15 @@
                             </span>
                         </div>
 
+                        <div th:if="${session.nvkUserLogin == null}"
+                             class="alert alert-warning d-flex align-items-center mb-3 py-2 border-0 bg-warning bg-opacity-10 text-warning"
+                             role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <div class="small fw-bold">
+                                Vui lòng <a href="/nvk-login" class="text-warning text-decoration-underline">đăng
+                                nhập</a> để mua hàng!
+                            </div>
+                        </div>
                         <div class="d-grid gap-2">
                             <button class="btn btn-primary rounded-pill py-3 fw-bold shadow-lg"
                                     onclick="addToCartAjax()">
@@ -212,8 +238,6 @@
                              th:if="${session.nvkUserLogin != null}">
                             <h5 class="text-white mb-3 fw-bold">Chia sẻ cảm nhận của bạn</h5>
                             <form id="reviewForm">
-                                <input type="hidden" id="pId" th:value="${nvkProduct.nvkId}">
-
                                 <div class="mb-3">
                                     <label class="text-white-50 mb-1 small">Mức độ hài lòng:</label>
                                     <div class="star-rating">
@@ -279,7 +303,7 @@
                                          class="avatar-img shadow-sm"
                                          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
                                     <div class="avatar-circle shadow-sm" th:unless="${r.nvkCustomer?.nvkAvatar != null}"
-                                         th:text="${#strings.substring(r.nvkCustomer?.nvkFullName ?: 'U', 0, 1)}">U
+                                         th:text="${#strings.substring((r.nvkCustomer?.nvkFullName ?: 'U'), 0, 1)}">U
                                     </div>
                                 </div>
 
@@ -379,7 +403,6 @@
             .then(res => res.json())
             .then(data => {
                 if (data.status === 'success') {
-                    // Reload để hiện review mới (Đơn giản hóa)
                     window.location.reload();
                 } else if (data.status === 'login_required') {
                     window.location.href = '/nvk-login';
