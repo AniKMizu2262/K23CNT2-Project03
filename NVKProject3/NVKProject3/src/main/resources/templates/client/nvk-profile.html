@@ -35,55 +35,63 @@
 
             <div class="col-lg-8">
 
-                <div th:if="${success}" class="alert alert-success alert-dismissible fade show shadow-sm">
-                    <i class="bi bi-check-circle-fill me-2"></i> [[${success}]]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show shadow-sm">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i> [[${error}]]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <div th:if="${success} or ${param.success}" class="alert alert-success alert-dismissible fade show shadow-sm border-start border-success border-4" role="alert">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-check-circle-fill text-success fs-4 me-3"></i>
+                        <div>
+                            <strong class="d-block">Thành công!</strong>
+                            <span th:if="${success}" th:text="${success}"></span>
+                            <span th:if="${param.success != null and param.success[0] == 'pass_changed'}">Đổi mật khẩu thành công! Hãy ghi nhớ mật khẩu mới nhé.</span>
+                            <span th:if="${param.success != null and param.success[0] == 'updated'}">Cập nhật hồ sơ thành công!</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
 
+                <div th:if="${error} or ${param.error}" class="alert alert-danger alert-dismissible fade show shadow-sm border-start border-danger border-4" role="alert">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-exclamation-triangle-fill text-danger fs-4 me-3"></i>
+                        <div>
+                            <strong class="d-block">Có lỗi xảy ra!</strong>
+                            <span th:if="${error}" th:text="${error}"></span>
+                            <span th:if="${param.error != null and param.error[0] == 'pass_mismatch'}">Mật khẩu xác nhận không khớp! Vui lòng thử lại.</span>
+                            <span th:if="${param.error != null and param.error[0] == 'wrong_old_pass'}">Mật khẩu cũ không chính xác!</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
                 <div class="card border-0 shadow-lg rounded-4 mb-4" style="background-color: #1e293b;">
                     <div class="card-header bg-transparent border-bottom border-secondary p-4">
-                        <h5 class="mb-0 fw-bold text-primary"><i class="bi bi-person-lines-fill me-2"></i> Thông tin cá
-                            nhân</h5>
+                        <h5 class="mb-0 fw-bold text-primary"><i class="bi bi-person-lines-fill me-2"></i> Thông tin cá nhân</h5>
                     </div>
                     <div class="card-body p-4">
-                        <form th:action="@{/nvk-profile/update}" method="post" th:object="${nvkCustomer}"
-                              enctype="multipart/form-data">
-
+                        <form th:action="@{/nvk-profile/update}" method="post" th:object="${nvkCustomer}" enctype="multipart/form-data">
                             <input type="hidden" th:field="*{nvkId}">
                             <input type="hidden" th:field="*{nvkEmail}">
-                            <input type="hidden" th:field="*{nvkPassword}"> <input type="hidden"
-                                                                                   th:field="*{nvkActive}">
+                            <input type="hidden" th:field="*{nvkPassword}">
+                            <input type="hidden" th:field="*{nvkActive}">
                             <input type="hidden" th:field="*{nvkAvatar}">
+
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label class="form-label text-white-50">Họ tên</label>
-                                    <input type="text" class="form-control bg-dark text-white border-secondary"
-                                           th:field="*{nvkFullName}" required>
+                                    <input type="text" class="form-control bg-dark text-white border-secondary" th:field="*{nvkFullName}" required>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label text-white-50">Số điện thoại</label>
-                                    <input type="text" class="form-control bg-dark text-white border-secondary"
-                                           th:field="*{nvkPhone}" required>
+                                    <input type="text" class="form-control bg-dark text-white border-secondary" th:field="*{nvkPhone}" required>
                                 </div>
                                 <div class="col-12">
                                     <label class="form-label text-white-50">Thay đổi ảnh đại diện</label>
-                                    <input type="file" name="nvkImageFile"
-                                           class="form-control bg-dark text-white border-secondary"
-                                           accept="image/*" onchange="previewImage(event)">
+                                    <input type="file" name="nvkImageFile" class="form-control bg-dark text-white border-secondary" accept="image/*" onchange="previewImage(event)">
                                 </div>
                                 <div class="col-12">
                                     <label class="form-label text-white-50">Địa chỉ</label>
-                                    <textarea class="form-control bg-dark text-white border-secondary" rows="2"
-                                              th:field="*{nvkAddress}" required></textarea>
+                                    <textarea class="form-control bg-dark text-white border-secondary" rows="2" th:field="*{nvkAddress}" required></textarea>
                                 </div>
                             </div>
                             <div class="mt-4 text-end">
-                                <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">Lưu thay đổi
-                                </button>
+                                <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">Lưu thay đổi</button>
                             </div>
                         </form>
                     </div>
@@ -98,31 +106,25 @@
                             <div class="row g-3">
                                 <div class="col-md-4">
                                     <label class="form-label text-white-50">Mật khẩu cũ</label>
-                                    <input type="password" name="currentPassword"
-                                           class="form-control bg-dark text-white border-secondary" required>
+                                    <input type="password" name="currentPassword" class="form-control bg-dark text-white border-secondary" required>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label text-white-50">Mật khẩu mới</label>
-                                    <input type="password" name="newPassword"
-                                           class="form-control bg-dark text-white border-secondary" required>
+                                    <input type="password" name="newPassword" class="form-control bg-dark text-white border-secondary" required>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label text-white-50">Xác nhận mới</label>
-                                    <input type="password" name="confirmPassword"
-                                           class="form-control bg-dark text-white border-secondary" required>
+                                    <input type="password" name="confirmPassword" class="form-control bg-dark text-white border-secondary" required>
                                 </div>
                             </div>
                             <div class="mt-4 text-end">
-                                <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold">Đổi mật khẩu
-                                </button>
+                                <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold">Đổi mật khẩu</button>
                             </div>
                         </form>
                     </div>
                 </div>
 
             </div>
-        </div>
-    </div>
 </main>
 
 <footer th:replace="~{fragments/client/footer :: footer}"></footer>
