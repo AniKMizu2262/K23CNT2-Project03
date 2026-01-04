@@ -73,8 +73,21 @@ public class nvkCustomerController {
 
     @GetMapping("/delete/{id}")
     public String deleteCustomer(@PathVariable("id") Long id, RedirectAttributes ra) {
-        customerService.deleteCustomer(id);
-        ra.addFlashAttribute("nvkMsg", "Đã xóa khách hàng thành công!");
+        try {
+            // Thử xóa cứng (nếu khách chưa mua gì thì xóa được)
+            customerService.deleteCustomer(id);
+            ra.addFlashAttribute("nvkMsg", "Đã xóa khách hàng thành công!");
+        } catch (Exception e) {
+            // Nếu lỗi (tức là khách đã có đơn hàng) -> Chuyển sang KHÓA tài khoản
+            nvkCustomer customer = customerService.getCustomerById(id);
+            if (customer != null) {
+                customer.setNvkActive(false); // Chuyển trạng thái sang KHÓA (0)
+                customerService.saveCustomer(customer);
+                ra.addFlashAttribute("nvkMsg", "Khách hàng này đã có đơn hàng -> Hệ thống đã CHUYỂN SANG TRẠNG THÁI KHÓA!");
+            } else {
+                ra.addFlashAttribute("nvkMsg", "Lỗi: Không tìm thấy khách hàng!");
+            }
+        }
         return "redirect:/nvkAdmin/customer";
     }
 }
