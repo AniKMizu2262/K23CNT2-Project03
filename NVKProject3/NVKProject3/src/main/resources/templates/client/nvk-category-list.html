@@ -244,18 +244,26 @@
 
                         <select name="sort" class="form-select form-select-sm bg-dark text-white border-secondary"
                                 onchange="this.form.submit()" style="min-width: 160px;">
+
                             <option value="">-- Sắp xếp --</option>
-                            <option value="name_asc" th:selected="${param.sort != null && param.sort[0] == 'name_asc'}">
+
+                            <option value="name-asc" th:selected="${param.sort != null && param.sort[0] == 'name-asc'}">
                                 Tên: A - Z
                             </option>
-                            <option value="name_desc"
-                                    th:selected="${param.sort != null && param.sort[0] == 'name_desc'}">Tên: Z - A
+
+                            <option value="name-desc"
+                                    th:selected="${param.sort != null && param.sort[0] == 'name-desc'}">
+                                Tên: Z - A
                             </option>
-                            <option value="price_asc"
-                                    th:selected="${param.sort != null && param.sort[0] == 'price_asc'}">Giá: Tăng dần
+
+                            <option value="price-asc"
+                                    th:selected="${param.sort != null && param.sort[0] == 'price-asc'}">
+                                Giá: Tăng dần
                             </option>
-                            <option value="price_desc"
-                                    th:selected="${param.sort != null && param.sort[0] == 'price_desc'}">Giá: Giảm dần
+
+                            <option value="price-desc"
+                                    th:selected="${param.sort != null && param.sort[0] == 'price-desc'}">
+                                Giá: Giảm dần
                             </option>
                         </select>
                     </form>
